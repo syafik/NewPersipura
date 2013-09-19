@@ -34,6 +34,7 @@
     <string name="ns_menu_snippet3">Media</string>
     <string name="ns_menu_snippet4">Match</string>
     <string name="ns_menu_snippet5">Squad</string>
-    <string name="ns_menu_snippet6">Snippet 6</string>
-    <string name="ns_menu_snippet7">Snippet 7</string>
+    <string name="ns_menu_items_connect1">Facebook</string>
+    <string name="ns_menu_items_connect2">Twitter</string>
+    
 </resources>

@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp" 
-        >
+        android:background="#212021">
 
         <ImageView
             android:id="@+id/menurow_icon"
@@ -47,11 +47,11 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <View
+   <!--  <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="1dp"
         android:layout_marginTop="1dp"
-        android:background="#DADADC" />
+        android:background="#171617" /> -->
 
 </LinearLayout>

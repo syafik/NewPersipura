@@ -8,14 +8,24 @@
         <item>ns_menu_snippet4</item>
         <item>ns_menu_snippet5</item>
     </string-array>
+    
+    <string-array name="ns_menu_items_connect">
+        <item>ns_menu_items_connect1</item>
+        <item>ns_menu_items_connect2</item>
+    </string-array>
 
     <array name="ns_menu_items_icon">
-        
         <item>slidebar_home_icon</item>
         <item>slidebar_news_icon</item>
         <item>slidebar_media_icon</item>
         <item>slidebar_match_icon</item>
         <item>slidebar_squad_icon</item>
     </array>
+    
+    <array name="ns_menu_items_icon_connect">
+        <item>slidebar_fb_icon</item>
+        <item>slidebar_tw_icon</item>
+    </array>
+    
 
 </resources>	

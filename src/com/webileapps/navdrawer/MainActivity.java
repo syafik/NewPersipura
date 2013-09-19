@@ -40,7 +40,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private DrawerLayout mDrawer;
 	private CustomActionBarDrawerToggle mDrawerToggle;
 	private String[] menuItems;
-
+	private String[] connectItems;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mPlanetTitles;
@@ -221,10 +221,17 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		menuItems = getResources().getStringArray(
 				R.array.ns_menu_items);
+		connectItems = getResources().getStringArray(
+				R.array.ns_menu_items_connect); 
 		String[] menuItemsIcon = getResources().getStringArray(
 				R.array.ns_menu_items_icon);
+		String[] menuItemsIconConnect = getResources().getStringArray(
+				R.array.ns_menu_items_icon_connect);
+		
 
 		int res = 0;
+		int resConnect = 0;
+		
 		for (String item : menuItems) {
 
 			int id_title = getResources().getIdentifier(item, "string",
@@ -241,7 +248,21 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		
 		mAdapter.addHeader(R.string.ns_menu_main_header2);
-		
+			
+		for (String itemConnect : connectItems) {
+
+			int id_title_connect = getResources().getIdentifier(itemConnect, "string",
+					this.getPackageName());
+			int id_icon_connect = getResources().getIdentifier(menuItemsIconConnect[resConnect],
+					"drawable", this.getPackageName());
+			
+			NsMenuItemModel mItemConnect = new NsMenuItemModel(id_title_connect, id_icon_connect);
+//			if (res==1) mItem.counter=12; //it is just an example...
+//			if (res==3) mItem.counter=3; //it is just an example...
+			mAdapter.addItem(mItemConnect);
+			
+			resConnect++;
+		}
 
 
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
