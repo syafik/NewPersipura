@@ -29,11 +29,11 @@
     <string name="ns_menu_open">Navigation Drawer Open Menu</string>
     <string name="ns_menu_close">Navigation Drawer</string>
     
-    <string name="ns_menu_snippet1">Snippet 1</string>
-    <string name="ns_menu_snippet2">Snippet 2</string>
-    <string name="ns_menu_snippet3">Snippet 3</string>
-    <string name="ns_menu_snippet4">Snippet 4</string>
-    <string name="ns_menu_snippet5">Snippet 5</string>
+    <string name="ns_menu_snippet1">Home</string>
+    <string name="ns_menu_snippet2">News</string>
+    <string name="ns_menu_snippet3">Media</string>
+    <string name="ns_menu_snippet4">Match</string>
+    <string name="ns_menu_snippet5">Squad</string>
     <string name="ns_menu_snippet6">Snippet 6</string>
     <string name="ns_menu_snippet7">Snippet 7</string>
 </resources>

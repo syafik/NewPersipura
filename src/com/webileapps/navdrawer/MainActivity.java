@@ -215,7 +215,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		NsMenuAdapter mAdapter = new NsMenuAdapter(this);
 
 		// Add Header
-		mAdapter.addHeader(R.string.ns_menu_main_header);
+//		mAdapter.addHeader(R.string.ns_menu_main_header);
 
 		// Add first block
 
@@ -231,16 +231,18 @@ public class MainActivity extends SherlockFragmentActivity {
 					this.getPackageName());
 			int id_icon = getResources().getIdentifier(menuItemsIcon[res],
 					"drawable", this.getPackageName());
-
+			
 			NsMenuItemModel mItem = new NsMenuItemModel(id_title, id_icon);
-			if (res==1) mItem.counter=12; //it is just an example...
-			if (res==3) mItem.counter=3; //it is just an example...
+//			if (res==1) mItem.counter=12; //it is just an example...
+//			if (res==3) mItem.counter=3; //it is just an example...
 			mAdapter.addItem(mItem);
+			
 			res++;
 		}
 		
-
 		mAdapter.addHeader(R.string.ns_menu_main_header2);
+		
+
 
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		if (mDrawerList != null)

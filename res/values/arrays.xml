@@ -7,18 +7,15 @@
         <item>ns_menu_snippet3</item>
         <item>ns_menu_snippet4</item>
         <item>ns_menu_snippet5</item>
-        <item>ns_menu_snippet6</item>
-        <item>ns_menu_snippet7</item>
     </string-array>
 
     <array name="ns_menu_items_icon">
-        <item>ic_action_settings</item>
-        <item>ic_save</item>
-        <item>action_add</item>
-        <item>ic_launcher_</item>
-        <item>action_add</item>
-        <item>ic_action_settings</item>
-        <item>ic_launcher_</item>
+        
+        <item>slidebar_home_icon</item>
+        <item>slidebar_news_icon</item>
+        <item>slidebar_media_icon</item>
+        <item>slidebar_match_icon</item>
+        <item>slidebar_squad_icon</item>
     </array>
 
-</resources>
+</resources>	
