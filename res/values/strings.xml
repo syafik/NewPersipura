@@ -24,7 +24,7 @@
     <string name="drawer_text">Navigation Drawer example.</string>
     
     <string name="ns_menu_main_header">Title</string>
-    <string name="ns_menu_main_header2">Title 2</string>
+    <string name="ns_menu_main_header2">Connect</string>
     
     <string name="ns_menu_open">Navigation Drawer Open Menu</string>
     <string name="ns_menu_close">Navigation Drawer</string>
@@ -37,4 +37,11 @@
     <string name="ns_menu_items_connect1">Facebook</string>
     <string name="ns_menu_items_connect2">Twitter</string>
     
+    <string name="ns_menu_snippet6">Snippet 6</string>
+    <string name="ns_menu_snippet7">Snippet 7</string>
+    
+    <string name="section1">section 1</string>
+	<string name="section2">section 2</string>
+	<string name="section3">section 3</string>
+
 </resources>

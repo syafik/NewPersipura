@@ -20,6 +20,15 @@
         <item>slidebar_media_icon</item>
         <item>slidebar_match_icon</item>
         <item>slidebar_squad_icon</item>
+<!-- =======
+        <item>homepage</item>
+        <item>news</item>
+        <item>media</item>
+        <item>match</item>
+        <item>squad</item>
+        <item>ic_action_settings</item>
+        <item>ic_launcher_</item>
+>>>>>>> Stashed changes -->
     </array>
     
     <array name="ns_menu_items_icon_connect">

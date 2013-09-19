@@ -18,11 +18,16 @@ package com.webileapps.navdrawer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -116,12 +121,10 @@ public class MainActivity extends SherlockFragmentActivity {
 			com.actionbarsherlock.view.MenuItem item) {
 
 		switch (item.getItemId()) {
-
 		case android.R.id.home: {
 			if (mDrawer.isDrawerOpen(mDrawerList)) {
 				mDrawer.closeDrawer(mDrawerList);
 			} else {
-
 				mDrawer.openDrawer(mDrawerList);
 			}
 			break;
@@ -168,20 +171,37 @@ public class MainActivity extends SherlockFragmentActivity {
 		case 0:
 			getSupportFragmentManager()
 					.beginTransaction()
-					.add(R.id.content,
+					.replace(R.id.content,
 							PageSlidingTabStripFragment.newInstance(),
 							PageSlidingTabStripFragment.TAG).commit();
 			break;
-		default:
-
-			SherlockFragment fragment = new PlanetFragment();
-			Bundle args = new Bundle();
-			args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-			fragment.setArguments(args);
-
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, fragment).commit();
+		case 1:
+			getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.content,
+					News.newInstance(),
+					News.TAG).commit();
 			break;
+		case 2:
+			getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.content,
+					Media.newInstance(),
+					Media.TAG).commit();
+	        break;
+		case 3:
+
+			break;
+//		default:
+//
+//			SherlockFragment fragment = new PlanetFragment();
+//			Bundle args = new Bundle();
+//			args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+//			fragment.setArguments(args);
+//
+//			getSupportFragmentManager().beginTransaction()
+//					.add(R.id.content, fragment).commit();
+//			break;
 		}
 
 		mDrawer.closeDrawer(mDrawerList);
@@ -218,7 +238,6 @@ public class MainActivity extends SherlockFragmentActivity {
 //		mAdapter.addHeader(R.string.ns_menu_main_header);
 
 		// Add first block
-
 		menuItems = getResources().getStringArray(
 				R.array.ns_menu_items);
 		connectItems = getResources().getStringArray(
