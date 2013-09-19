@@ -1,24 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
 
-    <com.astuetz.viewpager.extensions.PagerSlidingTabStrip
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="30dip"
-        
-        android:background="@drawable/background_tabs" />
+    <!--
+    This title strip will display the currently visible page title, as well as the page
+    titles for adjacent pages.
+    -->
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    <android.support.v4.view.PagerTitleStrip
+        android:id="@+id/pager_title_strip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/colors"
-        android:layout_below="@+id/tabs"
-        tools:context=".MainActivity" />
+        android:layout_gravity="top"
+        android:background="#33b5e5"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:textColor="#fff" />
 
-    
-
-</RelativeLayout>
+</android.support.v4.view.ViewPager>
