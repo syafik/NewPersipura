@@ -134,10 +134,9 @@ public class AppConstants {
 
 	// Live
 	public static String APPKEY = "cGU8o7zrsXqBM3pv";
-	public static final String ROOT_URL = "http://app.relevantmobile.com";
-	public static final String ROOT_URL_HTTPS = "https://app.relevantmobile.com";
-	// http://app.relevantmobile.com/url/7/roti-facebook
-	public static String BASE_URL = ROOT_URL + "/api/v1"; // Live
+	public static final String ROOT_URL = "http://prspura.tk";
+	public static final String ROOT_URL_HTTPS = "http://prspura.tk";
+	public static String BASE_URL = ROOT_URL; 
 	public static String BASE_URL_HTTPS = ROOT_URL_HTTPS + "/api/v1"; // Live
 	public static String URL_TERMS_OF_USE = ROOT_URL + "/terms_of_use";
 	public static String URL_PRIVACY_URL = ROOT_URL + "/privacy_policy";
@@ -145,35 +144,7 @@ public class AppConstants {
 	public static String URL_TWITTER_PAGE = ROOT_URL + "/url/7/roti-twitter";
 	// Live
 
-	// frel
-
-	// public static String BASE_URL = "http://frelevant.herokuapp.com/api/v1";
-	// public static String BASE_URL_HTTPS =
-	// "https://frelevant.herokuapp.com/api/v1";
-	// public static String URL_TERMS_OF_USE =
-	// "http://frelevant.herokuapp.com/terms_of_use";
-	// public static String URL_PRIVACY_URL =
-	// "http://frelevant.herokuapp.com/privacy_policy";
-	// public static String URL_FB_PAGE = "https://www.facebook.com/rotiusa";
-	// public static String URL_TWITTER_PAGE = "http://twitter.com/rotiusa";
-
-	// frel
-
-	// // Trel
-//	 public static String APPKEY = "1Bof81COFOfo66rS";
-//	 public static String BASE_URL = "http://trelevant.herokuapp.com/api/v1";
-//	 public static String BASE_URL_HTTPS =
-//	 "https://trelevant.herokuapp.com/api/v1";
-//	 public static String URL_TERMS_OF_USE =
-//	 "http://trelevant.herokuapp.com/terms_of_use";
-//	 public static String URL_PRIVACY_URL =
-//	 "http://trelevant.herokuapp.com/privacy_policy";
-//	 public static String URL_FB_PAGE =
-//	 "http://trelevant.herokuapp.com/url/11/roti-facebook";
-//	 public static String URL_TWITTER_PAGE =
-//	 "http://trelevant.herokuapp.com/url/11/roti-twitter";
 	
-	// // Trel
 
 	public static String CALL_US_NOW_CELL = "CALL_US_NOW_CELL_IDENTIFIER";
 	public static String OFFER_LIST_CELL = "OFFER_LIST_CELL_IDENTIFIER";
