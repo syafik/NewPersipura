@@ -19,23 +19,35 @@ package com.webileapps.navdrawer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 @SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
@@ -49,11 +61,14 @@ public class MainActivity extends SherlockFragmentActivity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mPlanetTitles;
+	 private EditText search;
 
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		
 		mTitle = mDrawerTitle = getTitle();
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
@@ -63,7 +78,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		mDrawer.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
+				GravityCompat.END);
 		// set up the drawer's list view with items and click listener
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, mPlanetTitles));
@@ -72,8 +87,9 @@ public class MainActivity extends SherlockFragmentActivity {
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 //		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-
-		
+		getActionBar().setTitle("HOME");
+		getSupportActionBar().setBackgroundDrawable(new 
+				   ColorDrawable(Color.parseColor("#B61718"))); 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
 //		mDrawer.setDrawerListener(mDrawerToggle);
@@ -105,27 +121,47 @@ public class MainActivity extends SherlockFragmentActivity {
 //		};
 //		mDrawer.setDrawerListener(mDrawerToggle);
 
-		if (savedInstanceState == null) {
-			selectItem(0);
-		}
+//		if (savedInstanceState == null) {
+//			selectItem(0);
+//		}
+		
+		   RelativeLayout mainLayout = (RelativeLayout)findViewById(R.id.content);
+		   
+	        //create a view to inflate the layout_item (the xml with the textView created before)
+	        View view = getLayoutInflater().inflate(R.layout.home, mainLayout,false);
+	 
+	        //add the view to the main layout
+	        mainLayout.addView(view);
 
 	}
 
-	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		return super.onCreateOptionsMenu(menu);
-	}
+	    menu.add(0, 1, 1, "asdasd").setIcon(R.drawable.action_search).setActionView(R.layout.search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+	    return super.onCreateOptionsMenu(menu);
+	 }
 
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
 
 		switch (item.getItemId()) {
+        case 1:
+            search = (EditText) item.getActionView().findViewById(R.id.descrizione);
+            search.addTextChangedListener(filterTextWatcher);
+            search.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            
+
+    }   
+		switch (item.getItemId()) {
 		case android.R.id.home: {
 			if (mDrawer.isDrawerOpen(mDrawerList)) {
 				mDrawer.closeDrawer(mDrawerList);
+				getSupportActionBar().setTitle("HOME");
 			} else {
 				mDrawer.openDrawer(mDrawerList);
+				getSupportActionBar().setTitle("HOME");
 			}
 			break;
 		}
@@ -139,6 +175,19 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+	
+	private TextWatcher filterTextWatcher = new TextWatcher() {
+	    public void afterTextChanged(Editable s) {
+	    }
+
+	    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+	    }
+
+	    public void onTextChanged(CharSequence s, int start, int before, int count) {
+	        // your search logic here
+	    }
+
+	};
 
 	// The click listener for ListView in the navigation drawer
 	private class DrawerItemClickListener implements
@@ -220,13 +269,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void onDrawerClosed(View view) {
-			getActionBar().setTitle(getString(R.string.ns_menu_close));
+			getActionBar().setTitle("HOME");
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
-			getActionBar().setTitle(getString(R.string.ns_menu_open));
+			getActionBar().setTitle("HOME");
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 	}

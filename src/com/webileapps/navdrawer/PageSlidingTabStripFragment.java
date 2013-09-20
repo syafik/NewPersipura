@@ -56,7 +56,6 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		mSectionsPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
 		mViewPager  = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
 //		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view
 //				.findViewById(R.id.tabs);
 //		ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
