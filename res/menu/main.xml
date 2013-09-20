@@ -5,8 +5,5 @@
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
         android:title="@string/action_contact"/>
-    <item android:id="@+id/action_search"
-          android:icon="@drawable/action_search"
-          />
 
 </menu>

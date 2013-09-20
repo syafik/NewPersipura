@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Persipura Test</string>
+    <string name="app_name">Persipura</string>
     <string name="action_contact">Contact</string>
 
     <string-array name="planets_array">
