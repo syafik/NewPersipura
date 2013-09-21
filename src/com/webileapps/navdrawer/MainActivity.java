@@ -37,13 +37,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
+import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -78,7 +84,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		mDrawer.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.END);
+				GravityCompat.START);
 		// set up the drawer's list view with items and click listener
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, mPlanetTitles));
@@ -129,10 +135,35 @@ public class MainActivity extends SherlockFragmentActivity {
 		   
 	        //create a view to inflate the layout_item (the xml with the textView created before)
 	        View view = getLayoutInflater().inflate(R.layout.home, mainLayout,false);
-	 
+	        View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,false);
+	        
 	        //add the view to the main layout
 	        mainLayout.addView(view);
+	        mainLayout.addView(view2);
+	        
+		     view2.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
+
+				@Override
+				public void onLayoutChange(View v, int left, int top,
+						int right, int bottom, int oldLeft, int oldTop,
+						int oldRight, int oldBottom) {
+					RelativeLayout mainLayout = (RelativeLayout)findViewById(R.id.content);
+//					LayoutParams params = mainLayout.getLayoutParams();
+
+					FrameLayout bottom_control_bar = (FrameLayout) v.findViewById(R.id.bottom_control_bar);
+					ScrollView scrollBar = (ScrollView) mainLayout.findViewById(R.id.scrollBar);
+					LayoutParams params = scrollBar.getLayoutParams();
+					int height = mainLayout.getHeight() - bottom_control_bar.getHeight();
+					params.height = height;
+//					scrollBar.setLayoutParams(new ScrollView.LayoutParams(50, 40));
+					
+//					
+//				     params.height = height;	
+					
+				}
+		     });
+		     
 	}
 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {

@@ -26,9 +26,6 @@
         android:choiceMode="singleChoice"
         android:divider="#000"
         android:dividerHeight="1dp" />
-<TextView
-        android:text="Footer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:gravity="bottom|center"/>
+     
+
 </android.support.v4.widget.DrawerLayout>
