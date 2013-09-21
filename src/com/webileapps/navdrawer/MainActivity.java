@@ -57,7 +57,8 @@ import com.actionbarsherlock.view.MenuItem;
 
 @SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
-//	DrawerLayout mDrawer;
+private static final String TAG = "TAG";
+	//	DrawerLayout mDrawer;
 	ListView mDrawerList;
 //	ActionBarDrawerToggle mDrawerToggle;
 	private DrawerLayout mDrawer;
@@ -69,6 +70,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	private String[] mPlanetTitles;
 	 private EditText search;
 
+	 public static MainActivity newInstance() {
+			return new MainActivity();
+		}
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -246,26 +250,28 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private void selectItem(int position) {
-
+		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
+		mainLayout.removeAllViews();
 		switch (position) {
 		case 0:
 			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.content,
-							PageSlidingTabStripFragment.newInstance(),
-							PageSlidingTabStripFragment.TAG).commit();
+			.beginTransaction()
+			.add(R.id.content,
+					Home.newInstance(),
+					Home.TAG).commit();
 			break;
 		case 1:
+			
 			getSupportFragmentManager()
 			.beginTransaction()
-			.replace(R.id.content,
+			.add(R.id.content,
 					News.newInstance(),
 					News.TAG).commit();
 			break;
 		case 2:
 			getSupportFragmentManager()
 			.beginTransaction()
-			.replace(R.id.content,
+			.add(R.id.content,
 					Media.newInstance(),
 					Media.TAG).commit();
 	        break;
@@ -283,6 +289,10 @@ public class MainActivity extends SherlockFragmentActivity {
 //					.add(R.id.content, fragment).commit();
 //			break;
 		}
+		  View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,false);
+	        
+	        mainLayout.addView(view2);
+		
 
 		mDrawer.closeDrawer(mDrawerList);
 	}
