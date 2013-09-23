@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/scelta1"
-        android:text="Large Text"
+        android:text="Search"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
