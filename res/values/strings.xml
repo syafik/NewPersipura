@@ -40,8 +40,9 @@
     <string name="ns_menu_snippet6">Snippet 6</string>
     <string name="ns_menu_snippet7">Snippet 7</string>
     
-    <string name="section1">section 1</string>
-	<string name="section2">section 2</string>
-	<string name="section3">section 3</string>
+    <string name="section1">Jadwal Pertandingan</string>
+	<string name="section2">Hasil Pertandingan</string>
+	<string name="section3">Klasemen</string>
+	<string name="section4">Kalender</string>
 
 </resources>

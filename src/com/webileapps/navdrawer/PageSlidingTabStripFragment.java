@@ -56,12 +56,6 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		mSectionsPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
 		mViewPager  = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-//		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view
-//				.findViewById(R.id.tabs);
-//		ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
-//		MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager());
-//		pager.setAdapter(adapter);
-//		tabs.setViewPager(pager);
 
 	}
 	
@@ -76,17 +70,41 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
-			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
+			Fragment fragment = null;
+			Bundle args = null;
+			switch (position) {
+			case 0:
+				fragment = new JadwalPertandingan();
+				args = new Bundle();
+//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				fragment.setArguments(args);
+				return fragment;
+			case 1:
+				fragment = new HasilPertandingan();
+				args = new Bundle();
+//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				fragment.setArguments(args);
+				return fragment;
+			case 2:
+				fragment = new DummySectionFragment();
+				args = new Bundle();
+				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				fragment.setArguments(args);
+				return fragment;
+			case 3:
+				fragment = new DummySectionFragment();
+				args = new Bundle();
+				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				fragment.setArguments(args);
+				return fragment;
+			}
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
-			return 3;
+			// Show 4 total pages.
+			return 4;
 		}
 
 		@Override
@@ -99,6 +117,8 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 				return getString(R.string.section2).toUpperCase(l);
 			case 2:
 				return getString(R.string.section3).toUpperCase(l);
+			case 3:
+				return getString(R.string.section4).toUpperCase(l);
 			}
 			return null;
 		}

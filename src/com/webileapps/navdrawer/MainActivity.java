@@ -276,7 +276,11 @@ private static final String TAG = "TAG";
 					Media.TAG).commit();
 	        break;
 		case 3:
-
+			getSupportFragmentManager()
+			.beginTransaction()
+			.add(R.id.content,
+					PageSlidingTabStripFragment.newInstance(),
+					PageSlidingTabStripFragment.TAG).commit();
 			break;
 //		default:
 //

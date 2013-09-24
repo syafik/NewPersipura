@@ -69,6 +69,40 @@ public class WebHTTPMethodClass {
 		}
 		return result;
 	}
+	
+	public static String httpGetServiceWithoutparam(String serviceName) {
+		String result = "";
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpGet getMethod = new HttpGet(AppConstants.BASE_URL + serviceName);
+			Log.e(serviceName + " GetURL = ", AppConstants.BASE_URL + serviceName);
+			BufferedReader in = null;
+			BasicHttpResponse httpResponse = (BasicHttpResponse) httpclient
+					.execute(getMethod);
+			if (httpResponse.getStatusLine().getStatusCode() == 401) {
+				Log.i("Response Json Failure: 401", "" + httpResponse.toString());
+				AppConstants.ERROR401 = httpResponse.getStatusLine().getStatusCode() + "";
+			}
+			else
+				Log.i("Response Json 401 not fount", "" + "httpResponse.toString()");
+				
+			in = new BufferedReader(new InputStreamReader(httpResponse
+					.getEntity().getContent()));
+
+			StringBuffer sb = new StringBuffer("");
+			String line = "";
+			while ((line = in.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
+			result = sb.toString();
+			System.out.println(serviceName + " result = " + result);
+//			result = checkFor401Error(httpResponse, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	public static String httpDeleteService(String serviceName, String param) {
 		String result = "";
