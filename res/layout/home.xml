@@ -153,6 +153,44 @@
                     android:padding="10px" >
 
                     <ImageView
+                        android:id="@+id/imageViewList1"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/venus" />
+
+                    <TextView
+                        android:id="@+id/textViewList1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/imageViewList1"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="21dp"
+                        android:layout_toRightOf="@+id/imageViewList1"
+                        android:ellipsize="none"
+                        android:singleLine="false"
+                        android:textSize="11dp"
+                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/textViewList1"
+                        android:layout_below="@+id/textViewList1"
+                        android:textSize="10dp"
+                        android:text="3 jam yang lalu" />
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dip"
+                    android:background="@drawable/gradient_box"
+                    android:padding="10px" >
+
+                    <ImageView
                         android:id="@+id/imageViewList2"
                         android:layout_width="50dp"
                         android:layout_height="50dp"

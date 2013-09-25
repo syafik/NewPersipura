@@ -21,6 +21,8 @@ return new Media();
 		View rootView = inflater.inflate(R.layout.media, container,
 				false);
 		
+		
+		
 		return rootView;
 	}
 	

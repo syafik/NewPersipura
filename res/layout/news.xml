@@ -8,15 +8,15 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TEST" />
+        android:text="BERITA TERBARU"
+        android:layout_gravity="center" />
     
 	<ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/list_news"
+        android:id="@+id/list_news"
         android:layout_margin="10dp"
-        android:padding="5dp"
-        android:scrollbars="none" >
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:id="@+id/location_linear_parentview"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="5dp" >
+            >
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

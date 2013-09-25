@@ -4,26 +4,15 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import com.actionbarsherlock.app.SherlockFragment;
 
-import com.persipura.bean.NewsBean;
-import com.persipura.utils.*;
-
-import android.annotation.SuppressLint;
-import android.app.Service;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -32,64 +21,46 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.View.OnLayoutChangeListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("NewApi")
-public class News extends SherlockFragment {
-	// private static String url =
-	// "http://prspura.tk/restapi/get/news?limit=20&offset=1";
+import com.actionbarsherlock.app.SherlockFragment;
+import com.persipura.bean.NewsBean;
+import com.persipura.utils.WebHTTPMethodClass;
+
+public class DetailNews extends SherlockFragment {
+	public static final String TAG = DetailNews.class.getSimpleName();
+
+	public static DetailNews newInstance() {
+		return new DetailNews();
+	}
+	
 	private LayoutInflater mInflater;
 	List<NewsBean> listThisWeekBean;
-	LinearLayout lifePageCellContainerLayout;
-	private RelativeLayout mParentLayout;
+	RelativeLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
-
-	public static final String TAG = News.class.getSimpleName();
-
-	public static News newInstance() {
-		return new News();
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		nid = (String) container.getTag();
+
+		Log.d("tagID", "tagID : " + container.getTag());
+		
 		new fetchLocationFromServer().execute("");
-		View rootView = inflater.inflate(R.layout.news, container, false);
+
+		View rootView = inflater.inflate(R.layout.detail_news2, container,
+				false);
+		
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
-		lifePageCellContainerLayout = (LinearLayout) rootView
-				.findViewById(R.id.location_linear_parentview);
-
-		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-
-			@Override
-			public void onLayoutChange(View v, int left, int top, int right,
-					int bottom, int oldLeft, int oldTop, int oldRight,
-					int oldBottom) {
-
-				View footerView = mInflater.inflate(R.layout.footer,
-						newContainer, false);
-				FrameLayout bottom_control_bar = (FrameLayout) footerView
-						.findViewById(R.id.bottom_control_bar);
-				ScrollView scrollBar = (ScrollView) v
-						.findViewById(R.id.list_news);
-				LayoutParams params = scrollBar.getLayoutParams();
-				int height = v.getHeight() - bottom_control_bar.getHeight();
-				params.height = height;
-
-			}
-		});
+		lifePageCellContainerLayout = (RelativeLayout) rootView
+				.findViewById(R.id.list_parent);
 
 		return rootView;
 	}
@@ -105,7 +76,8 @@ public class News extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "limit=20" + "&offset=0");
+					"/restapi/get/news", "id="+nid);    
+
 
 			return result;
 		}
@@ -117,6 +89,8 @@ public class News extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d("result", "result : " + result);
+			
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
@@ -128,6 +102,7 @@ public class News extends SherlockFragment {
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setteaser(resObject.getString("teaser"));
 					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
+					thisWeekBean.setcreated(resObject.getString("created"));
 
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -137,7 +112,9 @@ public class News extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity(), "Failed to retrieve data from server", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -146,25 +123,25 @@ public class News extends SherlockFragment {
 				List<NewsBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(R.layout.news_list,
+				View cellViewMainLayout = mInflater.inflate(R.layout.detail_news2,
 						null);
 				TextView titleNews = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_name);
+						.findViewById(R.id.title);
 				TextView descNews = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_address);
-				TextView cellnumTextView = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_cellnum);
+						.findViewById(R.id.desc);
+				TextView time = (TextView) cellViewMainLayout
+						.findViewById(R.id.time);
 				ImageView imgNews = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 
 				titleNews.setText("");
 				descNews.setText("");
-				cellnumTextView.setText("");
-//				cellViewMainLayout.setTag(thisWeekBean.getNid());
-				nid = thisWeekBean.getNid();
+				time.setText("");
+				cellViewMainLayout.setTag(thisWeekBean.getNid());
 
 				titleNews.setText(thisWeekBean.gettitle());
 				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
+				time.setText(thisWeekBean.getcreated());
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -172,28 +149,7 @@ public class News extends SherlockFragment {
 				Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
 
 				imgNews.setImageBitmap(bm);
-				
-				View.OnClickListener myhandler1 = new View.OnClickListener() {
-					public void onClick(View v) {
-//						getChildFragmentManager()
-//						.beginTransaction()
-//						.replace(R.id.list_parent,
-//								,
-//								DetailNews.TAG).commit();
-						
 
-						final FragmentTransaction ft = getFragmentManager().beginTransaction();
-						ft.remove(News.this);
-				        
-						newContainer.setTag(nid);
-						ft.replace(R.id.content, DetailNews.newInstance(), "DetailNews"); 
-						ft.addToBackStack(null);
-
-						ft.commit(); 
-
-					}
-				};
-				cellViewMainLayout.setOnClickListener(myhandler1);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
@@ -201,6 +157,7 @@ public class News extends SherlockFragment {
 		}
 
 	}
+	
 
 	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
 		try {
@@ -221,7 +178,8 @@ public class News extends SherlockFragment {
 				out.write(buffer, 0, len);
 			}
 			out.close();
-			bis.close();			
+			bis.close();
+
 			byte[] data = out.toByteArray();
 			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 			return bitmap;

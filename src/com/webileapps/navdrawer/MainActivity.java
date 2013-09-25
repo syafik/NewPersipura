@@ -78,7 +78,8 @@ private static final String TAG = "TAG";
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		getSupportActionBar().setIcon(R.drawable.logo_persipura);
+
 		
 		mTitle = mDrawerTitle = getTitle();
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
@@ -193,11 +194,12 @@ private static final String TAG = "TAG";
 		case android.R.id.home: {
 			if (mDrawer.isDrawerOpen(mDrawerList)) {
 				mDrawer.closeDrawer(mDrawerList);
-				getSupportActionBar().setTitle("HOME");
 			} else {
 				mDrawer.openDrawer(mDrawerList);
-				getSupportActionBar().setTitle("HOME");
+				
 			}
+			
+			getSupportActionBar().setTitle("HOME");
 			break;
 		}
 
@@ -282,16 +284,6 @@ private static final String TAG = "TAG";
 					PageSlidingTabStripFragment.newInstance(),
 					PageSlidingTabStripFragment.TAG).commit();
 			break;
-//		default:
-//
-//			SherlockFragment fragment = new PlanetFragment();
-//			Bundle args = new Bundle();
-//			args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//			fragment.setArguments(args);
-//
-//			getSupportFragmentManager().beginTransaction()
-//					.add(R.id.content, fragment).commit();
-//			break;
 		}
 		  View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,false);
 	        

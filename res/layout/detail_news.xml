@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#2E2C2C" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listimageView1"
+        android:background="#fff">
+    <ImageView
+        android:id="@+id/detailNewsImg"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
+        
+        android:scaleType="fitXY"
+        android:src="@drawable/uranus" />
+
+    <RelativeLayout
+        android:id="@+id/detailNewsDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:minHeight="75dp"
+		android:background="@drawable/detail_news_box"
+ 		>
+
+        
+    </RelativeLayout>
+
+    </RelativeLayout>
+    
+
+</RelativeLayout>
+
+
+
