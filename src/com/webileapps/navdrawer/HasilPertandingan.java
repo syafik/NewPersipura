@@ -11,11 +11,14 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.sax.RootElement;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
+import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 
 
@@ -35,6 +39,7 @@ public class HasilPertandingan extends SherlockFragment {
 	private LayoutInflater mInflater;
 	List<HasilBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
+	
 	
 	public static final String TAG = HasilPertandingan.class
 	.getSimpleName();
@@ -53,20 +58,22 @@ public class HasilPertandingan extends SherlockFragment {
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-	
 		return rootView;
 	}
 	
+	
 	private class fetchLocationFromServer extends
 	AsyncTask<String, Void, String> {
-
+		
+		
 	@Override
 	protected void onPreExecute() {
-		
+	
 	}
 
 	@Override
 	protected String doInBackground(String... params) {
+		
 		String result = WebHTTPMethodClass.httpGetServiceWithoutparam("/restapi/get/match_results");
 		return result;
 	}
@@ -80,7 +87,6 @@ public class HasilPertandingan extends SherlockFragment {
 	protected void onPostExecute(String result) {
 		
 			try {
-
 	            JSONArray jsonArray = new JSONArray(result);
 	            
 	            listThisWeekBean = new ArrayList<HasilBean>();
@@ -96,7 +102,7 @@ public class HasilPertandingan extends SherlockFragment {
 	                thisWeekBean.setAteam(resObject.getString("a_team"));
 	                thisWeekBean.setHgoal(resObject.getString("h_goal"));
 	                thisWeekBean.setAgoal(resObject.getString("h_goal"));
-	                
+	              
 					listThisWeekBean.add(thisWeekBean);
 	            }
 				if (listThisWeekBean != null
@@ -154,17 +160,24 @@ public class HasilPertandingan extends SherlockFragment {
 				ScoreTeamA.setText(thisWeekBean.getHgoal());
 				ScoreTeamB.setText(thisWeekBean.getAgoal());
 				
-		        BitmapFactory.Options bmOptions;
-					bmOptions = new BitmapFactory.Options();
-				        bmOptions.inSampleSize = 1;
-					Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
-					imgTeamA.setImageBitmap(bm);
+				Imageloader imageLoader = new Imageloader(getSherlockActivity().getApplicationContext());
+				imgTeamA.setTag(thisWeekBean.getHlogo());
+				imageLoader.DisplayImage(thisWeekBean.getHlogo(),getActivity(),imgTeamA);
 				
-//					BitmapFactory.Options bmOptions2;
-//					bmOptions2 = new BitmapFactory.Options();
-//					bmOptions2.inSampleSize = 2;
-					Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
-					imgTeamB.setImageBitmap(bm2);
+				imgTeamB.setTag(thisWeekBean.getAlogo());
+				imageLoader.DisplayImage(thisWeekBean.getAlogo(),getActivity(),imgTeamB);
+				
+//		        BitmapFactory.Options bmOptions;
+//					bmOptions = new BitmapFactory.Options();
+//				        bmOptions.inSampleSize = 1;
+//					Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
+//					imgTeamA.setImageBitmap(bm);
+//				
+////					BitmapFactory.Options bmOptions2;
+////					bmOptions2 = new BitmapFactory.Options();
+////					bmOptions2.inSampleSize = 2;
+//					Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
+//					imgTeamB.setImageBitmap(bm2);
 						
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 				

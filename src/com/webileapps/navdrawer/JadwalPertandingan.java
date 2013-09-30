@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
+import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 
 
@@ -59,10 +61,13 @@ public class JadwalPertandingan extends SherlockFragment {
 	
 	private class fetchLocationFromServer extends
 	AsyncTask<String, Void, String> {
-
+		
+		
 	@Override
 	protected void onPreExecute() {
-		
+//		ProgressDialog pd = new ProgressDialog(getActivity());
+//		pd.setMessage("loading");
+//		pd.show();
 	}
 
 	@Override
@@ -73,7 +78,7 @@ public class JadwalPertandingan extends SherlockFragment {
 
 	@Override
 	protected void onProgressUpdate(Void... values) {
-
+		
 	}
 
 	@Override
@@ -95,7 +100,8 @@ public class JadwalPertandingan extends SherlockFragment {
 	                thisWeekBean.setHteam(resObject.getString("h_team"));
 	                thisWeekBean.setAteam(resObject.getString("a_team"));
 	                thisWeekBean.setPlace(resObject.getString("place"));
-	                
+//	                ProgressDialog pd = new ProgressDialog(getActivity());
+//	                pd.dismiss();
 					listThisWeekBean.add(thisWeekBean);
 	            }
 				if (listThisWeekBean != null
@@ -149,14 +155,21 @@ public class JadwalPertandingan extends SherlockFragment {
 				NameTeamB.setText(thisWeekBean.getAteam());
 				Place.setText(thisWeekBean.getPlace());
 			
-		        BitmapFactory.Options bmOptions;
-					bmOptions = new BitmapFactory.Options();
-				        bmOptions.inSampleSize = 1;
-					Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
-					imgTeamA.setImageBitmap(bm);
+//		        BitmapFactory.Options bmOptions;
+//					bmOptions = new BitmapFactory.Options();
+//				        bmOptions.inSampleSize = 1;
+//					Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
+//					imgTeamA.setImageBitmap(bm);
+//				
+//					Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
+//					imgTeamB.setImageBitmap(bm2);
 				
-					Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
-					imgTeamB.setImageBitmap(bm2);
+				Imageloader imageLoader = new Imageloader(getSherlockActivity().getApplicationContext());
+				imgTeamA.setTag(thisWeekBean.getHlogo());
+				imageLoader.DisplayImage(thisWeekBean.getHlogo(),getActivity(),imgTeamA);
+				
+				imgTeamB.setTag(thisWeekBean.getAlogo());
+				imageLoader.DisplayImage(thisWeekBean.getAlogo(),getActivity(),imgTeamB);
 						
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 				
