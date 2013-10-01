@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.match;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+import com.webileapps.navdrawer.R;
+import com.webileapps.navdrawer.R.drawable;
+import com.webileapps.navdrawer.R.id;
+import com.webileapps.navdrawer.R.layout;
 
 import android.content.Context;
 import android.graphics.Color;

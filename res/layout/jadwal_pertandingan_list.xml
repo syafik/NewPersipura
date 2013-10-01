@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dip"
+        android:background="@drawable/gradient_box"
+        android:padding="10px" >
+        
     <TextView
         android:id="@+id/findzoes_list_text_cellnum"
         android:layout_width="wrap_content"
@@ -112,5 +119,5 @@
         android:ellipsize="none"
         android:singleLine="false"
         android:text="TextView" />
-
+</RelativeLayout>
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.match;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,13 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
-import android.sax.RootElement;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,34 +30,66 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.R;
+import com.webileapps.navdrawer.R.id;
+import com.webileapps.navdrawer.R.layout;
 
 
 
-public class HasilPertandingan extends SherlockFragment {
+public class JadwalPertandingan extends SherlockFragment {
 
 	private LayoutInflater mInflater;
 	List<HasilBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
+	private ProgressDialog progressDialog;
 	
-	
-	public static final String TAG = HasilPertandingan.class
+	public static final String TAG = JadwalPertandingan.class
 	.getSimpleName();
 
-	public static HasilPertandingan newInstance() {
-		return new HasilPertandingan();
+	public static JadwalPertandingan newInstance() {
+		return new JadwalPertandingan();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		showProgressDialog();
 		new fetchLocationFromServer().execute("");
-		View rootView = inflater.inflate(R.layout.hasil_pertandingan, container,
+		View rootView = inflater.inflate(R.layout.jadwal_pertandingan, container,
 				false);
 		 mInflater = getLayoutInflater(savedInstanceState);
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
+	
 		return rootView;
+	}
+	
+	
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+		
+		progressDialog.show();
 	}
 	
 	
@@ -68,25 +99,27 @@ public class HasilPertandingan extends SherlockFragment {
 		
 	@Override
 	protected void onPreExecute() {
-	
+//		ProgressDialog pd = new ProgressDialog(getActivity());
+//		pd.setMessage("loading");
+//		pd.show();
 	}
 
 	@Override
 	protected String doInBackground(String... params) {
-		
 		String result = WebHTTPMethodClass.httpGetServiceWithoutparam("/restapi/get/match_results");
 		return result;
 	}
 
 	@Override
 	protected void onProgressUpdate(Void... values) {
-
+		
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
 		
 			try {
+
 	            JSONArray jsonArray = new JSONArray(result);
 	            
 	            listThisWeekBean = new ArrayList<HasilBean>();
@@ -100,9 +133,9 @@ public class HasilPertandingan extends SherlockFragment {
 	                thisWeekBean.setAlogo(resObject.getString("a_logo"));
 	                thisWeekBean.setHteam(resObject.getString("h_team"));
 	                thisWeekBean.setAteam(resObject.getString("a_team"));
-	                thisWeekBean.setHgoal(resObject.getString("h_goal"));
-	                thisWeekBean.setAgoal(resObject.getString("h_goal"));
-	              
+	                thisWeekBean.setPlace(resObject.getString("place"));
+//	                ProgressDialog pd = new ProgressDialog(getActivity());
+//	                pd.dismiss();
 					listThisWeekBean.add(thisWeekBean);
 	            }
 				if (listThisWeekBean != null
@@ -125,7 +158,7 @@ public class HasilPertandingan extends SherlockFragment {
 			HasilBean thisWeekBean = listThisWeekBean.get(i);
 			
 				View cellViewMainLayout = mInflater
-					.inflate(R.layout.hasil_pertandingan_list, null);
+					.inflate(R.layout.jadwal_pertandingan_list, null);
 				TextView ListDate = (TextView) cellViewMainLayout
 						.findViewById(R.id.list_date);
 				TextView ListTime = (TextView) cellViewMainLayout
@@ -136,10 +169,8 @@ public class HasilPertandingan extends SherlockFragment {
 						.findViewById(R.id.name_team1);
 				TextView NameTeamB = (TextView) cellViewMainLayout
 						.findViewById(R.id.name_team2);
-				TextView ScoreTeamA = (TextView) cellViewMainLayout
-						.findViewById(R.id.scoreTeam1);
-				TextView ScoreTeamB = (TextView) cellViewMainLayout
-						.findViewById(R.id.scoreTeam2);
+				TextView Place = (TextView) cellViewMainLayout
+						.findViewById(R.id.text_stadiun);
 				ImageView imgTeamA = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 				ImageView imgTeamB = (ImageView) cellViewMainLayout
@@ -149,16 +180,23 @@ public class HasilPertandingan extends SherlockFragment {
 				ListTime.setText("");
 				NameTeamA.setText("");
 				NameTeamB.setText("");
-				ScoreTeamA.setText("");
-				ScoreTeamB.setText("");
+				Place.setText("");
 				cellnumTextView.setText("");
 				
 				ListDate.setText(thisWeekBean.getDate());
 				ListTime.setText(thisWeekBean.getTime());
 				NameTeamA.setText(thisWeekBean.getHteam());
 				NameTeamB.setText(thisWeekBean.getAteam());
-				ScoreTeamA.setText(thisWeekBean.getHgoal());
-				ScoreTeamB.setText(thisWeekBean.getAgoal());
+				Place.setText(thisWeekBean.getPlace());
+			
+//		        BitmapFactory.Options bmOptions;
+//					bmOptions = new BitmapFactory.Options();
+//				        bmOptions.inSampleSize = 1;
+//					Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
+//					imgTeamA.setImageBitmap(bm);
+//				
+//					Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
+//					imgTeamB.setImageBitmap(bm2);
 				
 				Imageloader imageLoader = new Imageloader(getSherlockActivity().getApplicationContext());
 				imgTeamA.setTag(thisWeekBean.getHlogo());
@@ -166,18 +204,6 @@ public class HasilPertandingan extends SherlockFragment {
 				
 				imgTeamB.setTag(thisWeekBean.getAlogo());
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),getActivity(),imgTeamB);
-				
-//		        BitmapFactory.Options bmOptions;
-//					bmOptions = new BitmapFactory.Options();
-//				        bmOptions.inSampleSize = 1;
-//					Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
-//					imgTeamA.setImageBitmap(bm);
-//				
-////					BitmapFactory.Options bmOptions2;
-////					bmOptions2 = new BitmapFactory.Options();
-////					bmOptions2.inSampleSize = 2;
-//					Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
-//					imgTeamB.setImageBitmap(bm2);
 						
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 				

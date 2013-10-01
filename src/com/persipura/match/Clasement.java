@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.match;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,9 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.clasementBean;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.R;
+import com.webileapps.navdrawer.R.id;
+import com.webileapps.navdrawer.R.layout;
 
 
 

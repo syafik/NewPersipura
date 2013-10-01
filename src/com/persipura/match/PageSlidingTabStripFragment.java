@@ -1,10 +1,9 @@
-package com.webileapps.navdrawer;
+package com.persipura.match;
 
 import java.util.Locale;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,9 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.webileapps.navdrawer.R;
 
 
 public class PageSlidingTabStripFragment extends SherlockFragment {

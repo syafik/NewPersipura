@@ -1,10 +1,9 @@
-package com.persipura.squad;
+package com.persipura.media;
 
 import java.util.Locale;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,32 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
-import com.persipura.match.HasilPertandingan;
+import com.persipura.match.JadwalPertandingan;
 import com.webileapps.navdrawer.R;
 
 
-public class Squad extends SherlockFragment {
+public class pageSliding extends SherlockFragment {
 	MyPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
 	
-	public static final String TAG = Squad.class
+	public static final String TAG = pageSliding.class
 			.getSimpleName();
 
-	public static Squad newInstance() {
-		return new Squad();
+	public static pageSliding newInstance() {
+		return new pageSliding();
 	}
-
-//	@Override
-//	public void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.news);
-//		mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
-//		mViewPager = (ViewPager) findViewById(R.id.pager);
-//		mViewPager.setAdapter(mSectionsPagerAdapter);
-//	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +36,7 @@ public class Squad extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.pager, container, false);
+		return inflater.inflate(R.layout.pager_media, container, false);
 	}
 
 	@Override
@@ -76,29 +64,24 @@ public class Squad extends SherlockFragment {
 			Bundle args = null;
 			switch (position) {
 			case 0:
-				fragment = new Sejarah();
+				fragment = new mediaTerbaru();
 				args = new Bundle();
 //				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
 				fragment.setArguments(args);
 				return fragment;
 			case 1:
-				fragment = new Formasi();
+				fragment = new videoTerbaru();
 				args = new Bundle();
 //				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
 				fragment.setArguments(args);
 				return fragment;
 			case 2:
-				fragment = new Pemain();
-				args = new Bundle();
-//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-				fragment.setArguments(args);
-				return fragment;
-			case 3:
-				fragment = new StaffAndManagement();
+				fragment = new DummySectionFragment();
 				args = new Bundle();
 				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
 				fragment.setArguments(args);
 				return fragment;
+			
 			}
 			return fragment;
 		}
@@ -106,7 +89,7 @@ public class Squad extends SherlockFragment {
 		@Override
 		public int getCount() {
 			// Show 4 total pages.
-			return 4;
+			return 3;
 		}
 
 		@Override
@@ -114,13 +97,11 @@ public class Squad extends SherlockFragment {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.sejarah).toUpperCase(l);
+				return getString(R.string.media1).toUpperCase(l);
 			case 1:
-				return getString(R.string.formasi).toUpperCase(l);
+				return getString(R.string.media2).toUpperCase(l);
 			case 2:
-				return getString(R.string.pemain).toUpperCase(l);
-			case 3:
-				return getString(R.string.staffandmanagement).toUpperCase(l);
+				return getString(R.string.media3).toUpperCase(l);
 			}
 			return null;
 		}

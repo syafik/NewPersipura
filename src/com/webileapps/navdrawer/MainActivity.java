@@ -60,6 +60,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.persipura.home.Home;
+import com.persipura.match.PageSlidingTabStripFragment;
+import com.persipura.media.pageSliding;
 import com.persipura.squad.Squad;
 
 @SuppressLint("NewApi")
@@ -244,7 +246,8 @@ public class MainActivity extends SherlockFragmentActivity {
 			break;
 		case 2:
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, Media.newInstance(), Media.TAG).commit();
+			.add(R.id.content, pageSliding.newInstance(),
+					pageSliding.TAG).commit();
 			break;
 		case 3:
 			getSupportFragmentManager().beginTransaction()
