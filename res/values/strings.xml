@@ -44,5 +44,22 @@
 	<string name="section2">Hasil Pertandingan</string>
 	<string name="section3">Klasemen</string>
 	<string name="section4">Kalender</string>
+	<string name="nama_klub">Nama 			:</string>
+	<string name="berdiri_klub">Berdiri 		:</string>
+	<string name="alamat_klub">Alamat 		:</string>
+	<string name="telepon_klub">Telepon 		:</string>
+	<string name="julukan_klub">Julukan 		:</string>
+	<string name="ketua_klub">Ketua 		:</string>
+	<string name="manager_klub">Manager 		:</string>
+	<string name="pelatih_klub">Pelatih 		:</string>
+	<string name="stadion_klub">Stadion 		:</string>
+	
+	<string name="staffandmanagement">staff and management</string>
+	<string name="pemain">pemain</string>
+	<string name="formasi">formasi</string>
+	<string name="sejarah">sejarah</string>
+	
+	
+	
 
 </resources>

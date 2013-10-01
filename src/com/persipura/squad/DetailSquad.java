@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.squad;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,12 +31,13 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.NewsBean;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.R;
 
-public class DetailNews extends SherlockFragment {
-	public static final String TAG = DetailNews.class.getSimpleName();
+public class DetailSquad extends SherlockFragment {
+	public static final String TAG = DetailSquad.class.getSimpleName();
 
-	public static DetailNews newInstance() {
-		return new DetailNews();
+	public static DetailSquad newInstance() {
+		return new DetailSquad();
 	}
 	
 	private LayoutInflater mInflater;
@@ -54,7 +55,7 @@ public class DetailNews extends SherlockFragment {
 		
 		new fetchLocationFromServer().execute("");
 
-		View rootView = inflater.inflate(R.layout.detail_news2, container,
+		View rootView = inflater.inflate(R.layout.squad_profile, container,
 				false);
 		
 		mInflater = getLayoutInflater(savedInstanceState);
@@ -76,7 +77,7 @@ public class DetailNews extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "id="+nid);    
+					"/restapi/get/squad", "id="+nid);    
 
 
 			return result;
@@ -123,7 +124,7 @@ public class DetailNews extends SherlockFragment {
 				List<NewsBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(R.layout.detail_news2,
+				View cellViewMainLayout = mInflater.inflate(R.layout.detail_squad,
 						null);
 				TextView titleNews = (TextView) cellViewMainLayout
 						.findViewById(R.id.title);

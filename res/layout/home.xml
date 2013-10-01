@@ -142,6 +142,7 @@
                         android:layout_alignLeft="@+id/textViewList1"
                         android:layout_below="@+id/textViewList1"
                         android:textSize="10dp"
+                        android:id="@+id/timeNews"
                         android:text="3 jam yang lalu" />
                 </RelativeLayout>
                 
@@ -279,6 +280,14 @@
                     android:text="SQUAD TERBARU" />
 
             </FrameLayout>
+             <LinearLayout
+                android:id="@+id/squad_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical"
+                android:background="#2E2C2C" >
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -325,5 +334,6 @@
                         android:text="86" />
 
                 </RelativeLayout>
+                </LinearLayout>
         </LinearLayout>
     </ScrollView>

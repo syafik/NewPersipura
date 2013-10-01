@@ -109,6 +109,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView1"
         android:layout_centerHorizontal="true"
+        android:ellipsize="none"
+        android:singleLine="false"
         android:text="TextView" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.squad;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,29 +30,30 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.R;
 
 
 
-public class JadwalPertandingan extends SherlockFragment {
+public class Sejarah extends SherlockFragment {
 
 	private LayoutInflater mInflater;
 	List<HasilBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
 	private ProgressDialog progressDialog;
 	
-	public static final String TAG = JadwalPertandingan.class
+	public static final String TAG = Sejarah.class
 	.getSimpleName();
 
-	public static JadwalPertandingan newInstance() {
-		return new JadwalPertandingan();
+	public static Sejarah newInstance() {
+		return new Sejarah();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		showProgressDialog();
-		new fetchLocationFromServer().execute("");
-		View rootView = inflater.inflate(R.layout.jadwal_pertandingan, container,
+//		new fetchLocationFromServer().execute("");
+		View rootView = inflater.inflate(R.layout.sejarah, container,
 				false);
 		 mInflater = getLayoutInflater(savedInstanceState);
 

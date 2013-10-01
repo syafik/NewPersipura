@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/list_parent"
+    android:background="#2B292A"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/wrapper"
+        android:padding="10px" >
+
+        <ImageView
+            android:id="@+id/imageViewList2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/venus" />
+
+        <TextView
+            android:id="@+id/textViewList2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageViewList2"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="21dp"
+            android:layout_toRightOf="@+id/imageViewList2"
+            android:ellipsize="none"
+            android:singleLine="false"
+            android:text="Boaz salossa"
+            android:textSize="11dp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textViewList2"
+            android:layout_below="@+id/textViewList2"
+            android:text="Striker \n 27 tahun, Indonesia"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/no_punggung"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView1"
+            android:layout_alignBottom="@+id/textView1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="56dp"
+            android:text="86"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

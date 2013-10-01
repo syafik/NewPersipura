@@ -134,8 +134,8 @@ public class AppConstants {
 
 	// Live
 	public static String APPKEY = "cGU8o7zrsXqBM3pv";
-	public static final String ROOT_URL = "http://prspura.tk";
-	public static final String ROOT_URL_HTTPS = "http://prspura.tk";
+	public static final String ROOT_URL = "http://192.241.229.12";
+	public static final String ROOT_URL_HTTPS = "http://192.241.229.12";
 	public static String BASE_URL = ROOT_URL; 
 	public static String BASE_URL_HTTPS = ROOT_URL_HTTPS + "/api/v1"; // Live
 	public static String URL_TERMS_OF_USE = ROOT_URL + "/terms_of_use";

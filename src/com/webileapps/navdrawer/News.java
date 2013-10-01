@@ -13,11 +13,13 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
 
 import com.persipura.bean.NewsBean;
 import com.persipura.utils.*;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -54,6 +57,7 @@ public class News extends SherlockFragment {
 	private RelativeLayout mParentLayout;
 	ViewGroup newContainer;
 	String nid;
+	private ProgressDialog progressDialog;
 
 	public static final String TAG = News.class.getSimpleName();
 
@@ -64,7 +68,8 @@ public class News extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		new fetchLocationFromServer().execute("");
+		showProgressDialog();
+		new fetchLocationFromServer().execute("");	
 		View rootView = inflater.inflate(R.layout.news, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
@@ -92,6 +97,32 @@ public class News extends SherlockFragment {
 		});
 
 		return rootView;
+	}
+	
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+		
+		progressDialog.show();
 	}
 
 	private class fetchLocationFromServer extends
@@ -124,7 +155,7 @@ public class News extends SherlockFragment {
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
 					NewsBean thisWeekBean = new NewsBean();
-					thisWeekBean.setNid(resObject.getString("nid"));
+					thisWeekBean.setNid(resObject.getString("id"));
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setteaser(resObject.getString("teaser"));
 					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
@@ -143,7 +174,7 @@ public class News extends SherlockFragment {
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<NewsBean> listThisWeekBean) {
+				List<NewsBean> listThisWeekBean) throws IOException {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				NewsBean thisWeekBean = listThisWeekBean.get(i);
 				View cellViewMainLayout = mInflater.inflate(R.layout.news_list,
@@ -157,6 +188,7 @@ public class News extends SherlockFragment {
 				ImageView imgNews = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 
+					
 				titleNews.setText("");
 				descNews.setText("");
 				cellnumTextView.setText("");
@@ -169,9 +201,15 @@ public class News extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
+//				Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
+//				
+//				
+//				imgNews.setImageBitmap(bm);
+				int loader = R.drawable.loader;
 
-				imgNews.setImageBitmap(bm);
+				ImageLoader imgLoader = new ImageLoader(getActivity().getApplicationContext());
+
+				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader, imgNews);
 				
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {

@@ -3,24 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    
+
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/list_hasil"
-        android:layout_margin="3dp"
-        android:padding="2dp"
-        android:scrollbars="none" >
+        android:id="@+id/list_news"
+        android:layout_margin="10dp"
+        android:scrollbars="vertical">
 
         <LinearLayout
-            android:id="@+id/location_linear_parentview"
+            android:id="@+id/list_parent"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="3dp" >
+            >
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
