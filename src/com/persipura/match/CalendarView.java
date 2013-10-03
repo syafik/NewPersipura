@@ -129,16 +129,16 @@ public class CalendarView extends SherlockFragment {
 //		items = new ArrayList<String>();
 //		adapter = new CalendarAdapter(this, month);
 //
-//		GridView gridview = (GridView) findViewById(R.id.gridview);
+//		GridView gridview = (GridView) getView().findViewById(R.id.gridview);
 //		gridview.setAdapter(adapter);
 //
 //		handler = new Handler();
 //		handler.post(calendarUpdater);
 //
-//		TextView title = (TextView) findViewById(R.id.title);
+//		TextView title = (TextView) getView().findViewById(R.id.title);
 //		title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
 //
-//		RelativeLayout previous = (RelativeLayout) findViewById(R.id.previous);
+//		RelativeLayout previous = (RelativeLayout) getView().findViewById(R.id.previous);
 //
 //		previous.setOnClickListener(new OnClickListener() {
 //
@@ -149,7 +149,7 @@ public class CalendarView extends SherlockFragment {
 //			}
 //		});
 //
-//		RelativeLayout next = (RelativeLayout) findViewById(R.id.next);
+//		RelativeLayout next = (RelativeLayout) getView().findViewById(R.id.next);
 //		next.setOnClickListener(new OnClickListener() {
 //
 //			@Override

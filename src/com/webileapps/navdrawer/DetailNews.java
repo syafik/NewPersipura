@@ -76,8 +76,7 @@ public class DetailNews extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "id="+nid);    
-
+					"/restapi/get/news", "id=" + nid);   
 
 			return result;
 		}

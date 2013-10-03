@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.mediaBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+//import com.webileapps.navdrawer.DetailNews;
+//import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R;
+import com.webileapps.navdrawer.R.id;
+import com.webileapps.navdrawer.R.layout;
+
 
 
 
@@ -26,7 +33,8 @@ public class videoTerbaru extends SherlockFragment {
 	private LayoutInflater mInflater;
 	List<mediaBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
-	
+	ViewGroup newContainer;
+	String nid;
 	
 	public static final String TAG = videoTerbaru.class
 	.getSimpleName();
@@ -39,6 +47,7 @@ public class videoTerbaru extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		new fetchLocationFromServer().execute("");
+		newContainer = container;
 		View rootView = inflater.inflate(R.layout.video, container,
 				false);
 		 mInflater = getLayoutInflater(savedInstanceState);
@@ -116,13 +125,35 @@ public class videoTerbaru extends SherlockFragment {
 				
 				title.setText("");
 				created.setText("");
-				
+				nid = thisWeekBean.getId();
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
-				
+				Log.d("6666666666666666666", nid);
 				Imageloader imageLoader = new Imageloader(getSherlockActivity().getApplicationContext());
 				img.setTag(thisWeekBean.getvideo_image());
 				imageLoader.DisplayImage(thisWeekBean.getvideo_image(),getActivity(),img);
+				
+				View.OnClickListener myhandler1 = new View.OnClickListener() {
+					public void onClick(View v) {
+//						getChildFragmentManager()
+//						.beginTransaction()
+//						.replace(R.id.list_parent,
+//								,
+//								DetailNews.TAG).commit();
+						
+
+						final FragmentTransaction ft = getFragmentManager().beginTransaction();
+						ft.remove(videoTerbaru.this);
+						newContainer.setTag(nid);
+						ft.replace(R.id.content, videoPlayer.newInstance(), "videoPlayer");
+//						ft.replace(R.id.content, DetailNews.newInstance(), "videoPlayer"); 
+						ft.addToBackStack(null);
+
+						ft.commit(); 
+
+					}
+				};
+				cellViewMainLayout.setOnClickListener(myhandler1);
 										
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 				

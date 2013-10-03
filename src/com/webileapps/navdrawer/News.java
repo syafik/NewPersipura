@@ -222,7 +222,7 @@ public class News extends SherlockFragment {
 
 						final FragmentTransaction ft = getFragmentManager().beginTransaction();
 						ft.remove(News.this);
-				        
+	
 						newContainer.setTag(nid);
 						ft.replace(R.id.content, DetailNews.newInstance(), "DetailNews"); 
 						ft.addToBackStack(null);

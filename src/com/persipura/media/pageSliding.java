@@ -76,9 +76,9 @@ public class pageSliding extends SherlockFragment {
 				fragment.setArguments(args);
 				return fragment;
 			case 2:
-				fragment = new DummySectionFragment();
+				fragment = new videoPlayer();
 				args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
 				fragment.setArguments(args);
 				return fragment;
 			
