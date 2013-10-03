@@ -40,18 +40,20 @@ public class WebHTTPMethodClass {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet getMethod = new HttpGet(AppConstants.BASE_URL + serviceName
 					+ "?" + param);
-			Log.e(serviceName + " GetURL = ", AppConstants.BASE_URL + serviceName
-					+ "?" + param);
+			Log.e(serviceName + " GetURL = ", AppConstants.BASE_URL
+					+ serviceName + "?" + param);
 			BufferedReader in = null;
 			BasicHttpResponse httpResponse = (BasicHttpResponse) httpclient
 					.execute(getMethod);
 			if (httpResponse.getStatusLine().getStatusCode() == 401) {
-				Log.i("Response Json Failure: 401", "" + httpResponse.toString());
-				AppConstants.ERROR401 = httpResponse.getStatusLine().getStatusCode() + "";
-			}
-			else
-				Log.i("Response Json 401 not fount", "" + "httpResponse.toString()");
-				
+				Log.i("Response Json Failure: 401",
+						"" + httpResponse.toString());
+				AppConstants.ERROR401 = httpResponse.getStatusLine()
+						.getStatusCode() + "";
+			} else
+				Log.i("Response Json 401 not fount", ""
+						+ "httpResponse.toString()");
+
 			in = new BufferedReader(new InputStreamReader(httpResponse
 					.getEntity().getContent()));
 
@@ -63,29 +65,32 @@ public class WebHTTPMethodClass {
 			in.close();
 			result = sb.toString();
 			System.out.println(serviceName + " result = " + result);
-//			result = checkFor401Error(httpResponse, result);
+			// result = checkFor401Error(httpResponse, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	public static String httpGetServiceWithoutparam(String serviceName) {
 		String result = "";
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet getMethod = new HttpGet(AppConstants.BASE_URL + serviceName);
-			Log.e(serviceName + " GetURL = ", AppConstants.BASE_URL + serviceName);
+			Log.e(serviceName + " GetURL = ", AppConstants.BASE_URL
+					+ serviceName);
 			BufferedReader in = null;
 			BasicHttpResponse httpResponse = (BasicHttpResponse) httpclient
 					.execute(getMethod);
 			if (httpResponse.getStatusLine().getStatusCode() == 401) {
-				Log.i("Response Json Failure: 401", "" + httpResponse.toString());
-				AppConstants.ERROR401 = httpResponse.getStatusLine().getStatusCode() + "";
-			}
-			else
-				Log.i("Response Json 401 not fount", "" + "httpResponse.toString()");
-				
+				Log.i("Response Json Failure: 401",
+						"" + httpResponse.toString());
+				AppConstants.ERROR401 = httpResponse.getStatusLine()
+						.getStatusCode() + "";
+			} else
+				Log.i("Response Json 401 not fount", ""
+						+ "httpResponse.toString()");
+
 			in = new BufferedReader(new InputStreamReader(httpResponse
 					.getEntity().getContent()));
 
@@ -97,7 +102,7 @@ public class WebHTTPMethodClass {
 			in.close();
 			result = sb.toString();
 			System.out.println(serviceName + " result = " + result);
-//			result = checkFor401Error(httpResponse, result);
+			// result = checkFor401Error(httpResponse, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,17 +115,19 @@ public class WebHTTPMethodClass {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpDelete getMethod = new HttpDelete(AppConstants.BASE_URL
 					+ serviceName + "?" + param);
-			Log.e(serviceName + " deleteURL = ", AppConstants.BASE_URL + serviceName
-					+ "?" + param);
+			Log.e(serviceName + " deleteURL = ", AppConstants.BASE_URL
+					+ serviceName + "?" + param);
 			BufferedReader in = null;
 			BasicHttpResponse httpResponse = (BasicHttpResponse) httpclient
 					.execute(getMethod);
 			if (httpResponse.getStatusLine().getStatusCode() == 401) {
-				Log.i("Response Json Failure:401 ", "" + httpResponse.toString());
-				AppConstants.ERROR401 = httpResponse.getStatusLine().getStatusCode() + "";
-			}
-			else
-				Log.i("Response Json 401 not fount", "" + "httpResponse.toString()");
+				Log.i("Response Json Failure:401 ",
+						"" + httpResponse.toString());
+				AppConstants.ERROR401 = httpResponse.getStatusLine()
+						.getStatusCode() + "";
+			} else
+				Log.i("Response Json 401 not fount", ""
+						+ "httpResponse.toString()");
 			in = new BufferedReader(new InputStreamReader(httpResponse
 					.getEntity().getContent()));
 
@@ -132,7 +139,7 @@ public class WebHTTPMethodClass {
 			in.close();
 			result = sb.toString();
 			System.out.println(serviceName + " result = " + result);
-//			result = checkFor401Error(httpResponse, result);
+			// result = checkFor401Error(httpResponse, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,7 +149,7 @@ public class WebHTTPMethodClass {
 	public static String executeHttPost(String serviceName,
 			List<NameValuePair> mParams) {
 		String responseData = null;
-		
+
 		HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 		HttpParams httpParameters = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(httpParameters,
@@ -152,17 +159,18 @@ public class WebHTTPMethodClass {
 
 		SchemeRegistry registry = new SchemeRegistry();
 		SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
-		socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+		socketFactory
+				.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
 		registry.register(new Scheme("https", socketFactory, 443));
-		SingleClientConnManager mgr = new SingleClientConnManager(client.getParams(), registry);
-		DefaultHttpClient httpClient = new DefaultHttpClient(mgr, client.getParams());
+		SingleClientConnManager mgr = new SingleClientConnManager(
+				client.getParams(), registry);
+		DefaultHttpClient httpClient = new DefaultHttpClient(mgr,
+				client.getParams());
 
-		// Set verifier     
+		// Set verifier
 		HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
-		
-		
-		
-//		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+
+		// DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 		HttpPost post = new HttpPost(AppConstants.BASE_URL_HTTPS + serviceName);
 		Log.e(serviceName + " postURL = ", AppConstants.BASE_URL + serviceName
 				+ " " + mParams.toArray());
@@ -171,13 +179,15 @@ public class WebHTTPMethodClass {
 			HttpResponse response = httpClient.execute(post);
 			responseData = EntityUtils.toString(response.getEntity());
 			if (response.getStatusLine().getStatusCode() == 401) {
-				Log.i("Response Json Failure:401 ", "" + responseData.toString());
-				AppConstants.ERROR401 = response.getStatusLine().getStatusCode()+"";
-			}
-			else
-				Log.i("Response Json 401 not fount", "" + "httpResponse.toString()");
+				Log.i("Response Json Failure:401 ",
+						"" + responseData.toString());
+				AppConstants.ERROR401 = response.getStatusLine()
+						.getStatusCode() + "";
+			} else
+				Log.i("Response Json 401 not fount", ""
+						+ "httpResponse.toString()");
 			responseData = responseData.trim();
-//			responseData = checkFor401Error(response, responseData);
+			// responseData = checkFor401Error(response, responseData);
 		} catch (Exception e) {
 			responseData = "UnsupportedEncodingException";
 			if (e != null)

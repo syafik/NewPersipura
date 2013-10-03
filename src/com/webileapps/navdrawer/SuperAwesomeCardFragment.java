@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class SuperAwesomeCardFragment extends SherlockFragment{
+public class SuperAwesomeCardFragment extends SherlockFragment {
 
 	private static final String ARG_POSITION = "position";
 
@@ -50,15 +50,18 @@ public class SuperAwesomeCardFragment extends SherlockFragment{
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
 
 		FrameLayout fl = new FrameLayout(getActivity());
 		fl.setLayoutParams(params);
 
-		final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
-				.getDisplayMetrics());
+		final int margin = (int) TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
+						.getDisplayMetrics());
 
 		TextView v = new TextView(getActivity());
 		params.setMargins(margin, margin, margin, margin);

@@ -7,8 +7,7 @@ public class NewsBean {
 	String title = "";
 	String img_uri = "";
 	String teaser = "";
-	
-	
+
 	public String getNid() {
 		return nid;
 	}
@@ -19,7 +18,7 @@ public class NewsBean {
 		}
 		this.nid = nid;
 	}
-	
+
 	public String getcreated() {
 		return created;
 	}
@@ -30,7 +29,7 @@ public class NewsBean {
 		}
 		this.created = created;
 	}
-	
+
 	public String getcategory() {
 		return category;
 	}
@@ -41,7 +40,7 @@ public class NewsBean {
 		}
 		this.category = category;
 	}
-	
+
 	public String gettitle() {
 		return title;
 	}
@@ -52,7 +51,7 @@ public class NewsBean {
 		}
 		this.title = title;
 	}
-	
+
 	public String getimg_uri() {
 		return img_uri;
 	}
@@ -63,7 +62,7 @@ public class NewsBean {
 		}
 		this.img_uri = img_uri;
 	}
-	
+
 	public String getteaser() {
 		return teaser;
 	}
@@ -74,5 +73,5 @@ public class NewsBean {
 		}
 		this.teaser = teaser;
 	}
-	
+
 }

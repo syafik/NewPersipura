@@ -1,6 +1,5 @@
 package com.persipura.home;
 
-
 public class HomeNews {
 	String nid = "";
 	String created = "";
@@ -8,8 +7,7 @@ public class HomeNews {
 	String title = "";
 	String image = "";
 	String teaser = "";
-	
-	
+
 	public String getNid() {
 		return nid;
 	}
@@ -20,7 +18,7 @@ public class HomeNews {
 		}
 		this.nid = nid;
 	}
-	
+
 	public String getcreated() {
 		return created;
 	}
@@ -31,7 +29,7 @@ public class HomeNews {
 		}
 		this.created = created;
 	}
-	
+
 	public String getcategory() {
 		return category;
 	}
@@ -42,7 +40,7 @@ public class HomeNews {
 		}
 		this.category = category;
 	}
-	
+
 	public String gettitle() {
 		return title;
 	}
@@ -53,7 +51,7 @@ public class HomeNews {
 		}
 		this.title = title;
 	}
-	
+
 	public String getimg_uri() {
 		return image;
 	}
@@ -64,7 +62,7 @@ public class HomeNews {
 		}
 		this.image = image;
 	}
-	
+
 	public String getteaser() {
 		return teaser;
 	}
@@ -75,5 +73,5 @@ public class HomeNews {
 		}
 		this.teaser = teaser;
 	}
-	
+
 }

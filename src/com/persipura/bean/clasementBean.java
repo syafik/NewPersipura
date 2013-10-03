@@ -8,8 +8,8 @@ public class clasementBean {
 	String l = "";
 	String gd = "";
 	String pts = "";
-	String position = "";	
-	
+	String position = "";
+
 	public String getTeamname() {
 		return team_name;
 	}
@@ -20,7 +20,7 @@ public class clasementBean {
 		}
 		this.team_name = team_name;
 	}
-	
+
 	public String getP() {
 		return p;
 	}
@@ -31,7 +31,7 @@ public class clasementBean {
 		}
 		this.p = p;
 	}
-	
+
 	public String getW() {
 		return w;
 	}
@@ -42,7 +42,7 @@ public class clasementBean {
 		}
 		this.w = w;
 	}
-	
+
 	public String getD() {
 		return d;
 	}
@@ -53,7 +53,7 @@ public class clasementBean {
 		}
 		this.d = d;
 	}
-	
+
 	public String getL() {
 		return l;
 	}
@@ -64,7 +64,7 @@ public class clasementBean {
 		}
 		this.l = l;
 	}
-	
+
 	public String getGD() {
 		return gd;
 	}
@@ -75,7 +75,7 @@ public class clasementBean {
 		}
 		this.gd = gd;
 	}
-	
+
 	public String getPts() {
 		return pts;
 	}
@@ -86,7 +86,7 @@ public class clasementBean {
 		}
 		this.pts = pts;
 	}
-	
+
 	public String getPosition() {
 		return position;
 	}

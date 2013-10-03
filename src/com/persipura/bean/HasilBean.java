@@ -17,7 +17,7 @@ public class HasilBean {
 	String h_goal_minute = "";
 	String h_player_got_red = "";
 	String h_min_got_red = "";
-	
+
 	String a_team = "";
 	String a_logo = "";
 	String a_goal = "";
@@ -30,7 +30,7 @@ public class HasilBean {
 	String a_goal_minute = "";
 	String a_player_got_red = "";
 	String a_min_got_red = "";
-	
+
 	public String getNid() {
 		return id;
 	}
@@ -41,7 +41,7 @@ public class HasilBean {
 		}
 		this.id = id;
 	}
-	
+
 	public String getPlace() {
 		return place;
 	}
@@ -52,7 +52,7 @@ public class HasilBean {
 		}
 		this.place = place;
 	}
-	
+
 	public String getTime() {
 		return time;
 	}
@@ -63,7 +63,7 @@ public class HasilBean {
 		}
 		this.time = time;
 	}
-	
+
 	public String getDate() {
 		return date;
 	}
@@ -74,7 +74,7 @@ public class HasilBean {
 		}
 		this.date = date;
 	}
-	
+
 	public String getHteam() {
 		return h_team;
 	}
@@ -85,7 +85,7 @@ public class HasilBean {
 		}
 		this.h_team = h_team;
 	}
-	
+
 	public String getHlogo() {
 		return h_logo;
 	}
@@ -96,7 +96,7 @@ public class HasilBean {
 		}
 		this.h_logo = h_logo;
 	}
-	
+
 	public String getHgoal() {
 		return h_goal;
 	}
@@ -107,7 +107,7 @@ public class HasilBean {
 		}
 		this.h_goal = h_goal;
 	}
-	
+
 	public String getHgoalkick() {
 		return h_goal_kick;
 	}
@@ -118,7 +118,7 @@ public class HasilBean {
 		}
 		this.h_goal_kick = h_goal_kick;
 	}
-	
+
 	public String getHcornerkick() {
 		return h_corner_kick;
 	}
@@ -129,7 +129,7 @@ public class HasilBean {
 		}
 		this.h_corner_kick = h_corner_kick;
 	}
-	
+
 	public String getHredcard() {
 		return h_red_card;
 	}
@@ -140,7 +140,7 @@ public class HasilBean {
 		}
 		this.h_red_card = h_red_card;
 	}
-	
+
 	public String getHyellowcard() {
 		return h_yellow_card;
 	}
@@ -151,7 +151,7 @@ public class HasilBean {
 		}
 		this.h_yellow_card = h_yellow_card;
 	}
-	
+
 	public String getHpercentage() {
 		return h_percentage;
 	}
@@ -162,7 +162,7 @@ public class HasilBean {
 		}
 		this.h_percentage = h_percentage;
 	}
-	
+
 	public String getHgoalscorer() {
 		return h_goal_scorer;
 	}
@@ -173,7 +173,7 @@ public class HasilBean {
 		}
 		this.h_goal_scorer = h_goal_scorer;
 	}
-	
+
 	public String getHgoalminute() {
 		return h_goal_minute;
 	}
@@ -184,7 +184,7 @@ public class HasilBean {
 		}
 		this.h_goal_minute = h_goal_minute;
 	}
-	
+
 	public String getHplayergotred() {
 		return h_player_got_red;
 	}
@@ -195,7 +195,7 @@ public class HasilBean {
 		}
 		this.h_player_got_red = h_player_got_red;
 	}
-	
+
 	public String getHmingotred() {
 		return h_min_got_red;
 	}
@@ -207,9 +207,6 @@ public class HasilBean {
 		this.h_min_got_red = h_min_got_red;
 	}
 
-	
-	
-	
 	public String getAteam() {
 		return a_team;
 	}
@@ -220,7 +217,7 @@ public class HasilBean {
 		}
 		this.a_team = a_team;
 	}
-	
+
 	public String getAlogo() {
 		return a_logo;
 	}
@@ -231,7 +228,7 @@ public class HasilBean {
 		}
 		this.a_logo = a_logo;
 	}
-	
+
 	public String getAgoal() {
 		return a_goal;
 	}
@@ -242,7 +239,7 @@ public class HasilBean {
 		}
 		this.a_goal = a_goal;
 	}
-	
+
 	public String getAgoalkick() {
 		return a_goal_kick;
 	}
@@ -253,7 +250,7 @@ public class HasilBean {
 		}
 		this.a_goal_kick = a_goal_kick;
 	}
-	
+
 	public String getAcornerkick() {
 		return a_corner_kick;
 	}
@@ -264,7 +261,7 @@ public class HasilBean {
 		}
 		this.a_corner_kick = a_corner_kick;
 	}
-	
+
 	public String getAredcard() {
 		return a_red_card;
 	}
@@ -275,7 +272,7 @@ public class HasilBean {
 		}
 		this.a_red_card = a_red_card;
 	}
-	
+
 	public String getAyellowcard() {
 		return a_yellow_card;
 	}
@@ -286,7 +283,7 @@ public class HasilBean {
 		}
 		this.a_yellow_card = a_yellow_card;
 	}
-	
+
 	public String getApercentage() {
 		return a_percentage;
 	}
@@ -297,7 +294,7 @@ public class HasilBean {
 		}
 		this.a_percentage = a_percentage;
 	}
-	
+
 	public String getAgoalscorer() {
 		return a_goal_scorer;
 	}
@@ -308,7 +305,7 @@ public class HasilBean {
 		}
 		this.a_goal_scorer = a_goal_scorer;
 	}
-	
+
 	public String getAgoalminute() {
 		return a_goal_minute;
 	}
@@ -319,7 +316,7 @@ public class HasilBean {
 		}
 		this.a_goal_minute = a_goal_minute;
 	}
-	
+
 	public String getAplayergotred() {
 		return a_player_got_red;
 	}
@@ -330,7 +327,7 @@ public class HasilBean {
 		}
 		this.a_player_got_red = a_player_got_red;
 	}
-	
+
 	public String getAmingotred() {
 		return a_min_got_red;
 	}

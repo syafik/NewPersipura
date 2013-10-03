@@ -11,10 +11,12 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.NewsBean;
+import com.persipura.home.HomeSquad;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
@@ -39,31 +42,68 @@ public class DetailSquad extends SherlockFragment {
 	public static DetailSquad newInstance() {
 		return new DetailSquad();
 	}
-	
+
 	private LayoutInflater mInflater;
-	List<NewsBean> listThisWeekBean;
-	RelativeLayout lifePageCellContainerLayout;
+	List<HomeSquad> listThisWeekBean;
+	LinearLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
+	private ProgressDialog progressDialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		nid = (String) container.getTag();
+		if (nid == null) {
+			nid = getArguments().getString("squadId");
 
-		Log.d("tagID", "tagID : " + container.getTag());
-		
+		}
+		showProgressDialog();
+
 		new fetchLocationFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.squad_profile, container,
 				false);
-		
+
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
-		lifePageCellContainerLayout = (RelativeLayout) rootView
+		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.list_parent);
 
 		return rootView;
+	}
+
+	private void hideProgressDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+
+	}
+
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
 	}
 
 	private class fetchLocationFromServer extends
@@ -77,8 +117,7 @@ public class DetailSquad extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/squad", "id="+nid);    
-
+					"/restapi/get/squad", "id=" + nid);
 
 			return result;
 		}
@@ -91,19 +130,30 @@ public class DetailSquad extends SherlockFragment {
 		@Override
 		protected void onPostExecute(String result) {
 			Log.d("result", "result : " + result);
-			
+
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
-				listThisWeekBean = new ArrayList<NewsBean>();
+				listThisWeekBean = new ArrayList<HomeSquad>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
-					NewsBean thisWeekBean = new NewsBean();
-					thisWeekBean.setNid(resObject.getString("id"));
-					thisWeekBean.settitle(resObject.getString("title"));
-					thisWeekBean.setteaser(resObject.getString("teaser"));
-					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
-					thisWeekBean.setcreated(resObject.getString("created"));
+					HomeSquad thisWeekBean = new HomeSquad();
+					thisWeekBean.setNamaLengkap(resObject
+							.getString("nama_lengkap"));
+					thisWeekBean.setNama(resObject.getString("nama"));
+					thisWeekBean.setno_punggung(resObject
+							.getString("no_punggung"));
+					thisWeekBean.setberat_badan(resObject
+							.getString("berat_badan"));
+					thisWeekBean.settinggi_badan(resObject
+							.getString("tinggi_badan"));
+					thisWeekBean.setage(resObject.getString("age"));
+					thisWeekBean.settanggal_lahir(resObject
+							.getString("tanggal_lahir"));
+					thisWeekBean.setwarganegara(resObject
+							.getString("kewarganegaraan"));
+					thisWeekBean.setposisi(resObject.getString("posisi"));
+					thisWeekBean.setfoto(resObject.getString("foto"));
 
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -121,44 +171,64 @@ public class DetailSquad extends SherlockFragment {
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<NewsBean> listThisWeekBean) {
+				List<HomeSquad> listThisWeekBean) {
+			lifePageCellContainerLayout.removeAllViews();
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
-				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(R.layout.detail_squad,
-						null);
-				TextView titleNews = (TextView) cellViewMainLayout
-						.findViewById(R.id.title);
-				TextView descNews = (TextView) cellViewMainLayout
-						.findViewById(R.id.desc);
-				TextView time = (TextView) cellViewMainLayout
-						.findViewById(R.id.time);
+				HomeSquad thisWeekBean = listThisWeekBean.get(i);
+				View cellViewMainLayout = mInflater.inflate(
+						R.layout.detail_squad, null);
+				TextView nama_lengkap = (TextView) cellViewMainLayout
+						.findViewById(R.id.nama);
+				TextView nama = (TextView) cellViewMainLayout
+						.findViewById(R.id.textViewList2);
+				TextView no_punggung = (TextView) cellViewMainLayout
+						.findViewById(R.id.no_punggung);
+
+				TextView detailheader = (TextView) cellViewMainLayout
+						.findViewById(R.id.textView1);
+				TextView tanggal_lahir = (TextView) cellViewMainLayout
+						.findViewById(R.id.tanggal_lahir);
+				TextView kewarganegaraan = (TextView) cellViewMainLayout
+						.findViewById(R.id.kewarganegaraan);
+				TextView tinggi_badan = (TextView) cellViewMainLayout
+						.findViewById(R.id.tinggi_badan);
+				TextView berat_badan = (TextView) cellViewMainLayout
+						.findViewById(R.id.berat_badan);
 				ImageView imgNews = (ImageView) cellViewMainLayout
-						.findViewById(R.id.imageView1);
+						.findViewById(R.id.imageViewList2);
 
-				titleNews.setText("");
-				descNews.setText("");
-				time.setText("");
-				cellViewMainLayout.setTag(thisWeekBean.getNid());
+				nama_lengkap.setText("");
+				tanggal_lahir.setText("");
+				kewarganegaraan.setText("");
+				tinggi_badan.setText("");
+				berat_badan.setText("");
 
-				titleNews.setText(thisWeekBean.gettitle());
-				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
-				time.setText(thisWeekBean.getcreated());
+				nama_lengkap.setText(thisWeekBean.getNamaLengkap());
+				tanggal_lahir.setText(thisWeekBean.gettanggal_lahir());
+				kewarganegaraan.setText(thisWeekBean.getwarganegara());
+				tinggi_badan.setText(thisWeekBean.gettinggi_badan() + " cm");
+				berat_badan.setText(thisWeekBean.getberat_badan() + " kg");
+				no_punggung.setText(thisWeekBean.getno_punggung());
+				nama.setText(thisWeekBean.getNama());
+				detailheader.setText(thisWeekBean.getposisi() + "\n"
+						+ thisWeekBean.getage() + ", "
+						+ thisWeekBean.getwarganegara());
+
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
+				Bitmap bm = loadBitmap(thisWeekBean.getfoto(), bmOptions);
 
 				imgNews.setImageBitmap(bm);
-
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
 			}
+
 		}
 
 	}
-	
 
 	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
 		try {

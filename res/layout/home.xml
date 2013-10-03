@@ -280,6 +280,12 @@
                     android:text="SQUAD TERBARU" />
 
             </FrameLayout>
+             <View
+               android:layout_width="fill_parent"
+               android:layout_height="0.5dp"
+               android:layout_alignParentBottom="true"
+               android:layout_alignParentLeft="true"
+               android:background="#696666" />
              <LinearLayout
                 android:id="@+id/squad_home"
                 android:layout_width="match_parent"

@@ -34,24 +34,22 @@ public class CalendarView extends SherlockFragment {
 	public Handler handler;// for grabbing some event values for showing the dot
 							// marker.
 	public ArrayList<String> items; // container to store calendar items which
-			
+
 	// needs showing the event marker
 
-	public static final String TAG = CalendarView.class
-			.getSimpleName();
+	public static final String TAG = CalendarView.class.getSimpleName();
 
-			public static CalendarView newInstance() {
-				return new CalendarView();
-			}
-	
+	public static CalendarView newInstance() {
+		return new CalendarView();
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		View rootView = inflater.inflate(R.layout.calendar, container,
-				false);
-	
-		Locale.setDefault( Locale.US );
+
+		View rootView = inflater.inflate(R.layout.calendar, container, false);
+
+		Locale.setDefault(Locale.US);
 		month = (GregorianCalendar) GregorianCalendar.getInstance();
 		itemmonth = (GregorianCalendar) month.clone();
 
@@ -67,7 +65,8 @@ public class CalendarView extends SherlockFragment {
 		TextView title = (TextView) rootView.findViewById(R.id.title);
 		title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
 
-		RelativeLayout previous = (RelativeLayout) rootView.findViewById(R.id.previous);
+		RelativeLayout previous = (RelativeLayout) rootView
+				.findViewById(R.id.previous);
 
 		previous.setOnClickListener(new OnClickListener() {
 
@@ -114,78 +113,78 @@ public class CalendarView extends SherlockFragment {
 
 			}
 		});
-		
+
 		return rootView;
 	}
-	
-	
-//	public void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.calendar);
-//		 Locale.setDefault( Locale.US );
-//		month = (GregorianCalendar) GregorianCalendar.getInstance();
-//		itemmonth = (GregorianCalendar) month.clone();
-//
-//		items = new ArrayList<String>();
-//		adapter = new CalendarAdapter(this, month);
-//
-//		GridView gridview = (GridView) getView().findViewById(R.id.gridview);
-//		gridview.setAdapter(adapter);
-//
-//		handler = new Handler();
-//		handler.post(calendarUpdater);
-//
-//		TextView title = (TextView) getView().findViewById(R.id.title);
-//		title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
-//
-//		RelativeLayout previous = (RelativeLayout) getView().findViewById(R.id.previous);
-//
-//		previous.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				setPreviousMonth();
-//				refreshCalendar();
-//			}
-//		});
-//
-//		RelativeLayout next = (RelativeLayout) getView().findViewById(R.id.next);
-//		next.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				setNextMonth();
-//				refreshCalendar();
-//
-//			}
-//		});
-//
-//		gridview.setOnItemClickListener(new OnItemClickListener() {
-//			public void onItemClick(AdapterView<?> parent, View v,
-//					int position, long id) {
-//
-//				((CalendarAdapter) parent.getAdapter()).setSelected(v);
-//				String selectedGridDate = CalendarAdapter.dayString
-//						.get(position);
-//				String[] separatedTime = selectedGridDate.split("-");
-//				String gridvalueString = separatedTime[2].replaceFirst("^0*",
-//						"");// taking last part of date. ie; 2 from 2012-12-02.
-//				int gridvalue = Integer.parseInt(gridvalueString);
-//				// navigate to next or previous month on clicking offdays.
-//				if ((gridvalue > 10) && (position < 8)) {
-//					setPreviousMonth();
-//					refreshCalendar();
-//				} else if ((gridvalue < 7) && (position > 28)) {
-//					setNextMonth();
-//					refreshCalendar();
-//				}
-//				((CalendarAdapter) parent.getAdapter()).setSelected(v);
-//
-//				showToast(selectedGridDate);
-//
-//			}
-//		});
-//	}
+
+	// public void onCreate(Bundle savedInstanceState) {
+	// super.onCreate(savedInstanceState);
+	// setContentView(R.layout.calendar);
+	// Locale.setDefault( Locale.US );
+	// month = (GregorianCalendar) GregorianCalendar.getInstance();
+	// itemmonth = (GregorianCalendar) month.clone();
+	//
+	// items = new ArrayList<String>();
+	// adapter = new CalendarAdapter(this, month);
+	//
+	// GridView gridview = (GridView) getView().findViewById(R.id.gridview);
+	// gridview.setAdapter(adapter);
+	//
+	// handler = new Handler();
+	// handler.post(calendarUpdater);
+	//
+	// TextView title = (TextView) getView().findViewById(R.id.title);
+	// title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
+	//
+	// RelativeLayout previous = (RelativeLayout)
+	// getView().findViewById(R.id.previous);
+	//
+	// previous.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// setPreviousMonth();
+	// refreshCalendar();
+	// }
+	// });
+	//
+	// RelativeLayout next = (RelativeLayout) getView().findViewById(R.id.next);
+	// next.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// setNextMonth();
+	// refreshCalendar();
+	//
+	// }
+	// });
+	//
+	// gridview.setOnItemClickListener(new OnItemClickListener() {
+	// public void onItemClick(AdapterView<?> parent, View v,
+	// int position, long id) {
+	//
+	// ((CalendarAdapter) parent.getAdapter()).setSelected(v);
+	// String selectedGridDate = CalendarAdapter.dayString
+	// .get(position);
+	// String[] separatedTime = selectedGridDate.split("-");
+	// String gridvalueString = separatedTime[2].replaceFirst("^0*",
+	// "");// taking last part of date. ie; 2 from 2012-12-02.
+	// int gridvalue = Integer.parseInt(gridvalueString);
+	// // navigate to next or previous month on clicking offdays.
+	// if ((gridvalue > 10) && (position < 8)) {
+	// setPreviousMonth();
+	// refreshCalendar();
+	// } else if ((gridvalue < 7) && (position > 28)) {
+	// setNextMonth();
+	// refreshCalendar();
+	// }
+	// ((CalendarAdapter) parent.getAdapter()).setSelected(v);
+	//
+	// showToast(selectedGridDate);
+	//
+	// }
+	// });
+	// }
 
 	protected void setNextMonth() {
 		if (month.get(GregorianCalendar.MONTH) == month
@@ -212,19 +211,20 @@ public class CalendarView extends SherlockFragment {
 	}
 
 	protected void showToast(String string) {
-//		Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+		// Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
 
 	}
 
 	public void refreshCalendar() {
-		
-//		TextView title = (TextView) findViewById(R.id.title);
 
-//		adapter.refreshDays();
-//		adapter.notifyDataSetChanged();
-//		handler.post(calendarUpdater); // generate some calendar items
-//
-//		title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
+		// TextView title = (TextView) findViewById(R.id.title);
+
+		// adapter.refreshDays();
+		// adapter.notifyDataSetChanged();
+		// handler.post(calendarUpdater); // generate some calendar items
+		//
+		// title.setText(android.text.format.DateFormat.format("MMMM yyyy",
+		// month));
 	}
 
 	public Runnable calendarUpdater = new Runnable() {
@@ -234,7 +234,7 @@ public class CalendarView extends SherlockFragment {
 			items.clear();
 
 			// Print dates of the current week
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 			String itemvalue;
 			for (int i = 0; i < 7; i++) {
 				itemvalue = df.format(itemmonth.getTime());

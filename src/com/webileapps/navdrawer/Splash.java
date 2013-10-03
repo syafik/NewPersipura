@@ -1,6 +1,5 @@
 package com.webileapps.navdrawer;
 
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,7 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 public class Splash extends Activity {
 	private Timer my_timer;
 
@@ -19,8 +17,7 @@ public class Splash extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		boolean isNetworkAvailable = Utility
-				.isNetworkAvailable(Splash.this);
+		boolean isNetworkAvailable = Utility.isNetworkAvailable(Splash.this);
 
 		if (isNetworkAvailable) {
 			my_timer = new Timer();

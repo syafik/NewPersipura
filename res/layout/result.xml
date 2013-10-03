@@ -2,16 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:id="@+id/searchresult">
 
-    <ScrollView
+    <TextView
+        android:id="@+id/resultlabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Search result for : "
+        android:background="#2B292A"
+        />
+    
+	<ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/list_news"
+        android:layout_margin="10dp"
         android:scrollbars="vertical">
 
         <LinearLayout
-            android:id="@+id/list_parent"
+            android:id="@+id/location_linear_parentview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"

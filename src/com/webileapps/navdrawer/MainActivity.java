@@ -41,11 +41,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -62,6 +64,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.persipura.home.Home;
 import com.persipura.match.PageSlidingTabStripFragment;
 import com.persipura.media.pageSliding;
+import com.persipura.search.Search;
+import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 
 @SuppressLint("NewApi")
@@ -78,7 +82,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	private CharSequence mTitle;
 	private String[] mPlanetTitles;
 	private EditText search;
+	private Button scelta1;
 	private ProgressDialog progressDialog;
+	String squadId;
 
 	public static MainActivity newInstance() {
 		return new MainActivity();
@@ -89,32 +95,33 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
-	    
 
 		getSupportActionBar().setIcon(R.drawable.logo_persipura);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 		mTitle = mDrawerTitle = getTitle();
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mDrawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_list_item, mPlanetTitles));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("HOME");
-		getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B61718")));
+		getSupportActionBar().setBackgroundDrawable(
+				new ColorDrawable(Color.parseColor("#B61718")));
 		_initMenu();
 		mDrawerToggle = new CustomActionBarDrawerToggle(this, mDrawer);
 		mDrawer.setDrawerListener(mDrawerToggle);
 		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
 
-		View view = getLayoutInflater().inflate(R.layout.home, mainLayout, false);
-		View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout, false);
+		View view = getLayoutInflater().inflate(R.layout.home, mainLayout,
+				false);
+		View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
+				false);
 
 		mainLayout.addView(view);
 		mainLayout.addView(view2);
@@ -126,22 +133,31 @@ public class MainActivity extends SherlockFragmentActivity {
 					int bottom, int oldLeft, int oldTop, int oldRight,
 					int oldBottom) {
 				RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
-				FrameLayout bottom_control_bar = (FrameLayout) v.findViewById(R.id.bottom_control_bar);
-				ScrollView scrollBar = (ScrollView) mainLayout.findViewById(R.id.scrollBar);
+				FrameLayout bottom_control_bar = (FrameLayout) v
+						.findViewById(R.id.bottom_control_bar);
+				ScrollView scrollBar = (ScrollView) mainLayout
+						.findViewById(R.id.scrollBar);
 				LayoutParams params = scrollBar.getLayoutParams();
-				int height = mainLayout.getHeight() - bottom_control_bar.getHeight();
+				int height = mainLayout.getHeight()
+						- bottom_control_bar.getHeight();
 				params.height = height;
 			}
 
-			
 		});
-		
-	if(savedInstanceState == null){
-		selectItem(0);
-	}
+
+		if (savedInstanceState == null) {
+
+			Bundle extras = getIntent().getExtras();
+			if (extras == null) {
+				selectItem(0);
+			} else {
+				squadId = extras.getString("squadId");
+				selectItem(5);
+			}
+
+		}
 
 	}
-	
 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		menu.add(0, 1, 1, "search")
@@ -150,8 +166,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		
-		    
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -165,8 +180,19 @@ public class MainActivity extends SherlockFragmentActivity {
 					R.id.descrizione);
 			search.addTextChangedListener(filterTextWatcher);
 			search.requestFocus();
-//			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+			scelta1 = (Button) item.getActionView().findViewById(R.id.scelta1);
+			scelta1.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View v) {
+					if (search.length() > 0) {
+						selectItem(6);
+					}
+
+				}
+			});
+			// InputMethodManager imm = (InputMethodManager)
+			// getSystemService(Context.INPUT_METHOD_SERVICE);
+			// imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
 		}
 		switch (item.getItemId()) {
@@ -234,6 +260,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	private void selectItem(int position) {
 		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
 		mainLayout.removeAllViews();
+		Bundle args = new Bundle();
+
 		switch (position) {
 		case 0:
 			getSupportFragmentManager().beginTransaction()
@@ -245,25 +273,41 @@ public class MainActivity extends SherlockFragmentActivity {
 					.add(R.id.content, News.newInstance(), News.TAG).commit();
 			break;
 		case 2:
-			getSupportFragmentManager().beginTransaction()
-			.add(R.id.content, pageSliding.newInstance(),
-					pageSliding.TAG).commit();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.add(R.id.content, pageSliding.newInstance(),
+							pageSliding.TAG).commit();
 			break;
 		case 3:
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, PageSlidingTabStripFragment.newInstance(),
+			getSupportFragmentManager()
+					.beginTransaction()
+					.add(R.id.content,
+							PageSlidingTabStripFragment.newInstance(),
 							PageSlidingTabStripFragment.TAG).commit();
 			break;
 		case 4:
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, Squad.newInstance(),
-							Squad.TAG).commit();
-			break;	
+					.add(R.id.content, Squad.newInstance(), Squad.TAG).commit();
+			break;
+		case 5:
+			args.putString("squadId", squadId);
+			DetailSquad fragment = new DetailSquad();
+			fragment.setArguments(args);
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.content, fragment).commit();
+			break;
+		case 6:
+			args.putString("q", search.getText().toString());
+			Search searchFragment = new Search();
+			searchFragment.setArguments(args);
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.content, searchFragment).commit();
+			break;
 		}
-//		View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
-//				false);
-//
-//		mainLayout.addView(view2);
+		// View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
+		// false);
+		//
+		// mainLayout.addView(view2);
 
 		mDrawer.closeDrawer(mDrawerList);
 	}

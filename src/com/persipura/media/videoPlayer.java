@@ -32,7 +32,7 @@ public class videoPlayer extends SherlockFragment {
 	LinearLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
-	
+
 	public static final String TAG = videoPlayer.class.getSimpleName();
 
 	public static videoPlayer newInstance() {
@@ -43,14 +43,14 @@ public class videoPlayer extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		nid = (String) container.getTag();
-		
+
 		Log.d("tagID", "tagID : " + container.getTag());
-		
+
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.video_detail, container,
 				false);
 		mInflater = getLayoutInflater(savedInstanceState);
-		
+
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 		return rootView;

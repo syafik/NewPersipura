@@ -43,8 +43,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
-
-
 public class AppConstants {
 
 	// INTENT_EXTRA CONSTATNS
@@ -136,15 +134,13 @@ public class AppConstants {
 	public static String APPKEY = "cGU8o7zrsXqBM3pv";
 	public static final String ROOT_URL = "http://192.241.229.12";
 	public static final String ROOT_URL_HTTPS = "http://192.241.229.12";
-	public static String BASE_URL = ROOT_URL; 
+	public static String BASE_URL = ROOT_URL;
 	public static String BASE_URL_HTTPS = ROOT_URL_HTTPS + "/api/v1"; // Live
 	public static String URL_TERMS_OF_USE = ROOT_URL + "/terms_of_use";
 	public static String URL_PRIVACY_URL = ROOT_URL + "/privacy_policy";
 	public static String URL_FB_PAGE = ROOT_URL + "/url/7/roti-facebook";
 	public static String URL_TWITTER_PAGE = ROOT_URL + "/url/7/roti-twitter";
 	// Live
-
-	
 
 	public static String CALL_US_NOW_CELL = "CALL_US_NOW_CELL_IDENTIFIER";
 	public static String OFFER_LIST_CELL = "OFFER_LIST_CELL_IDENTIFIER";
@@ -265,94 +261,94 @@ public class AppConstants {
 		return isConfirm;
 	}
 
-//	public static void parseInput(String result, Activity mHomePage) {
-//		if (result != null && !result.equals("")) {
-//			try {
-//				result = checkFor401Error(result);
-//				if (result.equals(""))
-//					return;
-//				JSONObject resObject = new JSONObject(result);
-//				String sucess = "";// resObject.getString("status");
-//				String notice = "";
-//				if (resObject.has("status"))
-//					sucess = resObject.getString("status");
-//				if (resObject.has("notice")) {
-//					notice = resObject.getString("notice");
-//					if (!notice.equals("")
-//							&& notice.equals("Unauthorized API request.")) {
-//						// mHomePage.showLoginOptionPage(false);//TODO
-//						return;
-//					}
-//				}
-//				if (resObject.has("message"))
-//					notice = resObject.getString("message");
-//
-//				String errors = "";
-//				String auth_token = "";
-//				try {
-//					if (resObject.has("auth_token")) {
-//						auth_token = resObject.getString("auth_token");
-//						SharedPreferences mPreference = PreferenceManager
-//								.getDefaultSharedPreferences(mHomePage);
-//						Editor prefsEditor = mPreference.edit();
-//						prefsEditor.putString(AppConstants.PREFAUTH_TOKEN,
-//								auth_token);
-//						Log.d("auth_token", auth_token);
-//						prefsEditor.commit();
-//					}
-//				} catch (Exception e) {
-//				}
-//				try {
-//					if (resObject.has("errors")) {
-//						errors = resObject.getString("errors");
-//					}
-//				} catch (Exception e) {
-//				}
-//				if (sucess != null && !sucess.equals("") && !notice.equals("")) {// false
-//					showMsgDialog(CONSTANTTITLEMESSAGE, notice, mHomePage);
-//				} else {
-//					if (errors != null && (!errors.equals(""))) {
-//						showMsgDialog(CONSTANTTITLEMESSAGE, errors + notice,
-//								mHomePage);
-//					}
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	// public static void parseInput(String result, Activity mHomePage) {
+	// if (result != null && !result.equals("")) {
+	// try {
+	// result = checkFor401Error(result);
+	// if (result.equals(""))
+	// return;
+	// JSONObject resObject = new JSONObject(result);
+	// String sucess = "";// resObject.getString("status");
+	// String notice = "";
+	// if (resObject.has("status"))
+	// sucess = resObject.getString("status");
+	// if (resObject.has("notice")) {
+	// notice = resObject.getString("notice");
+	// if (!notice.equals("")
+	// && notice.equals("Unauthorized API request.")) {
+	// // mHomePage.showLoginOptionPage(false);//TODO
+	// return;
+	// }
+	// }
+	// if (resObject.has("message"))
+	// notice = resObject.getString("message");
+	//
+	// String errors = "";
+	// String auth_token = "";
+	// try {
+	// if (resObject.has("auth_token")) {
+	// auth_token = resObject.getString("auth_token");
+	// SharedPreferences mPreference = PreferenceManager
+	// .getDefaultSharedPreferences(mHomePage);
+	// Editor prefsEditor = mPreference.edit();
+	// prefsEditor.putString(AppConstants.PREFAUTH_TOKEN,
+	// auth_token);
+	// Log.d("auth_token", auth_token);
+	// prefsEditor.commit();
+	// }
+	// } catch (Exception e) {
+	// }
+	// try {
+	// if (resObject.has("errors")) {
+	// errors = resObject.getString("errors");
+	// }
+	// } catch (Exception e) {
+	// }
+	// if (sucess != null && !sucess.equals("") && !notice.equals("")) {// false
+	// showMsgDialog(CONSTANTTITLEMESSAGE, notice, mHomePage);
+	// } else {
+	// if (errors != null && (!errors.equals(""))) {
+	// showMsgDialog(CONSTANTTITLEMESSAGE, errors + notice,
+	// mHomePage);
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// }
 
-//	private static String checkFor401Error(String responseData) {
-//		try {
-//			String message = "";
-//			JSONObject responseJson = new JSONObject(responseData);
-//			if (AppConstants.ERROR401.equalsIgnoreCase("401")) {
-//				Log.i("Response Json Failure:", "" + responseData.toString());
-//				AppConstants.showMessageDialogWithNewIntent(
-//						AppConstants.ERROR401SERVICES,
-//						RotiHomeActivity.getInstance());// TODO
-//				AppConstants.ERROR401 = "";
-//				responseData = "";
-//			} else if (responseJson.has("status")
-//					&& responseJson.getBoolean("status") == false) {
-//				Log.i("Response Json Failure:", "" + responseJson);
-//				if (responseJson.has("notice"))
-//					message = responseJson.getString("notice");
-//				if (message.equals("") && responseJson.has("message"))
-//					message = responseJson.getString("message");
-//				if (!message.equals("")
-//						&& message.equals("Unauthorized API request.")) {
-//					AppConstants.showMessageDialogWithNewIntent(message,
-//							RotiHomeActivity.getInstance());// TODO
-//					responseData = "";
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		AppConstants.ERROR401 = "";
-//		return responseData;
-//	}
+	// private static String checkFor401Error(String responseData) {
+	// try {
+	// String message = "";
+	// JSONObject responseJson = new JSONObject(responseData);
+	// if (AppConstants.ERROR401.equalsIgnoreCase("401")) {
+	// Log.i("Response Json Failure:", "" + responseData.toString());
+	// AppConstants.showMessageDialogWithNewIntent(
+	// AppConstants.ERROR401SERVICES,
+	// RotiHomeActivity.getInstance());// TODO
+	// AppConstants.ERROR401 = "";
+	// responseData = "";
+	// } else if (responseJson.has("status")
+	// && responseJson.getBoolean("status") == false) {
+	// Log.i("Response Json Failure:", "" + responseJson);
+	// if (responseJson.has("notice"))
+	// message = responseJson.getString("notice");
+	// if (message.equals("") && responseJson.has("message"))
+	// message = responseJson.getString("message");
+	// if (!message.equals("")
+	// && message.equals("Unauthorized API request.")) {
+	// AppConstants.showMessageDialogWithNewIntent(message,
+	// RotiHomeActivity.getInstance());// TODO
+	// responseData = "";
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// AppConstants.ERROR401 = "";
+	// return responseData;
+	// }
 
 	static AlertDialog.Builder alertDialogBuilder;
 
@@ -509,49 +505,50 @@ public class AppConstants {
 		}
 	}
 
-//	public static void createImages(Bitmap bitmapOrg, ImageView imageView
-//	/* ,int type */) {
-//		try {
-//			imageView.setImageBitmap(bitmapOrg);
-//			int width = bitmapOrg.getWidth(); /* 140 */
-//			int height = bitmapOrg.getHeight();
-//			Display display = RotiHomeActivity.getInstance().getWindowManager()// TODO
-//					.getDefaultDisplay();
-//
-//			int maxWidth = display.getWidth() - 0;
-//			int maxHeight = display.getHeight() - 0;
-//			double newWidth = maxWidth - 0;
-//			double newHeight = maxHeight - 0;
-//
-//			if (width <= newWidth && height <= newHeight) {
-//				BitmapDrawable bmd = new BitmapDrawable(bitmapOrg);
-//				imageView.setImageDrawable(bmd);
-//				imageView.setScaleType(ScaleType.FIT_CENTER);
-//				return;
-//			}
-//			double ratio = (double) width / height;
-//			if (width > newWidth || height > maxWidth/* newHeight */) {
-//				if (ratio > 1) {
-//					newHeight = newWidth / ratio;
-//				} else {
-//					newWidth = newHeight * ratio;
-//				}
-//			}
-//			float scaleWidth = ((float) newWidth) / width;
-//			float scaleHeight = ((float) newHeight) / height;
-//			Matrix matrix = new Matrix();
-//
-//			matrix.postScale(scaleWidth, scaleHeight);
-//			Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOrg, 0, 0, width,
-//					height, matrix, true);
-//			imageView.setImageBitmap(resizedBitmap);
-//			BitmapDrawable bmd = new BitmapDrawable(resizedBitmap);
-//			imageView.setImageDrawable(bmd);
-//			imageView.setScaleType(ScaleType.FIT_CENTER);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	// public static void createImages(Bitmap bitmapOrg, ImageView imageView
+	// /* ,int type */) {
+	// try {
+	// imageView.setImageBitmap(bitmapOrg);
+	// int width = bitmapOrg.getWidth(); /* 140 */
+	// int height = bitmapOrg.getHeight();
+	// Display display = RotiHomeActivity.getInstance().getWindowManager()//
+	// TODO
+	// .getDefaultDisplay();
+	//
+	// int maxWidth = display.getWidth() - 0;
+	// int maxHeight = display.getHeight() - 0;
+	// double newWidth = maxWidth - 0;
+	// double newHeight = maxHeight - 0;
+	//
+	// if (width <= newWidth && height <= newHeight) {
+	// BitmapDrawable bmd = new BitmapDrawable(bitmapOrg);
+	// imageView.setImageDrawable(bmd);
+	// imageView.setScaleType(ScaleType.FIT_CENTER);
+	// return;
+	// }
+	// double ratio = (double) width / height;
+	// if (width > newWidth || height > maxWidth/* newHeight */) {
+	// if (ratio > 1) {
+	// newHeight = newWidth / ratio;
+	// } else {
+	// newWidth = newHeight * ratio;
+	// }
+	// }
+	// float scaleWidth = ((float) newWidth) / width;
+	// float scaleHeight = ((float) newHeight) / height;
+	// Matrix matrix = new Matrix();
+	//
+	// matrix.postScale(scaleWidth, scaleHeight);
+	// Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOrg, 0, 0, width,
+	// height, matrix, true);
+	// imageView.setImageBitmap(resizedBitmap);
+	// BitmapDrawable bmd = new BitmapDrawable(resizedBitmap);
+	// imageView.setImageDrawable(bmd);
+	// imageView.setScaleType(ScaleType.FIT_CENTER);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	public static Date makeDate(String dateString) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

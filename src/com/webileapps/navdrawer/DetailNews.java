@@ -11,10 +11,12 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -38,31 +40,57 @@ public class DetailNews extends SherlockFragment {
 	public static DetailNews newInstance() {
 		return new DetailNews();
 	}
-	
+
 	private LayoutInflater mInflater;
 	List<NewsBean> listThisWeekBean;
 	RelativeLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
+	ProgressDialog progressDialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		nid = (String) container.getTag();
+		showProgressDialog();
 
-		Log.d("tagID", "tagID : " + container.getTag());
-		
 		new fetchLocationFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.detail_news2, container,
 				false);
-		
+
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
 		lifePageCellContainerLayout = (RelativeLayout) rootView
 				.findViewById(R.id.list_parent);
 
 		return rootView;
+	}
+	
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
 	}
 
 	private class fetchLocationFromServer extends
@@ -76,7 +104,7 @@ public class DetailNews extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "id=" + nid);   
+					"/restapi/get/news", "id=" + nid);
 
 			return result;
 		}
@@ -89,7 +117,7 @@ public class DetailNews extends SherlockFragment {
 		@Override
 		protected void onPostExecute(String result) {
 			Log.d("result", "result : " + result);
-			
+
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
@@ -122,8 +150,8 @@ public class DetailNews extends SherlockFragment {
 				List<NewsBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(R.layout.detail_news2,
-						null);
+				View cellViewMainLayout = mInflater.inflate(
+						R.layout.detail_news2, null);
 				TextView titleNews = (TextView) cellViewMainLayout
 						.findViewById(R.id.title);
 				TextView descNews = (TextView) cellViewMainLayout
@@ -149,14 +177,12 @@ public class DetailNews extends SherlockFragment {
 
 				imgNews.setImageBitmap(bm);
 
-
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
 			}
 		}
 
 	}
-	
 
 	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
 		try {

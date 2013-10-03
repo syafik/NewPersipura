@@ -4,12 +4,12 @@ public class mediaBean {
 	String id = "";
 	String created = "";
 	String title = "";
-	String total_view= "";
+	String total_view = "";
 	String video_image = "";
 	String video_uri = "";
 	String category = "";
 	String description = "";
-	
+
 	public String getId() {
 		return id;
 	}
@@ -20,7 +20,7 @@ public class mediaBean {
 		}
 		this.id = id;
 	}
-	
+
 	public String getcreated() {
 		return created;
 	}
@@ -31,7 +31,7 @@ public class mediaBean {
 		}
 		this.created = created;
 	}
-	
+
 	public String getcategory() {
 		return category;
 	}
@@ -42,7 +42,7 @@ public class mediaBean {
 		}
 		this.category = category;
 	}
-	
+
 	public String gettitle() {
 		return title;
 	}
@@ -53,7 +53,7 @@ public class mediaBean {
 		}
 		this.title = title;
 	}
-	
+
 	public String getvideo_image() {
 		return video_image;
 	}
@@ -64,7 +64,7 @@ public class mediaBean {
 		}
 		this.video_image = video_image;
 	}
-	
+
 	public String gettotal_view() {
 		return total_view;
 	}
@@ -75,7 +75,7 @@ public class mediaBean {
 		}
 		this.total_view = total_view;
 	}
-	
+
 	public String getvideo_uri() {
 		return video_uri;
 	}
@@ -86,7 +86,7 @@ public class mediaBean {
 		}
 		this.video_uri = video_uri;
 	}
-	
+
 	public String getdescription() {
 		return description;
 	}
@@ -97,5 +97,5 @@ public class mediaBean {
 		}
 		this.description = description;
 	}
-	
+
 }

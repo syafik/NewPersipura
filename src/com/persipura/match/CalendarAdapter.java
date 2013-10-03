@@ -45,9 +45,10 @@ public class CalendarAdapter extends BaseAdapter {
 	public static List<String> dayString;
 	private View previousView;
 
-	public CalendarAdapter(CalendarView calendarView, GregorianCalendar monthCalendar) {
+	public CalendarAdapter(CalendarView calendarView,
+			GregorianCalendar monthCalendar) {
 		CalendarAdapter.dayString = new ArrayList<String>();
-		 Locale.setDefault( Locale.US );
+		Locale.setDefault(Locale.US);
 		month = monthCalendar;
 		selectedDate = (GregorianCalendar) monthCalendar.clone();
 		mContext = calendarView;
@@ -152,7 +153,7 @@ public class CalendarAdapter extends BaseAdapter {
 		// clear items
 		items.clear();
 		dayString.clear();
-		Locale.setDefault( Locale.US );
+		Locale.setDefault(Locale.US);
 		pmonth = (GregorianCalendar) month.clone();
 		// month start day. ie; sun, mon, etc
 		firstDay = month.get(GregorianCalendar.DAY_OF_WEEK);

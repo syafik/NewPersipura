@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.search;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +16,11 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 
 import com.persipura.bean.NewsBean;
+import com.persipura.bean.SearchBean;
 import com.persipura.utils.*;
+import com.webileapps.navdrawer.DetailNews;
+import com.webileapps.navdrawer.News;
+import com.webileapps.navdrawer.R;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -24,6 +28,7 @@ import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -48,34 +53,44 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class News extends SherlockFragment {
+public class Search extends SherlockFragment {
 	// private static String url =
 	// "http://prspura.tk/restapi/get/news?limit=20&offset=1";
 	private LayoutInflater mInflater;
-	List<NewsBean> listThisWeekBean;
+	List<SearchBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
 	private RelativeLayout mParentLayout;
 	ViewGroup newContainer;
 	String nid;
+	String q;
 	private ProgressDialog progressDialog;
+	ArrayList<String> arrayList;
+	String result_type;
+	public static final String TAG = Search.class.getSimpleName();
 
-	public static final String TAG = News.class.getSimpleName();
-
-	public static News newInstance() {
-		return new News();
+	public static Search newInstance() {
+		return new Search();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		showProgressDialog();
+		if (q == null) {
+			q = getArguments().getString("q");
+			Log.d("search ", "search is : " + q);
+
+		}
 		new fetchLocationFromServer().execute("");
-		View rootView = inflater.inflate(R.layout.news, container, false);
+		View rootView = inflater.inflate(R.layout.result, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-
+		TextView resultlabel = (TextView) rootView
+				.findViewById(R.id.resultlabel);
+		resultlabel.setText(Html.fromHtml(resultlabel.getText() + "&quot;" + q
+				+ "&quot;"));
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
 			@Override
@@ -136,7 +151,7 @@ public class News extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "limit=20" + "&offset=0");
+					"/restapi/get/find_content", "title=" + q + "s&body=" + q);
 
 			return result;
 		}
@@ -150,18 +165,28 @@ public class News extends SherlockFragment {
 		protected void onPostExecute(String result) {
 			try {
 				JSONArray jsonArray = new JSONArray(result);
+				Log.d("result", "result search json : " + jsonArray);
+				arrayList = new ArrayList<String>();
 
-				listThisWeekBean = new ArrayList<NewsBean>();
+				listThisWeekBean = new ArrayList<SearchBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
-					NewsBean thisWeekBean = new NewsBean();
-					thisWeekBean.setNid(resObject.getString("id"));
-					thisWeekBean.settitle(resObject.getString("title"));
-					thisWeekBean.setteaser(resObject.getString("teaser"));
-					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
+					if (!arrayList.contains(resObject.getString("type"))) {
+						arrayList.add(resObject.getString("type"));
+					}
+
+					SearchBean thisWeekBean = new SearchBean();
+					thisWeekBean.setid(resObject.getString("id"));
+					thisWeekBean.setnode_title(resObject
+							.getString("node_title"));
+					thisWeekBean.settype(resObject.getString("type"));
+					thisWeekBean.settimeago(resObject.getString("timeago"));
+					 thisWeekBean.setfoto(resObject.getString(resObject.getString("type") + "_img"));
 
 					listThisWeekBean.add(thisWeekBean);
 				}
+				Log.d("array", "array list : " + arrayList);
+
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
 				}
@@ -176,11 +201,12 @@ public class News extends SherlockFragment {
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<NewsBean> listThisWeekBean) throws IOException {
+				List<SearchBean> listThisWeekBean) throws IOException {
+
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
-				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(R.layout.news_list,
-						null);
+				SearchBean thisWeekBean = listThisWeekBean.get(i);
+				View cellViewMainLayout = mInflater.inflate(
+						R.layout.result_list, null);
 				TextView titleNews = (TextView) cellViewMainLayout
 						.findViewById(R.id.findzoes_list_text_name);
 				TextView descNews = (TextView) cellViewMainLayout
@@ -194,10 +220,10 @@ public class News extends SherlockFragment {
 				descNews.setText("");
 				cellnumTextView.setText("");
 				// cellViewMainLayout.setTag(thisWeekBean.getNid());
-				nid = thisWeekBean.getNid();
+				nid = thisWeekBean.getid();
 
-				titleNews.setText(thisWeekBean.gettitle());
-				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
+				titleNews.setText(thisWeekBean.getnode_title());
+				descNews.setText(thisWeekBean.gettimeago());
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -211,33 +237,72 @@ public class News extends SherlockFragment {
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
 
-				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
-						imgNews);
+				 imgLoader.DisplayImage(thisWeekBean.getfoto(), loader,
+				 imgNews);
+				LinearLayout rel = null;
 
-				View.OnClickListener myhandler1 = new View.OnClickListener() {
-					public void onClick(View v) {
-						// getChildFragmentManager()
-						// .beginTransaction()
-						// .replace(R.id.list_parent,
-						// ,
-						// DetailNews.TAG).commit();
+				for (int a = 0; a < arrayList.size(); a++) {
 
-						final FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						ft.remove(News.this);
+					if (arrayList.get(a).equals(thisWeekBean.gettype())) {
+						if (lifePageCellContainerLayout
+								.findViewWithTag(arrayList.get(a)) == null) {
+							rel = new LinearLayout(getActivity());
+							rel.setTag(arrayList.get(a));
+							rel.setLayoutParams(new LinearLayout.LayoutParams(
+									LayoutParams.MATCH_PARENT,
+									LinearLayout.LayoutParams.WRAP_CONTENT));
+							rel.setOrientation(LinearLayout.VERTICAL);
+							View view = new View(getActivity());
+							view.setLayoutParams(new LinearLayout.LayoutParams(
+									LayoutParams.MATCH_PARENT, (int) 2));
+							view.setBackgroundColor(Color.parseColor("#1E1D1F"));
+							RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+									LayoutParams.MATCH_PARENT,
+									LayoutParams.MATCH_PARENT); // or
+																// wrap_content
+							layoutParams
+									.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+							layoutParams
+									.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+							rel.addView(view, layoutParams);
 
-						newContainer.setTag(nid);
-						ft.replace(R.id.content, DetailNews.newInstance(),
-								"DetailNews");
-						ft.addToBackStack(null);
+							TextView tx = new TextView(getActivity());
 
-						ft.commit();
+							tx.setText("from " + arrayList.get(a).toString());
 
+							rel.addView(tx);
+
+						} else {
+							rel = (LinearLayout) lifePageCellContainerLayout
+									.findViewWithTag(arrayList.get(a));
+						}
+						result_type = thisWeekBean.gettype();
+						View.OnClickListener myhandler1 = new View.OnClickListener() {
+							public void onClick(View v) {
+								Log.d("result_type", "result_type :"
+										+ result_type);
+								if (result_type.equals("news")) {
+									final FragmentTransaction ft = getFragmentManager()
+											.beginTransaction();
+									ft.remove(Search.this);
+
+									newContainer.setTag(nid);
+
+									ft.replace(R.id.content,
+											DetailNews.newInstance(),
+											"DetailNews");
+									ft.addToBackStack(null);
+
+									ft.commit();
+								}
+							}
+						};
+						cellViewMainLayout.setOnClickListener(myhandler1);
+						rel.addView(cellViewMainLayout);
 					}
-				};
-				cellViewMainLayout.setOnClickListener(myhandler1);
+				}
 
-				lifePageCellContainerLayout.addView(cellViewMainLayout);
+				lifePageCellContainerLayout.addView(rel);
 
 			}
 		}

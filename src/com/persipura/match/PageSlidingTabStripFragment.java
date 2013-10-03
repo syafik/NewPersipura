@@ -14,11 +14,10 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.webileapps.navdrawer.R;
 
-
 public class PageSlidingTabStripFragment extends SherlockFragment {
 	MyPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
-	
+
 	public static final String TAG = PageSlidingTabStripFragment.class
 			.getSimpleName();
 
@@ -26,15 +25,15 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		return new PageSlidingTabStripFragment();
 	}
 
-//	@Override
-//	public void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.news);
-//		mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
-//		mViewPager = (ViewPager) findViewById(R.id.pager);
-//		mViewPager.setAdapter(mSectionsPagerAdapter);
-//	}
-	
+	// @Override
+	// public void onCreate(Bundle savedInstanceState) {
+	// super.onCreate(savedInstanceState);
+	// setContentView(R.layout.news);
+	// mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+	// mViewPager = (ViewPager) findViewById(R.id.pager);
+	// mViewPager.setAdapter(mSectionsPagerAdapter);
+	// }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,11 +51,11 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		mSectionsPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
-		mViewPager  = (ViewPager) view.findViewById(R.id.pager);
+		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 	}
-	
+
 	public class MyPagerAdapter extends FragmentPagerAdapter {
 
 		public MyPagerAdapter(FragmentManager fm) {
@@ -74,25 +73,29 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 			case 0:
 				fragment = new JadwalPertandingan();
 				args = new Bundle();
-//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
+				// + 1);
 				fragment.setArguments(args);
 				return fragment;
 			case 1:
 				fragment = new HasilPertandingan();
 				args = new Bundle();
-//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
+				// + 1);
 				fragment.setArguments(args);
 				return fragment;
 			case 2:
 				fragment = new Clasement();
 				args = new Bundle();
-//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
+				// + 1);
 				fragment.setArguments(args);
 				return fragment;
 			case 3:
 				fragment = new DummySectionFragment();
 				args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
+						position + 1);
 				fragment.setArguments(args);
 				return fragment;
 			}
@@ -122,7 +125,7 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		}
 
 	}
-	
+
 	public static class DummySectionFragment extends Fragment {
 		/**
 		 * The fragment argument representing the section number for this
@@ -134,13 +137,16 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy, container, false);
-			TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
+					container, false);
+			TextView dummyTextView = (TextView) rootView
+					.findViewById(R.id.section_label);
+			dummyTextView.setText(Integer.toString(getArguments().getInt(
+					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
 	}
-
 
 }
