@@ -76,7 +76,7 @@ public class pageSliding extends SherlockFragment {
 				fragment.setArguments(args);
 				return fragment;
 			case 2:
-				fragment = new GaleryView();
+				fragment = new ListGalery();
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
 				// + 1);

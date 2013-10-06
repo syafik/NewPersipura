@@ -158,6 +158,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 
 	}
+	
+	
 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		menu.add(0, 1, 1, "search")

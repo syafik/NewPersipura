@@ -13,41 +13,31 @@ import org.json.JSONObject;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.imageBean;
-import com.persipura.bean.mediaBean;
-import com.persipura.utils.Imageloader;
+
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
 
 public class GaleryView extends SherlockFragment {
 	// ---the images to display---
-	Integer[] imageIDs = { R.drawable.saturn, R.drawable.mercury,
-			R.drawable.mars };
 
-	static String uri1 = "http://i3.ytimg.com/vi/bQaWsVQSLdY/default.jpg";
-	static String uri2 = "http://i4.ytimg.com/vi/cJQCniWQdno/mqdefault.jpg";
-	static String uri3 = "http://i1.ytimg.com/vi/D8dA4pE5hEY/mqdefault.jpg";
-	public String[] urls={uri1,uri2};
+
+	public String[] urls=null;
 	ArrayList<String> stringArrayList = new ArrayList<String>();
 
 	private LayoutInflater mInflater;
@@ -68,7 +58,7 @@ public class GaleryView extends SherlockFragment {
 		new fetchImage().execute("");
 
 		newContainer = container;
-		View rootView = inflater.inflate(R.layout.gridviewgalery, container,
+		View rootView = inflater.inflate(R.layout.gridview, container,
 				false);
 		mInflater = getLayoutInflater(savedInstanceState);
 
@@ -167,21 +157,40 @@ public class GaleryView extends SherlockFragment {
 			return in;
 		}
 
+//		@Override
+//		public View getView(int position, View cv, ViewGroup parent) {
+//			ImageView imageview = null;
+//
+//			Bitmap bitmap = DownloadImage(urls[position]);
+//
+//			if (cv == null) {
+//				imageview = new ImageView(context);
+//			} else {
+//				imageview = (ImageView) cv;
+//			}
+//
+//			imageview.setImageBitmap(bitmap);
+//			return imageview;
+//		}
+		
+		
 		@Override
-		public View getView(int position, View cv, ViewGroup parent) {
-			ImageView imageview = null;
-
-			Bitmap bitmap = DownloadImage(urls[position]);
-
-			if (cv == null) {
-				imageview = new ImageView(context);
-			} else {
-				imageview = (ImageView) cv;
-			}
-
-			imageview.setImageBitmap(bitmap);
-			return imageview;
-		}
+	    public View getView(int position, View cv, ViewGroup parent) {
+	        View v = cv;
+	        ImageView picture;
+	        Bitmap bitmap = DownloadImage(urls[position]);
+	        
+	        if(v == null) {
+	            v = mInflater.inflate(R.layout.gridcrop, parent, false);
+	            v.setTag(R.id.picture, v.findViewById(R.id.picture));
+	            v.setTag(R.id.text, v.findViewById(R.id.text));
+	        }
+	        
+	        picture = (ImageView)v.getTag(R.id.picture);   
+	        picture.setImageBitmap(bitmap);
+	    
+	        return v;
+	    }
 	}
 
 	private class fetchImage extends AsyncTask<String, Void, String> {
@@ -240,55 +249,6 @@ public class GaleryView extends SherlockFragment {
 
 				stringArrayList.add(parts[0]);
 
-				// View cellViewMainLayout = mInflater.inflate(
-				// R.layout.video_list, null);
-				// TextView title = (TextView) cellViewMainLayout
-				// .findViewById(R.id.findzoes_list_text_name);
-				// TextView created = (TextView) cellViewMainLayout
-				// .findViewById(R.id.findzoes_list_text_address);
-				// ImageView img = (ImageView) cellViewMainLayout
-				// .findViewById(R.id.imageView1);
-				//
-				// title.setText("");
-				// created.setText("");
-				// nid = thisWeekBean.getId();
-				// title.setText(thisWeekBean.gettitle());
-				// created.setText(thisWeekBean.getcreated());
-				//
-				// Imageloader imageLoader = new
-				// Imageloader(getSherlockActivity()
-				// .getApplicationContext());
-				// img.setTag(thisWeekBean.getvideo_image());
-				// imageLoader.DisplayImage(thisWeekBean.getvideo_image(),
-				// getActivity(), img);
-				//
-				// View.OnClickListener myhandler1 = new View.OnClickListener()
-				// {
-				// public void onClick(View v) {
-				// // getChildFragmentManager()
-				// // .beginTransaction()
-				// // .replace(R.id.list_parent,
-				// // ,
-				// // DetailNews.TAG).commit();
-				//
-				// final FragmentTransaction ft = getFragmentManager()
-				// .beginTransaction();
-				// ft.remove(videoTerbaru.this);
-				// newContainer.setTag(nid);
-				// ft.replace(R.id.content, videoPlayer.newInstance(),
-				// "videoPlayer");
-				// // ft.replace(R.id.content, DetailNews.newInstance(),
-				// // "videoPlayer");
-				// ft.addToBackStack(null);
-				//
-				// ft.commit();
-				//
-				// }
-				// };
-				// cellViewMainLayout.setOnClickListener(myhandler1);
-				//
-				// lifePageCellContainerLayout.addView(cellViewMainLayout);
-
 			}
 
 			urls = stringArrayList.toArray(new String[stringArrayList.size()]);
@@ -296,8 +256,6 @@ public class GaleryView extends SherlockFragment {
 					.findViewById(R.id.gridview);
 			gridView.setAdapter(new ImageAdapter(getActivity()));
 
-			for (String s : urls)
-				Log.d("9999999999999999999", s);
 		}
 
 	}

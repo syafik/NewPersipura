@@ -21,30 +21,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.persipura.bean.imageBean;
 import com.persipura.bean.mediaBean;
 
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.DetailNews;
-//import com.webileapps.navdrawer.DetailNews;
-//import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R;
-import com.persipura.home.Home;
-import com.persipura.media.*;
 
 
-public class videoTerbaru extends SherlockFragment {
+
+
+public class ListGalery extends SherlockFragment {
 
 	private LayoutInflater mInflater;
-	List<mediaBean> listThisWeekBean;
+	List<imageBean> listThisWeekBean;
 	LinearLayout videoContainer;
 	ViewGroup newContainer;
 	String nid;
 
-	public static final String TAG = videoTerbaru.class.getSimpleName();
+	public static final String TAG = ListGalery.class.getSimpleName();
 
-	public static videoTerbaru newInstance() {
-		return new videoTerbaru();
+	public static ListGalery newInstance() {
+		return new ListGalery();
 	}
 	
 	@SuppressLint("NewApi")
@@ -52,12 +50,12 @@ public class videoTerbaru extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View rootView = inflater.inflate(R.layout.video, container, false);
+		View rootView = inflater.inflate(R.layout.galery, container, false);
 		newContainer = container;
 		mInflater = getLayoutInflater(savedInstanceState);
 
 		videoContainer = (LinearLayout) rootView
-				.findViewById(R.id.parent_video);
+				.findViewById(R.id.parent_Image);
 		
 		new fetchLocationFromServer().execute("");
 		
@@ -86,7 +84,7 @@ public class videoTerbaru extends SherlockFragment {
 		protected String doInBackground(String... params) {
 
 			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/video");
+					.httpGetServiceWithoutparam("/restapi/get/pictures");
 			return result;
 		}
 
@@ -101,15 +99,15 @@ public class videoTerbaru extends SherlockFragment {
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
-				listThisWeekBean = new ArrayList<mediaBean>();
+				listThisWeekBean = new ArrayList<imageBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
-					mediaBean thisWeekBean = new mediaBean();
-					thisWeekBean.setId(resObject.getString("id"));
+					imageBean thisWeekBean = new imageBean();
+					thisWeekBean.setNid(resObject.getString("id"));
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setcreated(resObject.getString("created"));
-					thisWeekBean.setvideo_image(resObject
-							.getString("video_image"));
+					thisWeekBean.setimg_uri(resObject
+							.getString("picture_url"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -125,9 +123,9 @@ public class videoTerbaru extends SherlockFragment {
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<mediaBean> listThisWeekBean) {
+				List<imageBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
-				mediaBean thisWeekBean = listThisWeekBean.get(i);
+				imageBean thisWeekBean = listThisWeekBean.get(i);
 
 				View cellViewMainLayout = mInflater.inflate(
 						R.layout.video_list, null);
@@ -143,11 +141,14 @@ public class videoTerbaru extends SherlockFragment {
 				nid = thisWeekBean.getId();
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
-				Log.d("6666666666666666666", nid);
+				
+				String[] parts = thisWeekBean.getpictureUrl().split(" | ");
+				Log.d("---------------------", parts[0]);
+				
 				Imageloader imageLoader = new Imageloader(getSherlockActivity()
 						.getApplicationContext());
-				img.setTag(thisWeekBean.getvideo_image());
-				imageLoader.DisplayImage(thisWeekBean.getvideo_image(),
+				img.setTag(parts[0]);
+				imageLoader.DisplayImage(parts[0],
 						getActivity(), img);
 
 				videoContainer.addView(cellViewMainLayout);
@@ -155,7 +156,7 @@ public class videoTerbaru extends SherlockFragment {
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {					
 						newContainer.setTag(nid);
-						videoPlayer vp = new videoPlayer();
+						GaleryView vp = new GaleryView();
 						
 						Bundle b = new Bundle();
 						b.putString("myString",nid);

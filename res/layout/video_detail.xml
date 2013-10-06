@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/abs__background_holo_dark" >
 
     <VideoView
         android:id="@+id/videoView1"
@@ -14,7 +15,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.07" >
+        android:layout_weight="0.07"
+        android:background="@color/abs__background_holo_dark" >
 
         <TextView
             android:id="@+id/textTitle"

@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnLayoutChangeListener;
 
 import android.webkit.WebView;
 import android.widget.LinearLayout;
@@ -39,12 +41,14 @@ public class videoPlayer extends SherlockFragment {
 		return new videoPlayer();
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		nid = (String) container.getTag();
-
-		Log.d("tagID", "tagID : " + container.getTag());
+		Bundle b = getArguments();
+		nid = b.getString("myString");
+	
+		Log.d("tagID +++++++++++++++++++++++++++++++", "tagID : " + nid);
 
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.video_detail, container,
@@ -53,9 +57,10 @@ public class videoPlayer extends SherlockFragment {
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
+		
 		return rootView;
 	}
-
+	
 	private class fetchLocationFromServer extends
 			AsyncTask<String, Void, String> {
 
@@ -94,7 +99,7 @@ public class videoPlayer extends SherlockFragment {
 					thisWeekBean.setvideo_image(resObject
 							.getString("video_image"));
 					thisWeekBean.setvideo_uri(resObject
-							.getString("video_image"));
+							.getString("video_uri"));
 					thisWeekBean.setdescription(resObject
 							.getString("description"));
 					listThisWeekBean.add(thisWeekBean);
@@ -137,7 +142,7 @@ public class videoPlayer extends SherlockFragment {
 				videoView
 						.setMediaController(new MediaController(getActivity()));
 				Uri uri = Uri
-						.parse("http://prspura.tk/sites/default/files/media_video/YouTube%20-%20Cang-Uncang%20Angge.mp4");
+						.parse(thisWeekBean.getvideo_uri());
 				videoView.setVideoURI(uri);
 				videoView.start();
 				videoView.requestFocus();
