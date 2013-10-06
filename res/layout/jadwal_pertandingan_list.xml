@@ -4,120 +4,128 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-      <RelativeLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dip"
+        android:layout_marginTop="20dip"
         android:background="@drawable/gradient_box"
         android:padding="10px" >
-        
-    <TextView
-        android:id="@+id/findzoes_list_text_cellnum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="7dp"
-        
-        android:gravity="center"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:visibility="gone"
-        android:singleLine="true"
-        
-        android:textSize="10dp" />
 
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="16dp"
-        android:paddingTop="6dp"
-        android:text="ISL"
-        android:textSize="14dp" />
+        <TextView
+            android:id="@+id/findzoes_list_text_cellnum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:singleLine="true"
+            android:textSize="10dp"
+            android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/name_team2"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="6dp"
+            android:text="vs"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/name_team2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/name_team1"
+            android:layout_alignBottom="@+id/name_team1"
+            android:layout_toLeftOf="@+id/ImageTeam2"
+            android:paddingTop="6dp"
+            android:text="TEAM2"
+            android:gravity="right"
+            android:textSize="11dp" />
+
+        <TextView
+            android:id="@+id/text_stadiun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="none"
+            android:singleLine="false"
+            android:text="TextView"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/name_team1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView1"
+            android:layout_toRightOf="@+id/imageView1"
+            android:paddingTop="6dp"
+            android:text="TEAM1"
+            android:textSize="11dp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageView
+            android:id="@+id/ImageTeam2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/name_team2"
+            android:src="@drawable/ic_launcher" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/TextView01"
-        android:layout_marginLeft="5dp"
-        android:src="@drawable/ic_launcher" />
+        android:layout_alignParentTop="true" >
 
-    <TextView
-        android:id="@+id/name_team1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/list_date"
-        android:layout_toRightOf="@+id/list_date"
-        android:paddingTop="6dp"
-        android:text="TEAM1"
-        android:textSize="12dp" />
+        <TextView
+            android:id="@+id/list_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="6dp"
+            android:text="10/8/2013"
+            android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/TextView04"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/name_team2"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="6dp"
-        android:text="vs"
-        android:textSize="12dp" />
+        <TextView
+            android:id="@+id/list_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/list_date"
+            android:layout_alignBottom="@+id/list_date"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="15:00 WIT"
+            android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/name_team2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/name_team1"
-        android:layout_alignBottom="@+id/name_team1"
-        android:layout_toLeftOf="@+id/ImageTeam2"
-        android:paddingTop="6dp"
-        android:text="TEAM2"
-        android:textSize="12dp" />
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:text="ISL"
+            android:paddingTop="6dp"
+            android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/list_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/TextView01"
-        android:layout_alignBottom="@+id/TextView01"
-        android:layout_centerHorizontal="true"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:paddingBottom="6dp"
-        android:text="15:00 WIT"
-        android:textSize="12dp" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/list_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/TextView01"
-        android:layout_alignLeft="@+id/imageView1"
-        android:paddingTop="6dp"
-        android:text="10/8/2013"
-        android:textSize="12dp" />
-
-    <ImageView
-        android:id="@+id/ImageTeam2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
-         android:layout_marginRight="5dp"
-        android:layout_alignTop="@+id/name_team2"
-        android:src="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/text_stadiun"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:ellipsize="none"
-        android:singleLine="false"
-        android:text="TextView" />
-</RelativeLayout>
 </RelativeLayout>

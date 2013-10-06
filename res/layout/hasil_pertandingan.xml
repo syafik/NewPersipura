@@ -6,8 +6,8 @@
     
     
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
         android:layout_below="@+id/list_hasil"
         android:layout_margin="3dp"
         android:padding="2dp"
@@ -22,5 +22,18 @@
             android:padding="3dp" >
         </LinearLayout>
     </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:src="@drawable/btm_logo" />
+    </RelativeLayout>
 
 </LinearLayout>
