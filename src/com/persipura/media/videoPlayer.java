@@ -137,7 +137,7 @@ public class videoPlayer extends SherlockFragment {
 
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
-				description.setText(thisWeekBean.getcreated());
+				description.setText(thisWeekBean.getdescription());
 
 				videoView
 						.setMediaController(new MediaController(getActivity()));

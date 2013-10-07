@@ -14,14 +14,17 @@ import org.json.JSONObject;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.imageBean;
 
+import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +48,7 @@ public class GaleryView extends SherlockFragment {
 	LinearLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
+	private ProgressDialog progressDialog;
 
 	public static final String TAG = GaleryView.class.getSimpleName();
 
@@ -56,7 +60,7 @@ public class GaleryView extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		new fetchImage().execute("");
-
+		showProgressDialog();
 		newContainer = container;
 		View rootView = inflater.inflate(R.layout.gridview, container,
 				false);
@@ -89,7 +93,7 @@ public class GaleryView extends SherlockFragment {
 	public class ImageAdapter extends BaseAdapter {
 		private Context context;
 		private int itemBackground;
-
+		
 		ImageAdapter(Context c) {
 			context = c;
 		}
@@ -187,17 +191,51 @@ public class GaleryView extends SherlockFragment {
 	        }
 	        
 	        picture = (ImageView)v.getTag(R.id.picture);   
+	        
+//	        Imageloader imageLoader = new Imageloader(getSherlockActivity()
+//					.getApplicationContext());
+//			picture.setTag(urls);
+//			imageLoader.DisplayImage(urls[position],
+//					getActivity(), picture);
+	     
 	        picture.setImageBitmap(bitmap);
 	    
 	        return v;
 	    }
 	}
+	
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
+	}
 
 	private class fetchImage extends AsyncTask<String, Void, String> {
-
+		ProgressDialog pd = new ProgressDialog(getActivity());
 		@Override
 		protected void onPreExecute() {
-
+			 
+						
 		}
 
 		@Override
@@ -226,6 +264,7 @@ public class GaleryView extends SherlockFragment {
 					thisWeekBean.setNid(resObject.getString("id"));
 					thisWeekBean.setimg_uri(resObject.getString("picture_url"));
 					listThisWeekBean.add(thisWeekBean);
+					
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 
@@ -246,7 +285,8 @@ public class GaleryView extends SherlockFragment {
 
 				String[] parts = thisWeekBean.getpictureUrl().split(" | ");
 				Log.d("---------------------", parts[0]);
-
+				
+				 
 				stringArrayList.add(parts[0]);
 
 			}

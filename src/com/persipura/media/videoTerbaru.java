@@ -140,6 +140,7 @@ public class videoTerbaru extends SherlockFragment {
 
 				title.setText("");
 				created.setText("");
+				nid = null;
 				nid = thisWeekBean.getId();
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
@@ -151,14 +152,14 @@ public class videoTerbaru extends SherlockFragment {
 						getActivity(), img);
 
 				videoContainer.addView(cellViewMainLayout);
-				
+				cellViewMainLayout.setTag(nid);
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {					
-						newContainer.setTag(nid);
+						
 						videoPlayer vp = new videoPlayer();
 						
 						Bundle b = new Bundle();
-						b.putString("myString",nid);
+						b.putString("myString",(String) v.getTag());
 						vp.setArguments(b);	
 						getActivity().getSupportFragmentManager()
 						.beginTransaction()

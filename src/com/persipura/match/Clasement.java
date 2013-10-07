@@ -141,6 +141,17 @@ public class Clasement extends SherlockFragment {
 				L.setText(thisWeekBean.getL());
 				GD.setText(thisWeekBean.getGD());
 				Pts.setText(thisWeekBean.getPts());
+				
+//				int myNum = 0;
+//				try {
+//				    myNum = Integer.parseInt(thisWeekBean.getPosition());
+//				} catch(NumberFormatException nfe) {
+//				
+//				if (myNum % 2 == 0){
+//					cellViewMainLayout.setBackgroundResource(R.drawable.gradient_box);
+//				} else {
+////				    reusableView.setBackgroundResource(R.drawable.alterselector2);
+//				}
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 			}

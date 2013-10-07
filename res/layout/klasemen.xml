@@ -3,7 +3,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+     <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="7dp"
+       android:padding="5dip"
+         >
+
+        <TextView
+            android:id="@+id/pos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:text="Nama Team"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="P"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/w"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="W"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="L"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/gd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GD"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/pts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pts"
+            android:paddingRight="15dp"
+            android:textSize="10dp" />
+
+    </TableRow>
     
     <ScrollView
         android:layout_width="fill_parent"
