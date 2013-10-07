@@ -75,7 +75,7 @@ public class News extends SherlockFragment {
 		newContainer = container;
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-
+		
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
 			@Override
@@ -194,7 +194,11 @@ public class News extends SherlockFragment {
 				descNews.setText("");
 				cellnumTextView.setText("");
 				// cellViewMainLayout.setTag(thisWeekBean.getNid());
+				nid = null;
 				nid = thisWeekBean.getNid();
+				
+				cellViewMainLayout.setTag(nid);
+				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 
 				titleNews.setText(thisWeekBean.gettitle());
 				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
@@ -216,22 +220,16 @@ public class News extends SherlockFragment {
 
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
-						// getChildFragmentManager()
-						// .beginTransaction()
-						// .replace(R.id.list_parent,
-						// ,
-						// DetailNews.TAG).commit();
 
-						final FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						ft.remove(News.this);
+				        Bundle data = new Bundle();
+				        data.putString("NewsId", (String) v.getTag());
 
-						newContainer.setTag(nid);
-						ft.replace(R.id.content, DetailNews.newInstance(),
-								"DetailNews");
-						ft.addToBackStack(null);
-
-						ft.commit();
+				        FragmentTransaction t = getActivity().getSupportFragmentManager()
+				                .beginTransaction();
+				        DetailNews mFrag = new DetailNews();
+				        mFrag.setArguments(data);
+				        t.replace(R.id.content, mFrag);
+				        t.commit();
 
 					}
 				};

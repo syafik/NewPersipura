@@ -318,22 +318,25 @@ public class Home extends SherlockFragment {
 				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
 						imgNews);
 
+				NewsId = null;
 				NewsId = thisWeekBean.getNid();
-
+				
+				cellViewMainLayout.setTag(NewsId);
+				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 
 					public void onClick(View v) {
+						
 
-						final FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						ft.remove(Home.this);
+					        Bundle data = new Bundle();
+					        data.putString("NewsId", (String) v.getTag());
 
-						newContainer.setTag(NewsId);
-						ft.replace(R.id.content, DetailNews.newInstance(),
-								"DetailNews");
-						ft.addToBackStack(null);
-
-						ft.commit();
+					        FragmentTransaction t = getActivity().getSupportFragmentManager()
+					                .beginTransaction();
+					        DetailNews mFrag = new DetailNews();
+					        mFrag.setArguments(data);
+					        t.replace(R.id.content, mFrag);
+					        t.commit();
 
 					}
 				};

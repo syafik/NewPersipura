@@ -51,7 +51,9 @@ public class DetailNews extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		nid = (String) container.getTag();
+//		nid = (String) container.getTag();
+		Bundle extras = getArguments();
+		nid = extras.getString("NewsId");
 		showProgressDialog();
 
 		new fetchLocationFromServer().execute("");
