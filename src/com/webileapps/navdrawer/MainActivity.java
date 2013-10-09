@@ -85,6 +85,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private Button scelta1;
 	private ProgressDialog progressDialog;
 	String squadId;
+	String titleNav = "Home";
 
 	public static MainActivity newInstance() {
 		return new MainActivity();
@@ -99,7 +100,7 @@ public class MainActivity extends SherlockFragmentActivity {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-
+		
 		getSupportActionBar().setIcon(R.drawable.logo_persipura);
 		mTitle = mDrawerTitle = getTitle();
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
@@ -110,7 +111,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				R.layout.drawer_list_item, mPlanetTitles));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle("HOME");
+		getActionBar().setTitle(titleNav);
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#B61718")));
 		_initMenu();
@@ -118,37 +119,13 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawer.setDrawerListener(mDrawerToggle);
 		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
 
-		View view = getLayoutInflater().inflate(R.layout.home, mainLayout,
-				false);
-		View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
-				false);
-
-		mainLayout.addView(view);
-		mainLayout.addView(view2);
-
-		view2.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-
-			@Override
-			public void onLayoutChange(View v, int left, int top, int right,
-					int bottom, int oldLeft, int oldTop, int oldRight,
-					int oldBottom) {
-				RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
-				FrameLayout bottom_control_bar = (FrameLayout) v
-						.findViewById(R.id.bottom_control_bar);
-				ScrollView scrollBar = (ScrollView) mainLayout
-						.findViewById(R.id.scrollBar);
-				LayoutParams params = scrollBar.getLayoutParams();
-				int height = mainLayout.getHeight()
-						- bottom_control_bar.getHeight();
-				params.height = height;
-			}
-
-		});
+	
 
 		if (savedInstanceState == null) {
 
 			Bundle extras = getIntent().getExtras();
 			if (extras == null) {
+				
 				selectItem(0);
 			} else {
 				squadId = extras.getString("squadId");
@@ -192,9 +169,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				}
 			});
-			// InputMethodManager imm = (InputMethodManager)
-			// getSystemService(Context.INPUT_METHOD_SERVICE);
-			// imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
 		}
 		switch (item.getItemId()) {
@@ -206,7 +180,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			}
 
-			getSupportActionBar().setTitle("HOME");
+			getSupportActionBar().setTitle(titleNav);
 			break;
 		}
 
@@ -268,17 +242,20 @@ public class MainActivity extends SherlockFragmentActivity {
 		case 0:
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.content, Home.newInstance(), Home.TAG).commit();
+			titleNav = "Home";
 			break;
 		case 1:
 
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.content, News.newInstance(), News.TAG).commit();
+			titleNav = "News";
 			break;
 		case 2:
 			getSupportFragmentManager()
 					.beginTransaction()
 					.add(R.id.content, pageSliding.newInstance(),
 							pageSliding.TAG).commit();
+			titleNav = "Media";
 			break;
 		case 3:
 			getSupportFragmentManager()
@@ -286,10 +263,12 @@ public class MainActivity extends SherlockFragmentActivity {
 					.add(R.id.content,
 							PageSlidingTabStripFragment.newInstance(),
 							PageSlidingTabStripFragment.TAG).commit();
+			titleNav = "Match";
 			break;
 		case 4:
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.content, Squad.newInstance(), Squad.TAG).commit();
+			titleNav = "Squad";
 			break;
 		case 5:
 			args.putString("squadId", squadId);
@@ -297,6 +276,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content, fragment).commit();
+			titleNav = "Squad";
 			break;
 		case 6:
 			args.putString("q", search.getText().toString());
@@ -304,13 +284,17 @@ public class MainActivity extends SherlockFragmentActivity {
 			searchFragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content, searchFragment).commit();
+			titleNav = "Search";
 			break;
 		}
-		// View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
-		// false);
-		//
-		// mainLayout.addView(view2);
 
+		
+//		 View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
+//		 false);
+//		
+//		 mainLayout.addView(view2);
+
+		
 		mDrawer.closeDrawer(mDrawerList);
 	}
 
@@ -324,13 +308,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void onDrawerClosed(View view) {
-			getActionBar().setTitle("HOME");
+			getActionBar().setTitle(titleNav);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
-			getActionBar().setTitle("HOME");
+			getActionBar().setTitle(titleNav);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 	}
