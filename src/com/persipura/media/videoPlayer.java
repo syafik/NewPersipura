@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,7 +138,7 @@ public class videoPlayer extends SherlockFragment {
 
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
-				description.setText(thisWeekBean.getdescription());
+				description.setText(Html.fromHtml(thisWeekBean.getdescription()));
 
 				videoView
 						.setMediaController(new MediaController(getActivity()));

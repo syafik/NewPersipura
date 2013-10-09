@@ -34,6 +34,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class GaleryView extends SherlockFragment {
@@ -59,6 +60,12 @@ public class GaleryView extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		Bundle b = getArguments();
+		nid = b.getString("myString");
+		
+		Log.d("tagID +++++++++++++++++++++++++++++++", "tagID : " + nid);
+		
 		new fetchImage().execute("");
 		showProgressDialog();
 		newContainer = container;
@@ -241,8 +248,7 @@ public class GaleryView extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 
-			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/pictures");
+			String result = WebHTTPMethodClass.httpGetService("/restapi/get/pictures","id=" + nid);
 			return result;
 		}
 
@@ -271,7 +277,6 @@ public class GaleryView extends SherlockFragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		@SuppressWarnings("deprecation")
@@ -280,11 +285,11 @@ public class GaleryView extends SherlockFragment {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				imageBean thisWeekBean = listThisWeekBean.get(i);
 
-				String[] parts = thisWeekBean.getpictureUrl().split(" | ");
-				Log.d("---------------------", parts[0]);
+				String[] parts = thisWeekBean.getpictureUrl().split("\\|");
 				
-				 
-				stringArrayList.add(parts[0]);
+				for (int x = 0; x < parts.length; x++) {
+					stringArrayList.add(parts[x]);
+				}
 
 			}
 

@@ -12,5 +12,6 @@
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"
         android:numColumns="2" 
+        android:background="@color/abs__background_holo_dark"
         />
 </FrameLayout>

@@ -55,7 +55,7 @@ public class mediaTerbaru extends SherlockFragment {
 		protected String doInBackground(String... params) {
 
 			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/video");
+					.httpGetServiceWithoutparam("/restapi/get/media");
 			return result;
 		}
 
