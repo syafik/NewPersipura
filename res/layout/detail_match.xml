@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/abs__background_holo_dark"
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/relative1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/datetext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -18,7 +20,7 @@
             android:text="date" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/timetext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -33,50 +35,15 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="24dp"
             android:text="ISL" />
-
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_below="@+id/relative1"
         android:layout_margin="5dip"
         android:background="@drawable/gradient_box"
         android:padding="10px" >
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/imageView1"
-            android:layout_marginRight="29dp"
-            android:src="@drawable/icon" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageView1"
-            android:layout_toRightOf="@+id/imageView1"
-            android:text="teamA" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="33dp"
-            android:src="@drawable/icon" />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageView2"
-            android:layout_toLeftOf="@+id/imageView2"
-            android:text="teamB" />
 
         <TextView
             android:id="@+id/textView6"
@@ -88,22 +55,59 @@
             android:text="VS" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/scoreA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView1"
-            android:layout_toRightOf="@+id/imageView1"
+            android:layout_marginRight="22dp"
+            android:layout_toLeftOf="@+id/textView6"
             android:text="scoreA" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/scoreB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView7"
-            android:layout_alignBottom="@+id/textView7"
-            android:layout_toLeftOf="@+id/imageView2"
+            android:layout_alignBaseline="@+id/scoreA"
+            android:layout_alignBottom="@+id/scoreA"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/textView6"
             android:text="scoreB" />
-        
+
+        <TextView
+            android:id="@+id/nameteamA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView1"
+            android:layout_toRightOf="@+id/imageView1"
+            android:layout_margin="10dp"
+            android:text="teamA" />
+
+        <TextView
+            android:id="@+id/nameteamB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/nameteamA"
+            android:layout_alignBottom="@+id/nameteamA"
+            android:layout_toLeftOf="@+id/imageView2"
+            android:layout_margin="10dp"
+            android:text="teamB" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/nameteamB"
+            android:src="@drawable/icon" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -116,31 +120,47 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="14dp"
             android:text="Ringkasan" />
 
     </RelativeLayout>
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="140dp"
         android:id="@+id/list_news"
-        android:layout_margin="10dp"
-        android:scrollbars="vertical">
+        android:layout_width="fill_parent"
+        android:layout_height="160dp"
+        android:layout_margin="5dp"
+        android:scrollbars="vertical"
+        android:background="@drawable/gradient_box" >
 
         <LinearLayout
-            android:id="@+id/location_linear_parentview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            >
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/location_linear1_parentview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_weight="1" >
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/location_linear2_parentview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_weight="1" >
+            </LinearLayout>
+            
         </LinearLayout>
     </ScrollView>
-	 <RelativeLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         >
+        android:layout_height="wrap_content" >
 
         <TextView
             android:id="@+id/textView9"
@@ -148,172 +168,172 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="14dp"
             android:text="statistik" />
-
     </RelativeLayout>
 
-	 <LinearLayout
-	     android:layout_width="match_parent"
-	     android:layout_height="wrap_content"
-	     android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-	     <RelativeLayout
-	         android:layout_width="match_parent"
-	         android:layout_height="20dp"
-	         android:background="@drawable/gradient_box" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@drawable/gradient_box" >
 
-	         <TextView
-	             android:id="@+id/textView10"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentLeft="true"
-	             android:layout_marginLeft="14dp"
-	             android:text="TextView" />
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="14dp"
+                android:text="TextView" />
 
-	         <TextView
-	             android:id="@+id/textView15"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentRight="true"
-	             android:layout_marginRight="14dp"
-	             android:text="TextView" />
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="14dp"
+                android:text="TextView" />
 
-	         <TextView
-	             android:id="@+id/textView20"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_centerHorizontal="true"
-	             android:text="Tendangan" />
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="Tendangan" />
+        </RelativeLayout>
+    </LinearLayout>
 
-	     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp" >
 
-	 </LinearLayout>
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:text="TextView" />
 
-	 <RelativeLayout
-	     android:layout_width="match_parent"
-	     android:layout_height="20dp" >
-	     
-	     <TextView
-	             android:id="@+id/textView11"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentLeft="true"
-	             android:layout_marginLeft="14dp"
-	             android:text="TextView" />
-	     <TextView
-	             android:id="@+id/textView16"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentRight="true"
-	             android:layout_marginRight="14dp"
-	             android:text="TextView" />
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:text="TextView" />
 
-	     <TextView
-	         android:id="@+id/textView21"
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:layout_alignParentTop="true"
-	         android:layout_centerHorizontal="true"
-	         android:text="Tendangan sudut" />
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Tendangan sudut" />
+    </RelativeLayout>
 
-	 </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@drawable/gradient_box" >
 
-	 <RelativeLayout
-	     android:layout_width="match_parent"
-	     android:layout_height="20dp"
-	     android:background="@drawable/gradient_box" >
-	     <TextView
-	             android:id="@+id/textView12"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentLeft="true"
-	             android:layout_marginLeft="14dp"
-	             android:text="TextView" />
-	     <TextView
-	             android:id="@+id/textView17"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentRight="true"
-	             android:layout_marginRight="14dp"
-	             android:text="TextView" />
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:text="TextView" />
 
-	     <TextView
-	         android:id="@+id/textView22"
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:layout_alignParentBottom="true"
-	         android:layout_centerHorizontal="true"
-	         android:text="Kartu Kuning" />
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:text="TextView" />
 
-	 </RelativeLayout>
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Kartu Kuning" />
+    </RelativeLayout>
 
-	 <RelativeLayout
-	     android:layout_width="match_parent"
-	     android:layout_height="20dp" >
-	     <TextView
-	             android:id="@+id/textView13"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentLeft="true"
-	             android:layout_marginLeft="14dp"
-	             android:text="TextView" />
-	     <TextView
-	             android:id="@+id/textView18"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentRight="true"
-	             android:layout_marginRight="14dp"
-	             android:text="TextView" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp" >
 
-	     <TextView
-	         android:id="@+id/textView23"
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:layout_alignParentBottom="true"
-	         android:layout_centerHorizontal="true"
-	         android:text="Kartu Merah" />
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:text="TextView" />
 
-	 </RelativeLayout>
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:text="TextView" />
 
-	 <RelativeLayout
-	     android:layout_width="match_parent"
-	     android:layout_height="20dp"
-	     android:background="@drawable/gradient_box" >
-	     <TextView
-	             android:id="@+id/textView14"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentLeft="true"
-	             android:layout_marginLeft="14dp"
-	             android:text="TextView" />
-	     <TextView
-	             android:id="@+id/textView19"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_alignParentBottom="true"
-	             android:layout_alignParentRight="true"
-	             android:layout_marginRight="14dp"
-	             android:text="TextView" />
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Kartu Merah" />
+    </RelativeLayout>
 
-	     <TextView
-	         android:id="@+id/textView24"
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:layout_alignParentBottom="true"
-	         android:layout_centerHorizontal="true"
-	         android:text="Penguasaan Bola" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@drawable/gradient_box" >
 
-	 </RelativeLayout>
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Penguasaan Bola" />
+    </RelativeLayout>
 
 </LinearLayout>

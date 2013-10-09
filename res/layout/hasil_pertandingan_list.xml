@@ -35,6 +35,7 @@
             android:layout_alignBottom="@+id/name_team1"
             android:layout_toLeftOf="@+id/ImageTeam2"
             android:paddingTop="6dp"
+            android:paddingLeft="5dp"
             android:text="TEAM2"
             android:textSize="11dp" />
 
@@ -45,6 +46,7 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/imageView1"
             android:paddingTop="6dp"
+            android:paddingLeft="5dp"
             android:text="TEAM1"
             android:textSize="11dp" />
 

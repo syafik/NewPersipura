@@ -256,18 +256,15 @@ public class GaleryView extends SherlockFragment {
 
 			try {
 				JSONArray jsonArray = new JSONArray(result);
-
 				listThisWeekBean = new ArrayList<imageBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
 					imageBean thisWeekBean = new imageBean();
 					thisWeekBean.setNid(resObject.getString("id"));
 					thisWeekBean.setimg_uri(resObject.getString("picture_url"));
-					listThisWeekBean.add(thisWeekBean);
-					
+					listThisWeekBean.add(thisWeekBean);					
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
-
 					createSelectLocationListView(listThisWeekBean);
 				}
 

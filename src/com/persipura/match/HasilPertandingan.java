@@ -22,6 +22,7 @@ import android.sax.RootElement;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
+import com.persipura.media.videoPlayer;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -99,7 +101,7 @@ public class HasilPertandingan extends SherlockFragment {
 					thisWeekBean.setHteam(resObject.getString("h_team"));
 					thisWeekBean.setAteam(resObject.getString("a_team"));
 					thisWeekBean.setHgoal(resObject.getString("h_goal"));
-					thisWeekBean.setAgoal(resObject.getString("h_goal"));
+					thisWeekBean.setAgoal(resObject.getString("a_goal"));
 
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -161,10 +163,27 @@ public class HasilPertandingan extends SherlockFragment {
 				imgTeamA.setTag(thisWeekBean.getHlogo());
 				imageLoader.DisplayImage(thisWeekBean.getHlogo(),
 						getActivity(), imgTeamA);
-
+				String id = thisWeekBean.getNid();
 				imgTeamB.setTag(thisWeekBean.getAlogo());
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
 						getActivity(), imgTeamB);
+				
+				cellViewMainLayout.setTag(id);
+				cellViewMainLayout.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {					
+						
+						detailPertandingan vp = new detailPertandingan();
+						
+						Bundle b = new Bundle();
+						b.putString("myString",(String) v.getTag());
+						vp.setArguments(b);	
+						getActivity().getSupportFragmentManager()
+						.beginTransaction()
+						.add(R.id.content, vp,"detail")
+						.addToBackStack("")
+						.commit();
+					}
+				});
 
 				// BitmapFactory.Options bmOptions;
 				// bmOptions = new BitmapFactory.Options();

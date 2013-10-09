@@ -1,30 +1,19 @@
 package com.persipura.match;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.sax.RootElement;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -32,15 +21,14 @@ import com.persipura.bean.HasilBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.R.id;
-import com.webileapps.navdrawer.R.layout;
 
 public class detailPertandingan extends SherlockFragment {
 
 	private LayoutInflater mInflater;
 	List<HasilBean> listThisWeekBean;
-	LinearLayout lifePageCellContainerLayout;
-
+	LinearLayout lifePageCellContainerLayout1, lifePageCellContainerLayout2;
+	String nid;
+	
 	public static final String TAG = detailPertandingan.class.getSimpleName();
 
 	public static detailPertandingan newInstance() {
@@ -50,13 +38,17 @@ public class detailPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Bundle b = getArguments();
+		nid = b.getString("myString");
 		new fetchLocationFromServer().execute("");
-		View rootView = inflater.inflate(R.layout.detail_match,
-				container, false);
+		View rootView = inflater.inflate(R.layout.detail_match, container,
+				false);
 		mInflater = getLayoutInflater(savedInstanceState);
 
-		lifePageCellContainerLayout = (LinearLayout) rootView
-				.findViewById(R.id.location_linear_parentview);
+		lifePageCellContainerLayout1 = (LinearLayout) rootView
+				.findViewById(R.id.location_linear1_parentview);
+		lifePageCellContainerLayout2 = (LinearLayout) rootView
+				.findViewById(R.id.location_linear2_parentview);
 		return rootView;
 	}
 
@@ -71,8 +63,7 @@ public class detailPertandingan extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 
-			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/match_results");
+			String result = WebHTTPMethodClass.httpGetService("/restapi/get/match_results","id=" + nid);
 			return result;
 		}
 
@@ -99,8 +90,33 @@ public class detailPertandingan extends SherlockFragment {
 					thisWeekBean.setHteam(resObject.getString("h_team"));
 					thisWeekBean.setAteam(resObject.getString("a_team"));
 					thisWeekBean.setHgoal(resObject.getString("h_goal"));
-					thisWeekBean.setAgoal(resObject.getString("h_goal"));
-
+					thisWeekBean.setAgoal(resObject.getString("a_goal"));
+					thisWeekBean.setHgoalkick(resObject
+							.getString("h_goal_kick"));
+					thisWeekBean.setAgoalkick(resObject
+							.getString("a_goal_kick"));
+					thisWeekBean.setHcornerkick(resObject
+							.getString("h_corner_kick"));
+					thisWeekBean.setAcornerkick(resObject
+							.getString("a_corner_kick"));
+					thisWeekBean.setHyellowcard(resObject
+							.getString("h_yellow_card"));
+					thisWeekBean.setAyellowcard(resObject
+							.getString("a_yellow_card"));
+					thisWeekBean.setAredcard(resObject.getString("a_red_card"));
+					thisWeekBean.setHredcard(resObject.getString("h_red_card"));
+					thisWeekBean.setApercentage(resObject
+							.getString("a_percentage"));
+					thisWeekBean.setHpercentage(resObject
+							.getString("h_percentage"));
+					thisWeekBean.setHgoalscorer(resObject
+							.getString("h_goal_scorer"));
+					thisWeekBean.setAgoalscorer(resObject
+							.getString("a_goal_scorer"));
+					thisWeekBean.setAgoalminute(resObject
+							.getString("a_goal_minute"));
+					thisWeekBean.setHgoalminute(resObject
+							.getString("h_goal_minute"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -120,26 +136,44 @@ public class detailPertandingan extends SherlockFragment {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				HasilBean thisWeekBean = listThisWeekBean.get(i);
 
-				View cellViewMainLayout = mInflater.inflate(
-						R.layout.hasil_pertandingan_list, null);
-				TextView ListDate = (TextView) cellViewMainLayout
-						.findViewById(R.id.list_date);
-				TextView ListTime = (TextView) cellViewMainLayout
-						.findViewById(R.id.list_time);
-				TextView cellnumTextView = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_cellnum);
-				TextView NameTeamA = (TextView) cellViewMainLayout
-						.findViewById(R.id.name_team1);
-				TextView NameTeamB = (TextView) cellViewMainLayout
-						.findViewById(R.id.name_team2);
-				TextView ScoreTeamA = (TextView) cellViewMainLayout
-						.findViewById(R.id.scoreTeam1);
-				TextView ScoreTeamB = (TextView) cellViewMainLayout
-						.findViewById(R.id.scoreTeam2);
-				ImageView imgTeamA = (ImageView) cellViewMainLayout
-						.findViewById(R.id.imageView1);
-				ImageView imgTeamB = (ImageView) cellViewMainLayout
-						.findViewById(R.id.ImageTeam2);
+				TextView ListDate = (TextView) getView().findViewById(
+						R.id.datetext);
+				TextView ListTime = (TextView) getView().findViewById(
+						R.id.timetext);
+				TextView cellnumTextView = (TextView) getView().findViewById(
+						R.id.findzoes_list_text_cellnum);
+				TextView NameTeamA = (TextView) getView().findViewById(
+						R.id.nameteamA);
+				TextView NameTeamB = (TextView) getView().findViewById(
+						R.id.nameteamB);
+				TextView ScoreTeamA = (TextView) getView().findViewById(
+						R.id.scoreA);
+				TextView ScoreTeamB = (TextView) getView().findViewById(
+						R.id.scoreB);
+				ImageView imgTeamA = (ImageView) getView().findViewById(
+						R.id.imageView1);
+				ImageView imgTeamB = (ImageView) getView().findViewById(
+						R.id.imageView2);
+				TextView goalkickA = (TextView) getView().findViewById(
+						R.id.textView10);
+				TextView goalkickB = (TextView) getView().findViewById(
+						R.id.textView15);
+				TextView cornerkickA = (TextView) getView().findViewById(
+						R.id.textView11);
+				TextView cornerkickB = (TextView) getView().findViewById(
+						R.id.textView16);
+				TextView yellowA = (TextView) getView().findViewById(
+						R.id.textView12);
+				TextView yellowB = (TextView) getView().findViewById(
+						R.id.textView17);
+				TextView redA = (TextView) getView().findViewById(
+						R.id.textView13);
+				TextView redB = (TextView) getView().findViewById(
+						R.id.textView18);
+				TextView percentageA = (TextView) getView().findViewById(
+						R.id.textView14);
+				TextView percentageB = (TextView) getView().findViewById(
+						R.id.textView19);
 
 				ListDate.setText("");
 				ListTime.setText("");
@@ -147,7 +181,19 @@ public class detailPertandingan extends SherlockFragment {
 				NameTeamB.setText("");
 				ScoreTeamA.setText("");
 				ScoreTeamB.setText("");
-				cellnumTextView.setText("");
+
+				goalkickA.setText("");
+				goalkickB.setText("");
+				cornerkickA.setText("");
+				cornerkickB.setText("");
+				yellowA.setText("");
+				yellowB.setText("");
+				redA.setText("");
+				redB.setText("");
+				percentageA.setText("");
+				percentageB.setText("");
+
+				// cellnumTextView.setText("");
 
 				ListDate.setText(thisWeekBean.getDate());
 				ListTime.setText(thisWeekBean.getTime());
@@ -156,6 +202,18 @@ public class detailPertandingan extends SherlockFragment {
 				ScoreTeamA.setText(thisWeekBean.getHgoal());
 				ScoreTeamB.setText(thisWeekBean.getAgoal());
 
+				goalkickA.setText(thisWeekBean.getHgoalkick());
+				goalkickB.setText(thisWeekBean.getAgoalkick());
+				cornerkickA.setText(thisWeekBean.getHcornerkick());
+				cornerkickB.setText(thisWeekBean.getAcornerkick());
+				yellowA.setText(thisWeekBean.getHyellowcard());
+				yellowB.setText(thisWeekBean.getAyellowcard());
+				redA.setText(thisWeekBean.getHredcard());
+				redB.setText(thisWeekBean.getAredcard());
+				percentageA.setText(thisWeekBean.getHpercentage());
+				percentageB.setText(thisWeekBean.getApercentage());
+
+				// Log.d("--------------------", thisWeekBean.getDate());
 				Imageloader imageLoader = new Imageloader(getSherlockActivity()
 						.getApplicationContext());
 				imgTeamA.setTag(thisWeekBean.getHlogo());
@@ -166,54 +224,46 @@ public class detailPertandingan extends SherlockFragment {
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
 						getActivity(), imgTeamB);
 
-				// BitmapFactory.Options bmOptions;
-				// bmOptions = new BitmapFactory.Options();
-				// bmOptions.inSampleSize = 1;
-				// Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
-				// imgTeamA.setImageBitmap(bm);
-				//
-				// // BitmapFactory.Options bmOptions2;
-				// // bmOptions2 = new BitmapFactory.Options();
-				// // bmOptions2.inSampleSize = 2;
-				// Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
-				// imgTeamB.setImageBitmap(bm2);
+				String[] partsA = thisWeekBean.getHgoalscorer().split("\\|");
+				String[] partsB = thisWeekBean.getAgoalscorer().split("\\|");
+				String[] timesA = thisWeekBean.getHgoalminute().split("\\|");
+				String[] timesB = thisWeekBean.getAgoalminute().split("\\|");
 
-				lifePageCellContainerLayout.addView(cellViewMainLayout);
+				for (int x = 0; x < partsA.length; x++) {
+					View cellViewMainLayout = mInflater.inflate(
+							R.layout.detail_match_list, null);
+					TextView goalscorerA = (TextView) cellViewMainLayout
+							.findViewById(R.id.findzoes_list_text_name);
+					TextView timescorerA = (TextView) cellViewMainLayout
+							.findViewById(R.id.findzoes_list_text_address);
+					goalscorerA.setText("");
+					goalscorerA.setText(partsA[x]);
+					timescorerA.setText("");
+					timescorerA.setText(timesA[x]);
+					lifePageCellContainerLayout1.addView(cellViewMainLayout);
+				}
+
+				for (int x = 0; x < partsB.length; x++) {
+					// Log.d("llllllllllllllllllllll", partsA[x]);
+					Log.d("llllllllllllllllllllll", partsB[x]);
+
+					View cellViewMainLayout2 = mInflater.inflate(
+							R.layout.detail_match_list2, null);
+					TextView timescorerB = (TextView) cellViewMainLayout2
+							.findViewById(R.id.findzoes_list_text_address);
+					TextView goalscorerB = (TextView) cellViewMainLayout2
+							.findViewById(R.id.findzoes_list_text_name);
+
+					goalscorerB.setText("");
+					goalscorerB.setText(partsB[x]);
+					timescorerB.setText("");
+					timescorerB.setText(timesB[x]);
+					lifePageCellContainerLayout2.addView(cellViewMainLayout2);
+
+				}
 
 			}
 		}
 
 	}
-
-	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
-		try {
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-						.permitAll().build();
-				StrictMode.setThreadPolicy(policy);
-			}
-
-			URL url = new URL(imgurl);
-			InputStream in = url.openConnection().getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(in, 1024 * 8);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			int len = 0;
-			byte[] buffer = new byte[1024];
-			while ((len = bis.read(buffer)) != -1) {
-				out.write(buffer, 0, len);
-			}
-			out.close();
-			bis.close();
-
-			byte[] data = out.toByteArray();
-			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-			return bitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-
-		}
-	}
-
 }
