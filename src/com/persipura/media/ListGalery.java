@@ -152,14 +152,14 @@ public class ListGalery extends SherlockFragment {
 						getActivity(), img);
 
 				videoContainer.addView(cellViewMainLayout);
-				
+				cellViewMainLayout.setTag(nid);
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {					
 						newContainer.setTag(nid);
 						GaleryView vp = new GaleryView();
 						
 						Bundle b = new Bundle();
-						b.putString("myString",nid);
+						b.putString("myString",(String) v.getTag());
 						vp.setArguments(b);	
 						getActivity().getSupportFragmentManager()
 						.beginTransaction()
