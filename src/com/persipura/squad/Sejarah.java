@@ -18,9 +18,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,6 +31,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
+import com.persipura.bean.SejarahBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -35,8 +39,8 @@ import com.webileapps.navdrawer.R;
 public class Sejarah extends SherlockFragment {
 
 	private LayoutInflater mInflater;
-	List<HasilBean> listThisWeekBean;
-	LinearLayout lifePageCellContainerLayout;
+	List<SejarahBean> listThisWeekBean;
+	RelativeLayout lifePageCellContainerLayout;
 	private ProgressDialog progressDialog;
 
 	public static final String TAG = Sejarah.class.getSimpleName();
@@ -48,13 +52,16 @@ public class Sejarah extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
 		showProgressDialog();
-		// new fetchLocationFromServer().execute("");
+		 new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.sejarah, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
-
-		lifePageCellContainerLayout = (LinearLayout) rootView
-				.findViewById(R.id.location_linear_parentview);
+		
+		lifePageCellContainerLayout = (RelativeLayout) rootView.findViewById(R.id.lifePageCellContainerLayout);
+		//String customHtml = "<html><body><h2>Greetings from JavaCodeGeeks</h2></body></html>";
+		//webView.loadData(customHtml, "text/html", "UTF-8");
+		
 
 		return rootView;
 	}
@@ -97,8 +104,9 @@ public class Sejarah extends SherlockFragment {
 
 		@Override
 		protected String doInBackground(String... params) {
-			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/match_results");
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/page", "slug=sejarah");
+			
 			return result;
 		}
 
@@ -114,18 +122,11 @@ public class Sejarah extends SherlockFragment {
 
 				JSONArray jsonArray = new JSONArray(result);
 
-				listThisWeekBean = new ArrayList<HasilBean>();
+				listThisWeekBean = new ArrayList<SejarahBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
-					HasilBean thisWeekBean = new HasilBean();
-					thisWeekBean.setId(resObject.getString("id"));
-					thisWeekBean.setTime(resObject.getString("time"));
-					thisWeekBean.setDate(resObject.getString("date"));
-					thisWeekBean.setHlogo(resObject.getString("h_logo"));
-					thisWeekBean.setAlogo(resObject.getString("a_logo"));
-					thisWeekBean.setHteam(resObject.getString("h_team"));
-					thisWeekBean.setAteam(resObject.getString("a_team"));
-					thisWeekBean.setPlace(resObject.getString("place"));
+					SejarahBean thisWeekBean = new SejarahBean();
+					thisWeekBean.setdesc(resObject.getString("body"));
 					// ProgressDialog pd = new ProgressDialog(getActivity());
 					// pd.dismiss();
 					listThisWeekBean.add(thisWeekBean);
@@ -143,62 +144,14 @@ public class Sejarah extends SherlockFragment {
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<HasilBean> listThisWeekBean) {
+				List<SejarahBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
-				HasilBean thisWeekBean = listThisWeekBean.get(i);
+				SejarahBean thisWeekBean = listThisWeekBean.get(i);
 
-				View cellViewMainLayout = mInflater.inflate(
-						R.layout.jadwal_pertandingan_list, null);
-				TextView ListDate = (TextView) cellViewMainLayout
-						.findViewById(R.id.list_date);
-				TextView ListTime = (TextView) cellViewMainLayout
-						.findViewById(R.id.list_time);
-				TextView cellnumTextView = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_cellnum);
-				TextView NameTeamA = (TextView) cellViewMainLayout
-						.findViewById(R.id.name_team1);
-				TextView NameTeamB = (TextView) cellViewMainLayout
-						.findViewById(R.id.name_team2);
-				TextView Place = (TextView) cellViewMainLayout
-						.findViewById(R.id.text_stadiun);
-				ImageView imgTeamA = (ImageView) cellViewMainLayout
-						.findViewById(R.id.imageView1);
-				ImageView imgTeamB = (ImageView) cellViewMainLayout
-						.findViewById(R.id.ImageTeam2);
+				TextView desc = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
 
-				ListDate.setText("");
-				ListTime.setText("");
-				NameTeamA.setText("");
-				NameTeamB.setText("");
-				Place.setText("");
-				cellnumTextView.setText("");
+				desc.setText(Html.fromHtml(thisWeekBean.getdesc()));
 
-				ListDate.setText(thisWeekBean.getDate());
-				ListTime.setText(thisWeekBean.getTime());
-				NameTeamA.setText(thisWeekBean.getHteam());
-				NameTeamB.setText(thisWeekBean.getAteam());
-				Place.setText(thisWeekBean.getPlace());
-
-				// BitmapFactory.Options bmOptions;
-				// bmOptions = new BitmapFactory.Options();
-				// bmOptions.inSampleSize = 1;
-				// Bitmap bm = loadBitmap(thisWeekBean.getHlogo(), bmOptions);
-				// imgTeamA.setImageBitmap(bm);
-				//
-				// Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
-				// imgTeamB.setImageBitmap(bm2);
-
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
-						.getApplicationContext());
-				imgTeamA.setTag(thisWeekBean.getHlogo());
-				imageLoader.DisplayImage(thisWeekBean.getHlogo(),
-						getActivity(), imgTeamA);
-
-				imgTeamB.setTag(thisWeekBean.getAlogo());
-				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
-						getActivity(), imgTeamB);
-
-				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
 			}
 		}

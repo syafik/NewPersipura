@@ -22,7 +22,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -34,6 +34,6 @@
             android:layout_centerHorizontal="true"
             android:padding="5dp"
             android:src="@drawable/btm_logo" />
-    </RelativeLayout>
+    </RelativeLayout> -->
 
 </LinearLayout>
