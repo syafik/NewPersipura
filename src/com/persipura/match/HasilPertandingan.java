@@ -157,6 +157,15 @@ public class HasilPertandingan extends SherlockFragment {
 				NameTeamB.setText(thisWeekBean.getAteam());
 				ScoreTeamA.setText(thisWeekBean.getHgoal());
 				ScoreTeamB.setText(thisWeekBean.getAgoal());
+				
+				int in1 = new Integer(ScoreTeamA.getText().toString());
+				int in2 = new Integer(ScoreTeamB.getText().toString());
+				
+				if(in1 > in2){
+					ScoreTeamA.setTextColor(getResources().getColor(R.color.red));
+				}else{
+					ScoreTeamB.setTextColor(getResources().getColor(R.color.red));
+				}
 
 				Imageloader imageLoader = new Imageloader(getSherlockActivity()
 						.getApplicationContext());
@@ -204,35 +213,6 @@ public class HasilPertandingan extends SherlockFragment {
 
 	}
 
-	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
-		try {
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-						.permitAll().build();
-				StrictMode.setThreadPolicy(policy);
-			}
-
-			URL url = new URL(imgurl);
-			InputStream in = url.openConnection().getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(in, 1024 * 8);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			int len = 0;
-			byte[] buffer = new byte[1024];
-			while ((len = bis.read(buffer)) != -1) {
-				out.write(buffer, 0, len);
-			}
-			out.close();
-			bis.close();
-
-			byte[] data = out.toByteArray();
-			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-			return bitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-
-		}
-	}
+	
 
 }

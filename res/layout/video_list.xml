@@ -37,6 +37,7 @@
             android:maxLines="2"
             android:paddingBottom="6dp"
             android:text="time"
+            android:textColor="@color/abs__bright_foreground_disabled_holo_light"
             android:textSize="10dp" />
 
         <ImageView
@@ -57,7 +58,7 @@
             android:layout_toRightOf="@+id/imageView1"
             android:paddingTop="6dp"
             android:text="Title"
-            android:textSize="18dp"
+            android:textSize="16dp"
            />
     </RelativeLayout>
 
