@@ -92,10 +92,10 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 				fragment.setArguments(args);
 				return fragment;
 			case 3:
-				fragment = new DummySectionFragment();
+				fragment = new CalendarView();
 				args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
-						position + 1);
+//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
+//						position + 1);
 				fragment.setArguments(args);
 				return fragment;
 			}

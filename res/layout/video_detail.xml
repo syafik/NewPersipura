@@ -16,7 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.07"
-        android:background="@color/abs__background_holo_dark" >
+        android:layout_margin="5dip"
+        android:background="@drawable/gradient_box"
+        android:padding="10px" >
 
         <TextView
             android:id="@+id/textTitle"
