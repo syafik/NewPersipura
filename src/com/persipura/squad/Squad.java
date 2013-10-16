@@ -74,7 +74,7 @@ public class Squad extends SherlockFragment {
 			Bundle args = null;
 			switch (position) {
 			case 0:
-				fragment = new Sejarah();
+//				fragment = new Sejarah();
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
 				// + 1);
