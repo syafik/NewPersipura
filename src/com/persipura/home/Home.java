@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.squad.DetailSquad;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.DetailNews;
 import com.webileapps.navdrawer.News;
@@ -33,7 +34,8 @@ public class Home extends SherlockFragment {
 	public static final String TAG = Home.class.getSimpleName();
 	List<HomeNews> listThisWeekBean;
 	List<HomeSquad> listSquadBean;
-	LinearLayout newsContainerLayout, squadContainerLayout;
+	List<HomeNextMatch> listNextMatchBean;
+	LinearLayout newsContainerLayout, squadContainerLayout, nextMatchContainerLayout;
 	private LayoutInflater mInflater;
 	private ProgressDialog progressDialog;
 	ViewGroup newContainer;
@@ -57,10 +59,15 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.relativeLayout3);
 		squadContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.squad_home);
+		nextMatchContainerLayout = (LinearLayout) rootView.findViewById(R.id.linearNextMatch);
 		newContainer = container;
-
+		TextView squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
+		TextView homeNewsTitle = (TextView) rootView.findViewById(R.id.homeNewsTitle);
+		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextView(homeNewsTitle, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
 		new fetchHomeLatestFromServer().execute("");
 		new fetchHomeNewsFromServer().execute("");
+		new fetchNextMatchFromServer().execute("");
 
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
@@ -186,11 +193,15 @@ public class Home extends SherlockFragment {
 				nama.setText("");
 				detail.setText("");
 				no_punggung.setText("");
-
+				
+				
 				no_punggung.setText(squad.getno_punggung());
 				nama.setText(squad.getNamaLengkap());
 				detail.setText(squad.getposisi() + "\n" + squad.getage()
 						+ " tahun" + ", " + squad.getwarganegara());
+				AppConstants.fontrobotoTextViewBold(nama, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(no_punggung, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(detail, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
 				BitmapFactory.Options bmOptions;
 				squadId = squad.getId();
 
@@ -230,7 +241,79 @@ public class Home extends SherlockFragment {
 		}
 
 	}
+	
+	
+	private class fetchNextMatchFromServer extends
+	AsyncTask<String, Void, String> {
 
+@Override
+protected void onPreExecute() {
+
+}
+
+@Override
+protected String doInBackground(String... params) {
+	String result = WebHTTPMethodClass.httpGetServiceWithoutparam(
+			"/restapi/get/home_match");
+
+	return result;
+}
+
+@Override
+protected void onProgressUpdate(Void... values) {
+
+}
+
+@Override
+protected void onPostExecute(String result) {
+	try {
+		JSONArray jsonArray = new JSONArray(result);
+		Log.d("test1", "test1 : " + jsonArray);
+		listNextMatchBean = new ArrayList<HomeNextMatch>();
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject resObject = jsonArray.getJSONObject(i);
+			HomeNextMatch thisWeekBean = new HomeNextMatch();
+			
+
+			listNextMatchBean.add(thisWeekBean);
+
+		}
+		if (listNextMatchBean != null && listNextMatchBean.size() > 0) {
+			createNewsHomeListView(listNextMatchBean);
+		}
+
+	} catch (Exception e) {
+		e.printStackTrace();
+		Toast.makeText(getActivity().getApplicationContext(),
+				"Failed to retrieve data from server",
+				Toast.LENGTH_LONG).show();
+	}
+
+}
+
+private void createNewsHomeListView(List<HomeNextMatch> listNextMatchBean)
+		throws IOException {
+	nextMatchContainerLayout.removeAllViews();
+	for (int i = 0; i < listNextMatchBean.size(); i++) {
+		HomeNextMatch thisWeekBean = listNextMatchBean.get(i);
+		View cellViewMainLayout = mInflater.inflate(R.layout.home_next_match,
+				null);
+		TextView titleNews = (TextView) cellViewMainLayout
+				.findViewById(R.id.findzoes_list_text_name);
+		TextView timeNews = (TextView) cellViewMainLayout
+				.findViewById(R.id.findzoes_list_text_address);
+
+		ImageView imgNews = (ImageView) cellViewMainLayout
+				.findViewById(R.id.imageView1);
+
+		titleNews.setText("");
+		timeNews.setText("");
+
+		
+	}
+}
+
+}
 	private class fetchHomeNewsFromServer extends
 			AsyncTask<String, Void, String> {
 
@@ -302,6 +385,8 @@ public class Home extends SherlockFragment {
 
 				titleNews.setText(thisWeekBean.gettitle());
 				timeNews.setText(thisWeekBean.getcreated());
+				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(titleNews, 11, "ffffff", getActivity().getApplicationContext().getAssets());
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();

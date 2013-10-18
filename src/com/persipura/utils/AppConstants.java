@@ -637,6 +637,8 @@ public class AppConstants {
 	}
 
 	private static String ATSackersHeavyGothic = "ATSackersHeavyGothic.ttf";
+	private static String roboto = "Roboto-Medium.ttf";
+	private static String robotoLight = "Roboto-Regular.ttf";
 	private static String bertholdcitybold = "berthold-city-bold.ttf";
 	private static String dinbold = "din-bold.ttf";
 	private static String DINEngschriftRegular = "DINEngschrift-Regular.ttf";
@@ -703,12 +705,19 @@ public class AppConstants {
 		setTextViewAttributeBold(textView, size, color, face);
 	}
 
-	public static void fontdinmediumTextViewBold(TextView textView, int size,
+	public static void fontrobotoTextView(TextView textView, int size,
 			String color, AssetManager assetManager) {
-		Typeface face = Typeface.createFromAsset(assetManager, "" + dinmedium);
+		Typeface face = Typeface.createFromAsset(assetManager, "" + robotoLight);
+		setTextViewAttribute(textView, size, color, face);
+	}
+	
+	public static void fontrobotoTextViewBold(TextView textView, int size,
+			String color, AssetManager assetManager) {
+		Typeface face = Typeface.createFromAsset(assetManager, "" + roboto);
 		setTextViewAttributeBold(textView, size, color, face);
 	}
-
+	
+	
 	private static void setTextViewAttributeBold(TextView textView, int size,
 			String color, Typeface face) {
 		textView.setTextSize(size);

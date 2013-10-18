@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <ScrollView  
+
+    <ScrollView
         android:id="@+id/scrollBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -15,25 +16,27 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-             >
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/linearNextMatch"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#2E2C2C"
+                android:orientation="vertical" >
+            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:padding="5dp">
+                android:layout_height="fill_parent"
+                android:padding="5dp" >
 
                 <TextView
+                    android:id="@+id/homeNewsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:text="NEXT MATCH" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="-25.34" />
+                    android:text="BERITA TERBARU" />
             </FrameLayout>
 
             <View
@@ -43,73 +46,14 @@
                 android:layout_marginTop="5dp"
                 android:background="#1E1D1F" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayout1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/team1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView1"
-                        android:text="Persipura" />
-
-                    <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_launcher" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:text="vs" />
-
-                    <TextView
-                        android:id="@+id/team2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/imageView2"
-                        android:text="Persib" />
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_launcher" />
-
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:background="#1E1D1F" />
-                </RelativeLayout>
-            </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/relativeLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:orientation="vertical"
-                android:background="#2E2C2C" >
+                android:background="#2E2C2C"
+                android:orientation="vertical" >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -137,19 +81,19 @@
                         android:layout_toRightOf="@+id/imageViewList1"
                         android:ellipsize="none"
                         android:singleLine="false"
-                        android:textSize="11dp"
-                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram" />
+                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram"
+                        android:textSize="11dp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/textViewList1"
-                        android:layout_below="@+id/textViewList1"
-                        android:textSize="10dp"
                         android:id="@+id/timeNews"
-                        android:text="3 jam yang lalu" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/textViewList1"
+                        android:layout_below="@+id/textViewList1"
+                        android:text="3 jam yang lalu"
+                        android:textSize="10dp" />
                 </RelativeLayout>
-                
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -176,18 +120,18 @@
                         android:layout_toRightOf="@+id/imageViewList1"
                         android:ellipsize="none"
                         android:singleLine="false"
-                        android:textSize="11dp"
-                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram" />
+                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram"
+                        android:textSize="11dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/textViewList1"
                         android:layout_below="@+id/textViewList1"
-                        android:textSize="10dp"
-                        android:text="3 jam yang lalu" />
+                        android:text="3 jam yang lalu"
+                        android:textSize="10dp" />
                 </RelativeLayout>
-                
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -214,18 +158,18 @@
                         android:layout_toRightOf="@+id/imageViewList2"
                         android:ellipsize="none"
                         android:singleLine="false"
-                        android:textSize="11dp"
-                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram" />
+                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram"
+                        android:textSize="11dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/textViewList2"
                         android:layout_below="@+id/textViewList2"
-                        android:textSize="10dp"
-                        android:text="3 jam yang lalu" />
+                        android:text="3 jam yang lalu"
+                        android:textSize="10dp" />
                 </RelativeLayout>
-                
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -252,56 +196,58 @@
                         android:layout_toRightOf="@+id/imageViewList2"
                         android:ellipsize="none"
                         android:singleLine="false"
-                        android:textSize="11dp"
-                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram" />
+                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram"
+                        android:textSize="11dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/textViewList2"
                         android:layout_below="@+id/textViewList2"
-                        android:textSize="10dp"
-                        android:text="3 jam yang lalu" />
+                        android:text="3 jam yang lalu"
+                        android:textSize="10dp" />
                 </RelativeLayout>
-                
-                
             </LinearLayout>
-             <View
-               android:layout_width="fill_parent"
-               android:layout_height="0.5dp"
-               android:layout_alignParentBottom="true"
-               android:layout_alignParentLeft="true"
-               android:background="#696666" />
-             <FrameLayout
+
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:padding="5dp">
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="#696666" />
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="5dp" >
 
                 <TextView
+                    android:id="@+id/squadTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:text="SQUAD TERBARU" />
-
             </FrameLayout>
-             <View
-               android:layout_width="fill_parent"
-               android:layout_height="0.5dp"
-               android:layout_alignParentBottom="true"
-               android:layout_alignParentLeft="true"
-               android:background="#696666" />
-             <LinearLayout
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="#696666" />
+
+            <LinearLayout
                 android:id="@+id/squad_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:orientation="vertical"
-                android:background="#2E2C2C" >
-            <RelativeLayout
+                android:background="#2E2C2C"
+                android:orientation="vertical" >
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    
                     android:padding="10px" >
 
                     <ImageView
@@ -323,16 +269,16 @@
                         android:layout_toRightOf="@+id/imageViewList2"
                         android:ellipsize="none"
                         android:singleLine="false"
-                        android:textSize="11dp"
-                        android:text="Boaz salossa" />
+                        android:text="Boaz salossa"
+                        android:textSize="11dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/textViewList2"
                         android:layout_below="@+id/textViewList2"
-                        android:textSize="10dp"
-                        android:text="Striker \n 27 tahun, Indonesia" />
+                        android:text="Striker \n 27 tahun, Indonesia"
+                        android:textSize="10dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -340,23 +286,24 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
-                        android:textSize="13dp"
-                        android:text="86" />
-
+                        android:text="86"
+                        android:textSize="13dp" />
                 </RelativeLayout>
-                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <FrameLayout android:id="@+id/bottom_control_bar"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:background="#000"
-        >
 
-         <ImageView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:src="@drawable/btm_logo" 
-             android:layout_gravity="center"/>
+    <FrameLayout
+        android:id="@+id/bottom_control_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000" >
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btm_logo" />
     </FrameLayout>
-    </LinearLayout>
+
+</LinearLayout>
