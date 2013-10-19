@@ -59,8 +59,6 @@ public class Sejarah extends SherlockFragment {
 		mInflater = getLayoutInflater(savedInstanceState);
 		
 		lifePageCellContainerLayout = (RelativeLayout) rootView.findViewById(R.id.lifePageCellContainerLayout);
-		//String customHtml = "<html><body><h2>Greetings from JavaCodeGeeks</h2></body></html>";
-		//webView.loadData(customHtml, "text/html", "UTF-8");
 		
 
 		return rootView;
@@ -148,9 +146,14 @@ public class Sejarah extends SherlockFragment {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				SejarahBean thisWeekBean = listThisWeekBean.get(i);
 
-				TextView desc = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
+//				TextView desc = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
 
-				desc.setText(Html.fromHtml(thisWeekBean.getdesc()));
+//				desc.setText(Html.fromHtml(thisWeekBean.getdesc()));
+				WebView webview = (WebView) lifePageCellContainerLayout.findViewById(R.id.webview);
+
+				 // OR, you can also load from an HTML string:
+				 String summary = thisWeekBean.getdesc();
+				 webview.loadData(summary, "text/html", null);
 
 
 			}

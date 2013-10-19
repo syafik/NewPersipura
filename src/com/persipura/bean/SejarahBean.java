@@ -14,5 +14,4 @@ public class SejarahBean {
 		this.desc = desc;
 	}
 
-
 }

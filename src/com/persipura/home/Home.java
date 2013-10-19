@@ -268,18 +268,22 @@ protected void onProgressUpdate(Void... values) {
 protected void onPostExecute(String result) {
 	try {
 		JSONArray jsonArray = new JSONArray(result);
-		Log.d("test1", "test1 : " + jsonArray);
+		
 		listNextMatchBean = new ArrayList<HomeNextMatch>();
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject resObject = jsonArray.getJSONObject(i);
 			HomeNextMatch thisWeekBean = new HomeNextMatch();
+			
+			thisWeekBean.setTeam1(resObject.getString("a_team"));
+			thisWeekBean.setTeam2(resObject.getString("h_team"));
+			thisWeekBean.setId(resObject.getString("id"));
 			
 
 			listNextMatchBean.add(thisWeekBean);
 
 		}
 		if (listNextMatchBean != null && listNextMatchBean.size() > 0) {
-			createNewsHomeListView(listNextMatchBean);
+			createNextMatchView(listNextMatchBean);
 		}
 
 	} catch (Exception e) {
@@ -291,23 +295,28 @@ protected void onPostExecute(String result) {
 
 }
 
-private void createNewsHomeListView(List<HomeNextMatch> listNextMatchBean)
+private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
 		throws IOException {
 	nextMatchContainerLayout.removeAllViews();
 	for (int i = 0; i < listNextMatchBean.size(); i++) {
 		HomeNextMatch thisWeekBean = listNextMatchBean.get(i);
 		View cellViewMainLayout = mInflater.inflate(R.layout.home_next_match,
 				null);
-		TextView titleNews = (TextView) cellViewMainLayout
-				.findViewById(R.id.findzoes_list_text_name);
-		TextView timeNews = (TextView) cellViewMainLayout
-				.findViewById(R.id.findzoes_list_text_address);
+		
+		
+		TextView team1 = (TextView) cellViewMainLayout
+				.findViewById(R.id.team1);
+		TextView team2 = (TextView) cellViewMainLayout
+				.findViewById(R.id.team2);
 
-		ImageView imgNews = (ImageView) cellViewMainLayout
-				.findViewById(R.id.imageView1);
 
-		titleNews.setText("");
-		timeNews.setText("");
+		team1.setText("");
+		team2.setText("");
+		
+		team1.setText(thisWeekBean.getTeam1());
+		team2.setText(thisWeekBean.getTeam2());
+		
+		nextMatchContainerLayout.addView(cellViewMainLayout);
 
 		
 	}
