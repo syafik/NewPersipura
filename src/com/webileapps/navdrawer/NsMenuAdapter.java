@@ -110,9 +110,9 @@ public class NsMenuAdapter extends ArrayAdapter<NsMenuItemModel> {
 				holder.textHolder.setText(item.title);
 			
 			
-			AppConstants.fontrobotoTextViewBold(holder.textHolder, 14, "ffffff", view.getContext().getApplicationContext().getAssets());
+			AppConstants.fontrobotoTextViewBold(holder.textHolder, 20, "ffffff", view.getContext().getApplicationContext().getAssets());
 			if(holder.textHolder.getText() == "CONNECT"){
-				AppConstants.fontrobotoTextView(holder.textHolder, 15, "ffffff", view.getContext().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(holder.textHolder, 23, "ffffff", view.getContext().getApplicationContext().getAssets());
 			}
 			if (holder.textCounterHolder != null) {
 				if (item.counter > 0) {
