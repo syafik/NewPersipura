@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:text="date" />
 
         <TextView
@@ -25,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:text="time" />
 
         <TextView
@@ -33,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="24dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
             android:text="ISL" />
     </RelativeLayout>
 
@@ -60,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/imageView1"
             android:layout_toRightOf="@+id/imageView1"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:text="" />
 
         <TextView
@@ -70,7 +73,7 @@
             android:layout_alignBaseline="@+id/nameteamA"
             android:layout_alignBottom="@+id/nameteamA"
             android:layout_toLeftOf="@+id/imageView2"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:text="" />
 
         <ImageView

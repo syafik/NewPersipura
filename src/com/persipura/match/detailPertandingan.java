@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
 import com.persipura.bean.matchResult;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -375,6 +376,27 @@ public class detailPertandingan extends SherlockFragment {
 				imgTeamB.setTag(thisWeekBean.getAlogo());
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
 						getActivity(), imgTeamB);
+				
+				
+				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(NameTeamB, 12, "ffffff", getActivity().getApplicationContext().getAssets());
+				
+				AppConstants.fontrobotoTextViewBold(ScoreTeamA, 18, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(ScoreTeamB, 18, "ffffff", getActivity().getApplicationContext().getAssets());
+				
+				AppConstants.fontrobotoTextView(ListTime, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(ListDate, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				
+				AppConstants.fontrobotoTextViewBold(goalkickA, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(goalkickB, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(cornerkickB, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(cornerkickA, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(redA, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(redB, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(yellowA, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(yellowB, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(percentageA, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(percentageB, 11, "ffffff", getActivity().getApplicationContext().getAssets());
 
 				// String[] partsA =
 				// thisWeekBean.getHgoalscorer().split("\\|");
