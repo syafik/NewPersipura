@@ -15,6 +15,8 @@
  *******************************************************************************/
 package com.webileapps.navdrawer;
 
+import com.persipura.utils.AppConstants;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,7 +108,9 @@ public class NsMenuAdapter extends ArrayAdapter<NsMenuItemModel> {
 		if (item != null && holder != null) {
 			if (holder.textHolder != null)
 				holder.textHolder.setText(item.title);
-
+			
+			
+			AppConstants.fontrobotoTextView(holder.textHolder, 15, "ffffff", view.getContext().getApplicationContext().getAssets());
 			if (holder.textCounterHolder != null) {
 				if (item.counter > 0) {
 					holder.textCounterHolder.setVisibility(View.VISIBLE);

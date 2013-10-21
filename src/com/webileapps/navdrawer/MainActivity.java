@@ -65,6 +65,8 @@ import com.persipura.home.Home;
 import com.persipura.match.PageSlidingTabStripFragment;
 import com.persipura.media.pageSliding;
 import com.persipura.search.Search;
+import com.persipura.socialize.Facebook;
+import com.persipura.socialize.Twitter;
 import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 
@@ -164,7 +166,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				public void onClick(View v) {
 					if (search.length() > 0) {
-						selectItem(6);
+						selectItem(8);
 					}
 
 				}
@@ -237,7 +239,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
 		mainLayout.removeAllViews();
 		Bundle args = new Bundle();
-
+		Log.d("position", "position : " + position);
 		switch (position) {
 		case 0:
 			getSupportFragmentManager().beginTransaction()
@@ -279,6 +281,16 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Squad";
 			break;
 		case 6:
+			getSupportFragmentManager().beginTransaction()
+			.add(R.id.content, Facebook.newInstance(), Facebook.TAG).commit();
+			titleNav = "Facebook";
+			break;	
+		case 7:
+			getSupportFragmentManager().beginTransaction()
+			.add(R.id.content, Twitter.newInstance(), Twitter.TAG).commit();
+			titleNav = "Twitter";
+			break;	
+		case 8:
 			args.putString("q", search.getText().toString());
 			Search searchFragment = new Search();
 			searchFragment.setArguments(args);
@@ -286,6 +298,7 @@ public class MainActivity extends SherlockFragmentActivity {
 					.replace(R.id.content, searchFragment).commit();
 			titleNav = "Search";
 			break;
+		
 		}
 
 		
@@ -341,12 +354,14 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			int id_title = getResources().getIdentifier(item, "string",
 					this.getPackageName());
+			
 			int id_icon = getResources().getIdentifier(menuItemsIcon[res],
 					"drawable", this.getPackageName());
 
 			NsMenuItemModel mItem = new NsMenuItemModel(id_title, id_icon);
 			// if (res==1) mItem.counter=12; //it is just an example...
 			// if (res==3) mItem.counter=3; //it is just an example...
+			
 			mAdapter.addItem(mItem);
 
 			res++;
