@@ -15,9 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.persipura.bean.mediaBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
+import com.persipura.utils.PullDownListView.ListViewTouchEventListener;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
@@ -43,8 +46,20 @@ public class mediaTerbaru extends SherlockFragment {
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
+		
+//		((PullToRefreshListView) getListView()).setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                // Do work to refresh the list here.
+//                new GetDataTask().execute();
+//            }
+//        });
+		
+		
 		return rootView;
 	}
+	
+	
 
 	private class fetchLocationFromServer extends
 			AsyncTask<String, Void, String> {
@@ -134,5 +149,5 @@ public class mediaTerbaru extends SherlockFragment {
 		}
 
 	}
-
+	
 }
