@@ -27,10 +27,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
 import com.persipura.media.videoPlayer;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -112,6 +114,9 @@ public class HasilPertandingan extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				Toast.makeText(getActivity(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
 
 		}
@@ -142,6 +147,17 @@ public class HasilPertandingan extends SherlockFragment {
 						.findViewById(R.id.imageView1);
 				ImageView imgTeamB = (ImageView) cellViewMainLayout
 						.findViewById(R.id.ImageTeam2);
+				
+				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(NameTeamB, 12, "ffffff", getActivity().getApplicationContext().getAssets());
+				
+				AppConstants.fontrobotoTextViewBold(ScoreTeamA, 18, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(ScoreTeamB, 18, "ffffff", getActivity().getApplicationContext().getAssets());
+				
+				
+				AppConstants.fontrobotoTextView(ListTime, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(ListDate, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				
 
 				ListDate.setText("");
 				ListTime.setText("");

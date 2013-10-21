@@ -188,7 +188,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="14dp"
-                android:text="TextView" />
+                android:text="-" />
 
             <TextView
                 android:id="@+id/textView15"
@@ -197,7 +197,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
-                android:text="TextView" />
+                android:text="-" />
 
             <TextView
                 android:id="@+id/textView20"
@@ -220,7 +220,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView16"
@@ -229,7 +229,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView21"
@@ -252,7 +252,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView17"
@@ -261,7 +261,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView22"
@@ -283,7 +283,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView18"
@@ -292,7 +292,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView23"
@@ -315,7 +315,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView19"
@@ -324,7 +324,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="14dp"
-            android:text="TextView" />
+            android:text="-" />
 
         <TextView
             android:id="@+id/textView24"

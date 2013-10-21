@@ -28,18 +28,6 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/name_team2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/name_team1"
-            android:layout_alignBottom="@+id/name_team1"
-            android:layout_toLeftOf="@+id/ImageTeam2"
-            android:paddingTop="6dp"
-            android:paddingLeft="5dp"
-            android:text="TEAM2"
-            android:textSize="11dp" />
-
-        <TextView
             android:id="@+id/name_team1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,6 +84,18 @@
             android:layout_centerHorizontal="true"
             android:text="vs"
             android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/name_team2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/TextView04"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/ImageTeam2"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:text="TEAM2"
+            android:textSize="11dp" />
 
     </RelativeLayout>
 

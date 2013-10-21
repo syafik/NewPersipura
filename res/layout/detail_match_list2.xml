@@ -8,8 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dip"
-        android:padding="10px" >
+        android:layout_margin="1dip"
+        android:padding="5px" >
 
         <TextView
             android:id="@+id/findzoes_list_text_cellnum"
@@ -54,7 +54,7 @@
             android:layout_height="10dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_launcher" />
+             />
 
     </RelativeLayout>
 

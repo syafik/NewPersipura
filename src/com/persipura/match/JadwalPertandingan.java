@@ -25,9 +25,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -140,6 +142,9 @@ public class JadwalPertandingan extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				Toast.makeText(getActivity(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
 
 		}
@@ -168,6 +173,14 @@ public class JadwalPertandingan extends SherlockFragment {
 						.findViewById(R.id.imageView1);
 				ImageView imgTeamB = (ImageView) cellViewMainLayout
 						.findViewById(R.id.ImageTeam2);
+				
+				
+				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(NameTeamB, 12, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(ListTime, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(ListDate, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(Place, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				
 
 				ListDate.setText("");
 				ListTime.setText("");
@@ -208,35 +221,6 @@ public class JadwalPertandingan extends SherlockFragment {
 
 	}
 
-	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
-		try {
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-						.permitAll().build();
-				StrictMode.setThreadPolicy(policy);
-			}
-
-			URL url = new URL(imgurl);
-			InputStream in = url.openConnection().getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(in, 1024 * 8);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			int len = 0;
-			byte[] buffer = new byte[1024];
-			while ((len = bis.read(buffer)) != -1) {
-				out.write(buffer, 0, len);
-			}
-			out.close();
-			bis.close();
-
-			byte[] data = out.toByteArray();
-			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-			return bitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-
-		}
-	}
+	
 
 }

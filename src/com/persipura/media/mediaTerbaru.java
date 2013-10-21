@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.mediaBean;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -88,6 +91,9 @@ public class mediaTerbaru extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				Toast.makeText(getActivity(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
 
 		}
@@ -107,6 +113,9 @@ public class mediaTerbaru extends SherlockFragment {
 				ImageView img = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 
+				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", getActivity().getApplicationContext().getAssets());
+				
 				title.setText("");
 				created.setText("");
 

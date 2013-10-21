@@ -20,24 +20,6 @@
         android:background="@drawable/gradient_box"
         android:padding="10px" >
 
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:text="Tittle" />
-
-        <TextView
-            android:id="@+id/textTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:text="Time" />
-
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="fill_parent"
@@ -55,10 +37,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:layout_gravity="center_horizontal"
-                    android:text="description" />
+                     />
+
             </LinearLayout>
         </ScrollView>
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textTime"
+            android:layout_alignParentTop="true"
+             />
+
+        <TextView
+            android:id="@+id/textTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/scrollView1"
+            android:layout_below="@+id/textTitle"
+            />
+
     </RelativeLayout>
 
 </LinearLayout>

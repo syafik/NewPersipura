@@ -43,6 +43,7 @@
             android:layout_alignBottom="@+id/name_team1"
             android:layout_toLeftOf="@+id/ImageTeam2"
             android:paddingTop="6dp"
+            android:paddingRight="3dp"
             android:text="TEAM2"
             android:gravity="right"
             android:textSize="11dp" />
@@ -65,6 +66,7 @@
             android:layout_alignTop="@+id/imageView1"
             android:layout_toRightOf="@+id/imageView1"
             android:paddingTop="6dp"
+            android:paddingLeft="3dp"
             android:text="TEAM1"
             android:textSize="11dp" />
 
@@ -100,6 +102,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="16dp"
             android:paddingTop="6dp"
+            android:paddingBottom="3dp"
             android:text="10/8/2013"
             android:textSize="12dp" />
 
@@ -112,6 +115,7 @@
             android:layout_centerHorizontal="true"
             android:ellipsize="end"
             android:maxLines="2"
+            android:paddingBottom="3dp"
             android:text="15:00 WIT"
             android:textSize="12dp" />
 
@@ -123,7 +127,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="17dp"
             android:text="ISL"
-            android:paddingTop="6dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="3dp"
             android:textSize="12dp" />
 
     </RelativeLayout>

@@ -1,23 +1,26 @@
 package com.persipura.match;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.HasilBean;
+import com.persipura.bean.matchResult;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -26,9 +29,13 @@ public class detailPertandingan extends SherlockFragment {
 
 	private LayoutInflater mInflater;
 	List<HasilBean> listThisWeekBean;
+	List<matchResult> listResult;
 	LinearLayout lifePageCellContainerLayout1, lifePageCellContainerLayout2;
 	String nid;
-	
+	private ProgressDialog progressDialog;
+	// List<Map<String, String>> planetsList = new ArrayList<Map<String,
+	// String>>();
+
 	public static final String TAG = detailPertandingan.class.getSimpleName();
 
 	public static detailPertandingan newInstance() {
@@ -40,7 +47,11 @@ public class detailPertandingan extends SherlockFragment {
 			Bundle savedInstanceState) {
 		Bundle b = getArguments();
 		nid = b.getString("myString");
+		showProgressDialog();
 		new fetchLocationFromServer().execute("");
+		new fetchMatchResult().execute("");
+		
+
 		View rootView = inflater.inflate(R.layout.detail_match, container,
 				false);
 		mInflater = getLayoutInflater(savedInstanceState);
@@ -50,6 +61,143 @@ public class detailPertandingan extends SherlockFragment {
 		lifePageCellContainerLayout2 = (LinearLayout) rootView
 				.findViewById(R.id.location_linear2_parentview);
 		return rootView;
+	}
+	
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
+	}
+
+	private class fetchMatchResult extends AsyncTask<String, Void, String> {
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/match_summary", "match_id=" + nid);
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+
+				listResult = new ArrayList<matchResult>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					matchResult thisWeekBean = new matchResult();
+					thisWeekBean.setNid(resObject.getString("id"));
+					thisWeekBean.setMinute(resObject.getString("minute"));
+					thisWeekBean.setPlayer(resObject.getString("player"));
+					thisWeekBean.setTeam(resObject.getString("team"));
+					thisWeekBean.setType(resObject.getString("type"));
+
+					listResult.add(thisWeekBean);
+				}
+				if (listResult != null && listResult.size() > 0) {
+
+					createMatchResult(listResult);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		// @SuppressWarnings("deprecation")
+		private void createMatchResult(List<matchResult> listResults)
+				throws IOException {
+			for (int i = 0; i < listResults.size(); i++) {
+				matchResult thisWeekBean = listResults.get(i);
+
+				View cellViewMainLayout = mInflater.inflate(
+						R.layout.detail_match_list, null);
+				TextView goalscorerA = (TextView) cellViewMainLayout
+						.findViewById(R.id.findzoes_list_text_name);
+				TextView timescorerA = (TextView) cellViewMainLayout
+						.findViewById(R.id.findzoes_list_text_address);
+				ImageView imgIconA = (ImageView) cellViewMainLayout
+						.findViewById(R.id.imageView1);
+
+				View cellViewMainLayout2 = mInflater.inflate(
+						R.layout.detail_match_list2, null);
+				TextView timescorerB = (TextView) cellViewMainLayout2
+						.findViewById(R.id.findzoes_list_text_address);
+				TextView goalscorerB = (TextView) cellViewMainLayout2
+						.findViewById(R.id.findzoes_list_text_name);
+				ImageView imgIconB = (ImageView) cellViewMainLayout2
+						.findViewById(R.id.imageView1);
+
+				if (thisWeekBean.getTeam().equals("home")) {
+					goalscorerA.setText("");
+					timescorerA.setText("");
+					goalscorerA.setText(thisWeekBean.getPlayer());
+					timescorerA.setText(thisWeekBean.getMinute());
+
+					if (thisWeekBean.getType().equals("goal")) {
+						imgIconA.setBackgroundResource(R.drawable.soccerballicon);
+					} else if (thisWeekBean.getType().equals("yellowcard")) {
+						imgIconA.setBackgroundResource(R.drawable.yellow_card_icon);
+					} else {
+						imgIconA.setBackgroundResource(R.drawable.red_card_icon);
+					}
+
+					lifePageCellContainerLayout1.addView(cellViewMainLayout);
+				} else {
+					goalscorerB.setText("");
+					timescorerB.setText("");
+					goalscorerB.setText(thisWeekBean.getPlayer());
+					timescorerB.setText(thisWeekBean.getMinute());
+					
+					if (thisWeekBean.getType().equals("goal")) {
+						imgIconB.setBackgroundResource(R.drawable.soccerballicon);
+					} else if (thisWeekBean.getType().equals("yellowcard")) {
+						imgIconB.setBackgroundResource(R.drawable.yellow_card_icon);
+					} else {
+						imgIconB.setBackgroundResource(R.drawable.red_card_icon);
+					}
+					
+					lifePageCellContainerLayout2.addView(cellViewMainLayout2);
+				}
+
+			}
+		}
 	}
 
 	private class fetchLocationFromServer extends
@@ -63,7 +211,8 @@ public class detailPertandingan extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 
-			String result = WebHTTPMethodClass.httpGetService("/restapi/get/match_results","id=" + nid);
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/match_results", "id=" + nid);
 			return result;
 		}
 
@@ -109,14 +258,14 @@ public class detailPertandingan extends SherlockFragment {
 							.getString("a_percentage"));
 					thisWeekBean.setHpercentage(resObject
 							.getString("h_percentage"));
-					thisWeekBean.setHgoalscorer(resObject
-							.getString("h_goal_scorer"));
-					thisWeekBean.setAgoalscorer(resObject
-							.getString("a_goal_scorer"));
-					thisWeekBean.setAgoalminute(resObject
-							.getString("a_goal_minute"));
-					thisWeekBean.setHgoalminute(resObject
-							.getString("h_goal_minute"));
+//					thisWeekBean.setHgoalscorer(resObject
+//							.getString("h_goal_scorer"));
+//					thisWeekBean.setAgoalscorer(resObject
+//							.getString("a_goal_scorer"));
+//					thisWeekBean.setAgoalminute(resObject
+//							.getString("a_goal_minute"));
+//					thisWeekBean.setHgoalminute(resObject
+//							.getString("h_goal_minute"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -126,11 +275,14 @@ public class detailPertandingan extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				Toast.makeText(getActivity(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
 
 		}
 
-		@SuppressWarnings("deprecation")
+		 @SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
 				List<HasilBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
@@ -224,43 +376,76 @@ public class detailPertandingan extends SherlockFragment {
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
 						getActivity(), imgTeamB);
 
-				String[] partsA = thisWeekBean.getHgoalscorer().split("\\|");
-				String[] partsB = thisWeekBean.getAgoalscorer().split("\\|");
-				String[] timesA = thisWeekBean.getHgoalminute().split("\\|");
-				String[] timesB = thisWeekBean.getAgoalminute().split("\\|");
+				// String[] partsA =
+				// thisWeekBean.getHgoalscorer().split("\\|");
+				// String[] partsB =
+				// thisWeekBean.getAgoalscorer().split("\\|");
+				// String[] timesA =
+				// thisWeekBean.getHgoalminute().split("\\|");
+				// String[] timesB =
+				// thisWeekBean.getAgoalminute().split("\\|");
 
-				for (int x = 0; x < partsA.length; x++) {
-					View cellViewMainLayout = mInflater.inflate(
-							R.layout.detail_match_list, null);
-					TextView goalscorerA = (TextView) cellViewMainLayout
-							.findViewById(R.id.findzoes_list_text_name);
-					TextView timescorerA = (TextView) cellViewMainLayout
-							.findViewById(R.id.findzoes_list_text_address);
-					goalscorerA.setText("");
-					goalscorerA.setText(partsA[x]);
-					timescorerA.setText("");
-					timescorerA.setText(timesA[x]);
-					lifePageCellContainerLayout1.addView(cellViewMainLayout);
-				}
+				// Map<String, String> map = new HashMap<String,String>();
+				// map.put("iOS", "100");
+				// map.put("iOS", "101");
+				// map.put("iOS", "102");
+				// map.put("iOS", "103");
+				//
+				// Set keys = map.keySet();
+				//
+				// for (Map.Entry<String,String> entry : map.entrySet()) {
+				// String key = entry.getKey();
+				// String value = entry.getValue();
+				// Log.d("------------***********", key + value);
+				// // do stuff
+				// }
 
-				for (int x = 0; x < partsB.length; x++) {
-					// Log.d("llllllllllllllllllllll", partsA[x]);
-					Log.d("llllllllllllllllllllll", partsB[x]);
+				// Map<String, List<String>> hm = new HashMap<String,
+				// List<String>>();
+				// List<String> values = new ArrayList<String>();
+				// values.add("Value 1");
+				// values.add("Value 2");
+				// hm.put("Key1", values);
 
-					View cellViewMainLayout2 = mInflater.inflate(
-							R.layout.detail_match_list2, null);
-					TextView timescorerB = (TextView) cellViewMainLayout2
-							.findViewById(R.id.findzoes_list_text_address);
-					TextView goalscorerB = (TextView) cellViewMainLayout2
-							.findViewById(R.id.findzoes_list_text_name);
+				// for (Map.Entry<String,String> entry : map.entrySet()) {
+				// String key = entry.getKey();
+				// String value = entry.getValue();
+				// Log.d("------------***********", key + value);
+				// // do stuff
+				// }
 
-					goalscorerB.setText("");
-					goalscorerB.setText(partsB[x]);
-					timescorerB.setText("");
-					timescorerB.setText(timesB[x]);
-					lifePageCellContainerLayout2.addView(cellViewMainLayout2);
+				// for (int x = 0; x < partsA.length; x++) {
+				// View cellViewMainLayout = mInflater.inflate(
+				// R.layout.detail_match_list, null);
+				// TextView goalscorerA = (TextView) cellViewMainLayout
+				// .findViewById(R.id.findzoes_list_text_name);
+				// TextView timescorerA = (TextView) cellViewMainLayout
+				// .findViewById(R.id.findzoes_list_text_address);
+				// goalscorerA.setText("");
+				// goalscorerA.setText(partsA[x]);
+				// timescorerA.setText("");
+				// timescorerA.setText(timesA[x]);
+				// lifePageCellContainerLayout1.addView(cellViewMainLayout);
+				// }
 
-				}
+				// for (int x = 0; x < partsB.length; x++) {
+				// // Log.d("llllllllllllllllllllll", partsA[x]);
+				// Log.d("llllllllllllllllllllll", partsB[x]);
+				//
+				// View cellViewMainLayout2 = mInflater.inflate(
+				// R.layout.detail_match_list2, null);
+				// TextView timescorerB = (TextView) cellViewMainLayout2
+				// .findViewById(R.id.findzoes_list_text_address);
+				// TextView goalscorerB = (TextView) cellViewMainLayout2
+				// .findViewById(R.id.findzoes_list_text_name);
+				//
+				// goalscorerB.setText("");
+				// goalscorerB.setText(partsB[x]);
+				// timescorerB.setText("");
+				// timescorerB.setText(timesB[x]);
+				// lifePageCellContainerLayout2.addView(cellViewMainLayout2);
+				//
+				// }
 
 			}
 		}

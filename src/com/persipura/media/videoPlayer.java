@@ -25,6 +25,7 @@ import android.widget.VideoView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.mediaBean;
 
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
@@ -131,6 +132,11 @@ public class videoPlayer extends SherlockFragment {
 						R.id.textDesc);
 				VideoView videoView = (VideoView) getView().findViewById(
 						R.id.videoView1);
+				
+				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(description, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				
 
 				title.setText("");
 				created.setText("");
