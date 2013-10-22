@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -65,17 +66,21 @@ public class ImageLoader {
 		// from web
 		try {
 			Bitmap bitmap = null;
-			URL imageUrl = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection) imageUrl
-					.openConnection();
-			conn.setConnectTimeout(30000);
-			conn.setReadTimeout(30000);
-			conn.setInstanceFollowRedirects(true);
-			InputStream is = conn.getInputStream();
-			OutputStream os = new FileOutputStream(f);
-			Utils.CopyStream(is, os);
-			os.close();
-			bitmap = decodeFile(f);
+			Log.d("imageUrl", "image url :" + url);
+			if(url != null){
+				URL imageUrl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) imageUrl
+						.openConnection();
+				conn.setConnectTimeout(30000);
+				conn.setReadTimeout(30000);
+				conn.setInstanceFollowRedirects(true);
+				InputStream is = conn.getInputStream();
+				OutputStream os = new FileOutputStream(f);
+				Utils.CopyStream(is, os);
+				os.close();
+				bitmap = decodeFile(f);
+			}
+			
 			return bitmap;
 		} catch (Exception ex) {
 			ex.printStackTrace();

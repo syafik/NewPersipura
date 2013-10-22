@@ -35,7 +35,8 @@ public class Home extends SherlockFragment {
 	List<HomeNews> listThisWeekBean;
 	List<HomeSquad> listSquadBean;
 	List<HomeNextMatch> listNextMatchBean;
-	LinearLayout newsContainerLayout, squadContainerLayout, nextMatchContainerLayout;
+	LinearLayout newsContainerLayout, squadContainerLayout,
+			nextMatchContainerLayout;
 	private LayoutInflater mInflater;
 	private ProgressDialog progressDialog;
 	ViewGroup newContainer;
@@ -59,26 +60,19 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.relativeLayout3);
 		squadContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.squad_home);
-		nextMatchContainerLayout = (LinearLayout) rootView.findViewById(R.id.linearNextMatch);
+		nextMatchContainerLayout = (LinearLayout) rootView
+				.findViewById(R.id.linearNextMatch);
 		newContainer = container;
 		TextView squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
-		TextView homeNewsTitle = (TextView) rootView.findViewById(R.id.homeNewsTitle);
-		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
-		AppConstants.fontrobotoTextView(homeNewsTitle, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
+		TextView homeNewsTitle = (TextView) rootView
+				.findViewById(R.id.homeNewsTitle);
+		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2", getActivity()
+				.getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextView(homeNewsTitle, 15, "A6A5A2",
+				getActivity().getApplicationContext().getAssets());
 		new fetchHomeLatestFromServer().execute("");
 		new fetchHomeNewsFromServer().execute("");
 		new fetchNextMatchFromServer().execute("");
-
-		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-
-			@Override
-			public void onLayoutChange(View v, int left, int top, int right,
-					int bottom, int oldLeft, int oldTop, int oldRight,
-					int oldBottom) {
-				// hideProgressDialog();
-			}
-
-		});
 
 		return rootView;
 	}
@@ -151,8 +145,8 @@ public class Home extends SherlockFragment {
 					homeSquad.setId(resObject.getString("id"));
 					homeSquad.setposisi(resObject.getString("posisi"));
 					homeSquad.setage(resObject.getString("age"));
-//					homeSquad
-//							.setwarganegara(resObject.getString("warganegara"));
+					homeSquad
+							.setwarganegara(resObject.getString("warganegara"));
 					homeSquad.setfoto(resObject.getString("foto"));
 					homeSquad
 							.setno_punggung(resObject.getString("no_punggung"));
@@ -193,26 +187,22 @@ public class Home extends SherlockFragment {
 				nama.setText("");
 				detail.setText("");
 				no_punggung.setText("");
-				
-				
+
 				no_punggung.setText(squad.getno_punggung());
 				nama.setText(squad.getNamaLengkap());
 				detail.setText(squad.getposisi() + "\n" + squad.getage()
-						+ " tahun" 
-//						+ ", " + squad.getwarganegara()
-						);
-				AppConstants.fontrobotoTextViewBold(nama, 11, "ffffff", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(no_punggung, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(detail, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+						+ " tahun" + ", " + squad.getwarganegara());
+				AppConstants.fontrobotoTextViewBold(nama, 11, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(no_punggung, 15, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(detail, 11, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
 				BitmapFactory.Options bmOptions;
 				squadId = squad.getId();
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				// Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
-				//
-				//
-				// imgNews.setImageBitmap(bm);
 				int loader = R.drawable.loader;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
@@ -243,108 +233,107 @@ public class Home extends SherlockFragment {
 		}
 
 	}
-	
-	
+
 	private class fetchNextMatchFromServer extends
-	AsyncTask<String, Void, String> {
+			AsyncTask<String, Void, String> {
 
-@Override
-protected void onPreExecute() {
-
-}
-
-@Override
-protected String doInBackground(String... params) {
-	String result = WebHTTPMethodClass.httpGetServiceWithoutparam(
-			"/restapi/get/home_match");
-
-	return result;
-}
-
-@Override
-protected void onProgressUpdate(Void... values) {
-
-}
-
-@Override
-protected void onPostExecute(String result) {
-	try {
-		JSONArray jsonArray = new JSONArray(result);
-		
-		listNextMatchBean = new ArrayList<HomeNextMatch>();
-		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObject resObject = jsonArray.getJSONObject(i);
-			HomeNextMatch thisWeekBean = new HomeNextMatch();
-			
-			thisWeekBean.setTeam1(resObject.getString("a_team"));
-			thisWeekBean.setTeam2(resObject.getString("h_team"));
-			thisWeekBean.setId(resObject.getString("id"));
-			thisWeekBean.setTeam1Logo(resObject.getString("a_logo"));
-			thisWeekBean.setTeam2Logo(resObject.getString("h_logo"));
-			
-			
-			listNextMatchBean.add(thisWeekBean);
+		@Override
+		protected void onPreExecute() {
 
 		}
-		if (listNextMatchBean != null && listNextMatchBean.size() > 0) {
-			createNextMatchView(listNextMatchBean);
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass
+					.httpGetServiceWithoutparam("/restapi/get/home_match");
+
+			return result;
 		}
 
-	} catch (Exception e) {
-		e.printStackTrace();
-		Toast.makeText(getActivity().getApplicationContext(),
-				"Failed to retrieve data from server",
-				Toast.LENGTH_LONG).show();
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+
+				listNextMatchBean = new ArrayList<HomeNextMatch>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					HomeNextMatch thisWeekBean = new HomeNextMatch();
+
+					thisWeekBean.setTeam1(resObject.getString("a_team"));
+					thisWeekBean.setTeam2(resObject.getString("h_team"));
+					thisWeekBean.setId(resObject.getString("id"));
+					thisWeekBean.setTeam1Logo(resObject.getString("a_logo"));
+					thisWeekBean.setTeam2Logo(resObject.getString("h_logo"));
+
+					listNextMatchBean.add(thisWeekBean);
+
+				}
+				if (listNextMatchBean != null && listNextMatchBean.size() > 0) {
+					createNextMatchView(listNextMatchBean);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
+				throws IOException {
+			nextMatchContainerLayout.removeAllViews();
+			for (int i = 0; i < listNextMatchBean.size(); i++) {
+				HomeNextMatch thisWeekBean = listNextMatchBean.get(i);
+				View cellViewMainLayout = mInflater.inflate(
+						R.layout.home_next_match, null);
+
+				TextView team1 = (TextView) cellViewMainLayout
+						.findViewById(R.id.team1);
+				TextView team2 = (TextView) cellViewMainLayout
+						.findViewById(R.id.team2);
+
+				team1.setText("");
+				team2.setText("");
+
+				team1.setText(thisWeekBean.getTeam1());
+				team2.setText(thisWeekBean.getTeam2());
+
+				AppConstants.fontrobotoTextViewBold(team1, 13, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(team2, 13, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				nextMatchContainerLayout.addView(cellViewMainLayout);
+
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+				ImageView imgNews = (ImageView) cellViewMainLayout
+						.findViewById(R.id.imageView1);
+				ImageView imgNews2 = (ImageView) cellViewMainLayout
+						.findViewById(R.id.imageView2);
+
+				imgLoader.DisplayImage(thisWeekBean.getTeam1Logo(), loader,
+						imgNews);
+				imgLoader.DisplayImage(thisWeekBean.getTeam2Logo(), loader,
+						imgNews2);
+			}
+		}
+
 	}
 
-}
-
-private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
-		throws IOException {
-	nextMatchContainerLayout.removeAllViews();
-	for (int i = 0; i < listNextMatchBean.size(); i++) {
-		HomeNextMatch thisWeekBean = listNextMatchBean.get(i);
-		View cellViewMainLayout = mInflater.inflate(R.layout.home_next_match,
-				null);
-		
-		
-		TextView team1 = (TextView) cellViewMainLayout
-				.findViewById(R.id.team1);
-		TextView team2 = (TextView) cellViewMainLayout
-				.findViewById(R.id.team2);
-
-
-		team1.setText("");
-		team2.setText("");
-		
-		team1.setText(thisWeekBean.getTeam1());
-		team2.setText(thisWeekBean.getTeam2());
-		
-		AppConstants.fontrobotoTextViewBold(team1, 13, "ffffff", getActivity().getApplicationContext().getAssets());
-		AppConstants.fontrobotoTextViewBold(team2, 13, "ffffff", getActivity().getApplicationContext().getAssets());
-		nextMatchContainerLayout.addView(cellViewMainLayout);
-		
-		BitmapFactory.Options bmOptions;
-
-		bmOptions = new BitmapFactory.Options();
-		bmOptions.inSampleSize = 1;
-		int loader = R.drawable.loader;
-
-		ImageLoader imgLoader = new ImageLoader(getActivity()
-				.getApplicationContext());
-		ImageView imgNews = (ImageView) cellViewMainLayout
-				.findViewById(R.id.imageView1);
-		ImageView imgNews2 = (ImageView) cellViewMainLayout
-				.findViewById(R.id.imageView2);
-		
-		imgLoader.DisplayImage(thisWeekBean.getTeam1Logo(), loader,
-				imgNews);
-		imgLoader.DisplayImage(thisWeekBean.getTeam2Logo(), loader,
-				imgNews2);
-	}
-}
-
-}
 	private class fetchHomeNewsFromServer extends
 			AsyncTask<String, Void, String> {
 
@@ -416,16 +405,14 @@ private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
 
 				titleNews.setText(thisWeekBean.gettitle());
 				timeNews.setText(thisWeekBean.getcreated());
-				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(titleNews, 11, "ffffff", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(titleNews, 11, "ffffff",
+						getActivity().getApplicationContext().getAssets());
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				// Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
-				//
-				//
-				// imgNews.setImageBitmap(bm);
 				int loader = R.drawable.loader;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
@@ -436,23 +423,22 @@ private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
 
 				NewsId = null;
 				NewsId = thisWeekBean.getNid();
-				
+
 				cellViewMainLayout.setTag(NewsId);
 				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 
 					public void onClick(View v) {
-						
 
-					        Bundle data = new Bundle();
-					        data.putString("NewsId", (String) v.getTag());
+						Bundle data = new Bundle();
+						data.putString("NewsId", (String) v.getTag());
 
-					        FragmentTransaction t = getActivity().getSupportFragmentManager()
-					                .beginTransaction();
-					        DetailNews mFrag = new DetailNews();
-					        mFrag.setArguments(data);
-					        t.replace(R.id.content, mFrag);
-					        t.commit();
+						FragmentTransaction t = getActivity()
+								.getSupportFragmentManager().beginTransaction();
+						DetailNews mFrag = new DetailNews();
+						mFrag.setArguments(data);
+						t.replace(R.id.content, mFrag);
+						t.commit();
 
 					}
 				};

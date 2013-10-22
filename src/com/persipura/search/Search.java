@@ -151,7 +151,7 @@ public class Search extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/find_content", "title=" + q + "s&body=" + q);
+					"/restapi/get/find_content", "title=" + q + "&body=" + q);
 
 			return result;
 		}
@@ -181,7 +181,16 @@ public class Search extends SherlockFragment {
 							.getString("node_title"));
 					thisWeekBean.settype(resObject.getString("type"));
 					thisWeekBean.settimeago(resObject.getString("timeago"));
-					 thisWeekBean.setfoto(resObject.getString(resObject.getString("type") + "_img"));
+					String imgUri = null;
+					if(resObject.getString("type") == "News"){
+						imgUri = resObject.getString("news_teaser");
+					}else if(resObject.getString("type") == "Video"){
+						imgUri = resObject.getString("video_teaser");
+					}else{
+						imgUri = resObject.getString("picture_url");
+					}
+					thisWeekBean.setfoto(imgUri);
+//					 thisWeekBean.setfoto(resObject.getString(resObject.getString("type") + "_img"));
 
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -234,6 +243,7 @@ public class Search extends SherlockFragment {
 				// imgNews.setImageBitmap(bm);
 				int loader = R.drawable.loader;
 
+				
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
 
