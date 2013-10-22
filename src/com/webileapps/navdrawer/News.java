@@ -155,7 +155,7 @@ public class News extends SherlockFragment {
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
 					NewsBean thisWeekBean = new NewsBean();
-					thisWeekBean.setNid(resObject.getString("id"));
+					thisWeekBean.setNid(resObject.getString("nid"));
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setteaser(resObject.getString("teaser"));
 					thisWeekBean.setimg_uri(resObject.getString("img_uri"));

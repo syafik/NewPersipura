@@ -4,6 +4,8 @@ public class HomeNextMatch {
 	String id = "";
 	String team1 = "";
 	String team2 = "";
+	String team1Logo = "";
+	String team2Logo = "";
 	
 	public String getId() {
 		return id;
@@ -37,5 +39,29 @@ public class HomeNextMatch {
 		}
 		this.team2 = team2;
 	}
+	
+	public String getTeam1Logo() {
+		return team1Logo;
+	}
 
+	public void setTeam1Logo(String team1Logo) {
+		if (team1Logo.equals("null")) {
+			team1Logo = "";
+		}
+		this.team1Logo = team1Logo;
+	}
+	
+	public String getTeam2Logo() {
+		return team2Logo;
+	}
+
+	public void setTeam2Logo(String team2Logo) {
+		if (team2Logo.equals("null")) {
+			team2Logo = "";
+		}
+		this.team2Logo = team2Logo;
+	}
+
+	
+	
 }

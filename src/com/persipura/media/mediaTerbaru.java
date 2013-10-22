@@ -15,8 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.markupartist.android.widget.PullToRefreshListView;
-import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+//import com.markupartist.android.widget.PullToRefreshListView;
+//import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.persipura.bean.mediaBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;

@@ -151,8 +151,8 @@ public class Home extends SherlockFragment {
 					homeSquad.setId(resObject.getString("id"));
 					homeSquad.setposisi(resObject.getString("posisi"));
 					homeSquad.setage(resObject.getString("age"));
-					homeSquad
-							.setwarganegara(resObject.getString("warganegara"));
+//					homeSquad
+//							.setwarganegara(resObject.getString("warganegara"));
 					homeSquad.setfoto(resObject.getString("foto"));
 					homeSquad
 							.setno_punggung(resObject.getString("no_punggung"));
@@ -198,7 +198,9 @@ public class Home extends SherlockFragment {
 				no_punggung.setText(squad.getno_punggung());
 				nama.setText(squad.getNamaLengkap());
 				detail.setText(squad.getposisi() + "\n" + squad.getage()
-						+ " tahun" + ", " + squad.getwarganegara());
+						+ " tahun" 
+//						+ ", " + squad.getwarganegara()
+						);
 				AppConstants.fontrobotoTextViewBold(nama, 11, "ffffff", getActivity().getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(no_punggung, 15, "A6A5A2", getActivity().getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(detail, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
@@ -277,8 +279,10 @@ protected void onPostExecute(String result) {
 			thisWeekBean.setTeam1(resObject.getString("a_team"));
 			thisWeekBean.setTeam2(resObject.getString("h_team"));
 			thisWeekBean.setId(resObject.getString("id"));
+			thisWeekBean.setTeam1Logo(resObject.getString("a_logo"));
+			thisWeekBean.setTeam2Logo(resObject.getString("h_logo"));
 			
-
+			
 			listNextMatchBean.add(thisWeekBean);
 
 		}
@@ -316,9 +320,27 @@ private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
 		team1.setText(thisWeekBean.getTeam1());
 		team2.setText(thisWeekBean.getTeam2());
 		
+		AppConstants.fontrobotoTextViewBold(team1, 13, "ffffff", getActivity().getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextViewBold(team2, 13, "ffffff", getActivity().getApplicationContext().getAssets());
 		nextMatchContainerLayout.addView(cellViewMainLayout);
-
 		
+		BitmapFactory.Options bmOptions;
+
+		bmOptions = new BitmapFactory.Options();
+		bmOptions.inSampleSize = 1;
+		int loader = R.drawable.loader;
+
+		ImageLoader imgLoader = new ImageLoader(getActivity()
+				.getApplicationContext());
+		ImageView imgNews = (ImageView) cellViewMainLayout
+				.findViewById(R.id.imageView1);
+		ImageView imgNews2 = (ImageView) cellViewMainLayout
+				.findViewById(R.id.imageView2);
+		
+		imgLoader.DisplayImage(thisWeekBean.getTeam1Logo(), loader,
+				imgNews);
+		imgLoader.DisplayImage(thisWeekBean.getTeam2Logo(), loader,
+				imgNews2);
 	}
 }
 
@@ -355,8 +377,8 @@ private void createNextMatchView(List<HomeNextMatch> listNextMatchBean)
 					HomeNews thisWeekBean = new HomeNews();
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setcreated(resObject.getString("created"));
-					thisWeekBean.setimg_uri(resObject.getString("image"));
-					thisWeekBean.setNid(resObject.getString("id"));
+					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
+					thisWeekBean.setNid(resObject.getString("nid"));
 
 					listThisWeekBean.add(thisWeekBean);
 
