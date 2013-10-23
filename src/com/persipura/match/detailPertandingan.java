@@ -349,7 +349,7 @@ public class detailPertandingan extends SherlockFragment {
 				// cellnumTextView.setText("");
 
 				ListDate.setText(thisWeekBean.getDate());
-				ListTime.setText(thisWeekBean.getTime());
+				ListTime.setText(thisWeekBean.getTime() + " WIT");
 				NameTeamA.setText(thisWeekBean.getHteam());
 				NameTeamB.setText(thisWeekBean.getAteam());
 				ScoreTeamA.setText(thisWeekBean.getHgoal());

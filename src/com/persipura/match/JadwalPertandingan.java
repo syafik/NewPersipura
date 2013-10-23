@@ -52,7 +52,7 @@ public class JadwalPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		showProgressDialog();
+		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.jadwal_pertandingan,
 				container, false);
@@ -190,7 +190,7 @@ public class JadwalPertandingan extends SherlockFragment {
 				cellnumTextView.setText("");
 
 				ListDate.setText(thisWeekBean.getDate());
-				ListTime.setText(thisWeekBean.getTime());
+				ListTime.setText(thisWeekBean.getTime()+ " WIT");
 				NameTeamA.setText(thisWeekBean.getHteam());
 				NameTeamB.setText(thisWeekBean.getAteam());
 				Place.setText(thisWeekBean.getPlace());

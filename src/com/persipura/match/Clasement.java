@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +28,7 @@ public class Clasement extends SherlockFragment {
 	private LayoutInflater mInflater;
 	List<clasementBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
-
+	private ProgressDialog progressDialog;
 	public static final String TAG = Clasement.class.getSimpleName();
 
 	public static Clasement newInstance() {
@@ -35,6 +38,7 @@ public class Clasement extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.klasemen, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
@@ -44,7 +48,35 @@ public class Clasement extends SherlockFragment {
 
 		return rootView;
 	}
+	
+	
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
 
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
+	}
+
+	
 	private class fetchLocationFromServer extends
 			AsyncTask<String, Void, String> {
 

@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.sax.RootElement;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class HasilPertandingan extends SherlockFragment {
 	private LayoutInflater mInflater;
 	List<HasilBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
-
+	private ProgressDialog progressDialog;
 	public static final String TAG = HasilPertandingan.class.getSimpleName();
 
 	public static HasilPertandingan newInstance() {
@@ -54,6 +55,7 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);
@@ -64,6 +66,32 @@ public class HasilPertandingan extends SherlockFragment {
 		return rootView;
 	}
 
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
+	}
+	
 	private class fetchLocationFromServer extends
 			AsyncTask<String, Void, String> {
 
@@ -158,7 +186,6 @@ public class HasilPertandingan extends SherlockFragment {
 				AppConstants.fontrobotoTextView(ListTime, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(ListDate, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
 				
-
 				ListDate.setText("");
 				ListTime.setText("");
 				NameTeamA.setText("");
@@ -168,7 +195,7 @@ public class HasilPertandingan extends SherlockFragment {
 				cellnumTextView.setText("");
 
 				ListDate.setText(thisWeekBean.getDate());
-				ListTime.setText(thisWeekBean.getTime());
+				ListTime.setText(thisWeekBean.getTime() + " WIT");
 				NameTeamA.setText(thisWeekBean.getHteam());
 				NameTeamB.setText(thisWeekBean.getAteam());
 				ScoreTeamA.setText(thisWeekBean.getHgoal());
