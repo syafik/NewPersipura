@@ -14,22 +14,32 @@ import org.json.JSONObject;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.imageBean;
 
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
+import android.R.drawable;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -43,6 +53,7 @@ public class GaleryView extends SherlockFragment {
 
 	public String[] urls=null;
 	ArrayList<String> stringArrayList = new ArrayList<String>();
+	ArrayList<String> stringTitleList = new ArrayList<String>();
 
 	private LayoutInflater mInflater;
 	List<imageBean> listThisWeekBean;
@@ -189,12 +200,13 @@ public class GaleryView extends SherlockFragment {
 	    public View getView(int position, View cv, ViewGroup parent) {
 	        View v = cv;
 	        ImageView picture;
-	        Bitmap bitmap = DownloadImage(urls[position]);
+	        final Bitmap bitmap = DownloadImage(urls[position]);
+	        final String imagURls = urls[position];
 	        
 	        if(v == null) {
 	            v = mInflater.inflate(R.layout.gridcrop, parent, false);
 	            v.setTag(R.id.picture, v.findViewById(R.id.picture));
-	            v.setTag(R.id.text, v.findViewById(R.id.text));
+//	            v.setTag(R.id.text, v.findViewById(R.id.text));
 	        }
 	        
 	        picture = (ImageView)v.getTag(R.id.picture);   
@@ -202,11 +214,62 @@ public class GaleryView extends SherlockFragment {
 //	        Imageloader imageLoader = new Imageloader(getSherlockActivity()
 //					.getApplicationContext());
 //			picture.setTag(urls);
-//			imageLoader.DisplayImage(urls[position],
+//			imageLoader.DisplayImage(imagURls,
 //					getActivity(), picture);
 	     
 	        picture.setImageBitmap(bitmap);
-	    
+	        
+	        picture.setOnClickListener(new OnClickListener()
+	        {
+	            @SuppressLint("NewApi")
+				public void onClick(View v)
+	            {
+	              
+	                		Log.d("adsafdfsa", imagURls);
+	                		// Get screen size
+	                		Display display = getActivity().getWindowManager().getDefaultDisplay();
+	                		Point size = new Point();
+	                		display.getSize(size);
+	                		int screenWidth = size.x;
+	                		int screenHeight = size.y;
+
+	                		// Get target image size
+//	                		Bitmap bitmap = BitmapFactory.decodeFile(drawable.presence_offline);
+	                		int bitmapHeight = bitmap.getHeight();
+	                		int bitmapWidth = bitmap.getWidth();
+
+	                		// Scale the image down to fit perfectly into the screen
+	                		// The value (250 in this case) must be adjusted for phone/tables displays
+	                		while(bitmapHeight > (screenHeight - 250) || bitmapWidth > (screenWidth - 250)) {
+	                		    bitmapHeight = bitmapHeight / 2;
+	                		    bitmapWidth = bitmapWidth / 2;
+	                		}
+
+	                		// Create resized bitmap image
+	                		BitmapDrawable resizedBitmap = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false));
+
+	                		// Create dialog
+	                		Dialog dialog = new Dialog(context);
+	                		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	                		dialog.setContentView(R.layout.thumbnail);
+
+	                		ImageView image = (ImageView) dialog.findViewById(R.id.imageview);
+
+	                		// !!! Do here setBackground() instead of setImageDrawable() !!! //
+//	                		image.setBackground(resizedBitmap);
+	                		image.setImageBitmap(bitmap);
+
+	                		// Without this line there is a very small border around the image (1px)
+	                		// In my opinion it looks much better without it, so the choice is up to you.
+	                		dialog.getWindow().setBackgroundDrawable(null);
+
+	                		// Show the dialog
+	                		dialog.show();
+
+	                }
+//	            }
+	        });
+	        
 	        return v;
 	    }
 	}
@@ -268,6 +331,9 @@ public class GaleryView extends SherlockFragment {
 					imageBean thisWeekBean = new imageBean();
 					thisWeekBean.setNid(resObject.getString("id"));
 					thisWeekBean.setimg_uri(resObject.getString("picture_url"));
+					thisWeekBean.setteaser(resObject.getString("picture_title"));
+					thisWeekBean.settitle(resObject.getString("title"));
+					thisWeekBean.setcreated(resObject.getString("created"));
 					listThisWeekBean.add(thisWeekBean);					
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -282,13 +348,32 @@ public class GaleryView extends SherlockFragment {
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
 				List<imageBean> listThisWeekBean) {
+			
+			
+			
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				imageBean thisWeekBean = listThisWeekBean.get(i);
 
+				
+				TextView title = (TextView) getView()
+						.findViewById(R.id.title_text);
+				TextView created = (TextView) getView()
+						.findViewById(R.id.date_text);
+	
+				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(title, 18, "ffffff", getActivity().getApplicationContext().getAssets());
+				
+				title.setText("");
+				created.setText("");
+				title.setText(thisWeekBean.gettitle());
+				created.setText(thisWeekBean.getcreated());
+				
 				String[] parts = thisWeekBean.getpictureUrl().split("\\|");
+				String[] picturetitle = thisWeekBean.getPictureTitle().split("\\|");
 				
 				for (int x = 0; x < parts.length; x++) {
 					stringArrayList.add(parts[x]);
+//					stringTitleList.add(picturetitle);
 				}
 
 			}

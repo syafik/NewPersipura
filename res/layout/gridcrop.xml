@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         />
-    <TextView
+    <!-- <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,5 +20,5 @@
         android:layout_gravity="bottom"
         android:textColor="@android:color/white"
         android:background="#55000000"
-        />
+        /> -->
 </FrameLayout>
