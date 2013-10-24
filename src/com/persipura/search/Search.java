@@ -17,6 +17,7 @@ import com.androidhive.imagefromurl.ImageLoader;
 
 import com.persipura.bean.NewsBean;
 import com.persipura.bean.SearchBean;
+import com.persipura.media.videoPlayer;
 import com.persipura.utils.*;
 import com.webileapps.navdrawer.DetailNews;
 import com.webileapps.navdrawer.News;
@@ -58,8 +59,7 @@ public class Search extends SherlockFragment {
 	// "http://prspura.tk/restapi/get/news?limit=20&offset=1";
 	private LayoutInflater mInflater;
 	List<SearchBean> listThisWeekBean;
-	LinearLayout lifePageCellContainerLayout;
-	private RelativeLayout mParentLayout;
+	LinearLayout eventContainerLayout, newsContainerLayout, videoContainerLayout;
 	ViewGroup newContainer;
 	String nid;
 	String q;
@@ -85,31 +85,17 @@ public class Search extends SherlockFragment {
 		View rootView = inflater.inflate(R.layout.result, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
-		lifePageCellContainerLayout = (LinearLayout) rootView
-				.findViewById(R.id.location_linear_parentview);
+		eventContainerLayout = (LinearLayout) rootView
+				.findViewById(R.id.relativeLayout2);
+		newsContainerLayout = (LinearLayout) rootView
+				.findViewById(R.id.relativeLayout3);
+		videoContainerLayout = (LinearLayout) rootView
+				.findViewById(R.id.relativeLayout4);
 		TextView resultlabel = (TextView) rootView
 				.findViewById(R.id.resultlabel);
 		resultlabel.setText(Html.fromHtml(resultlabel.getText() + "&quot;" + q
 				+ "&quot;"));
-		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-
-			@Override
-			public void onLayoutChange(View v, int left, int top, int right,
-					int bottom, int oldLeft, int oldTop, int oldRight,
-					int oldBottom) {
-
-				View footerView = mInflater.inflate(R.layout.footer,
-						newContainer, false);
-				FrameLayout bottom_control_bar = (FrameLayout) footerView
-						.findViewById(R.id.bottom_control_bar);
-				ScrollView scrollBar = (ScrollView) v
-						.findViewById(R.id.list_news);
-				LayoutParams params = scrollBar.getLayoutParams();
-				int height = v.getHeight() - bottom_control_bar.getHeight();
-				params.height = height;
-
-			}
-		});
+		
 
 		return rootView;
 	}
@@ -182,9 +168,9 @@ public class Search extends SherlockFragment {
 					thisWeekBean.settype(resObject.getString("type"));
 					thisWeekBean.settimeago(resObject.getString("timeago"));
 					String imgUri = null;
-					if(resObject.getString("type") == "News"){
+					if(resObject.getString("type").equals("News")){
 						imgUri = resObject.getString("news_teaser");
-					}else if(resObject.getString("type") == "Video"){
+					}else if(resObject.getString("type").equals("Video")){
 						imgUri = resObject.getString("video_teaser");
 					}else{
 						imgUri = resObject.getString("picture_url");
@@ -194,6 +180,7 @@ public class Search extends SherlockFragment {
 
 					listThisWeekBean.add(thisWeekBean);
 				}
+				
 				Log.d("array", "array list : " + arrayList);
 
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -211,6 +198,19 @@ public class Search extends SherlockFragment {
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
 				List<SearchBean> listThisWeekBean) throws IOException {
+				if(arrayList.contains("Event")){
+					View parent = (View) eventContainerLayout.getParent();
+					parent.setVisibility(View.VISIBLE);
+				}
+				if(arrayList.contains("News")){
+					View parent = (View) newsContainerLayout.getParent();
+					parent.setVisibility(View.VISIBLE);
+				}
+				if(arrayList.contains("Video")){
+					View parent = (View) videoContainerLayout.getParent();
+					parent.setVisibility(View.VISIBLE);
+				}
+				
 
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				SearchBean thisWeekBean = listThisWeekBean.get(i);
@@ -228,95 +228,70 @@ public class Search extends SherlockFragment {
 				titleNews.setText("");
 				descNews.setText("");
 				cellnumTextView.setText("");
-				// cellViewMainLayout.setTag(thisWeekBean.getNid());
+				 cellViewMainLayout.setTag(thisWeekBean.getid());
 				nid = thisWeekBean.getid();
 
 				titleNews.setText(thisWeekBean.getnode_title());
 				descNews.setText(thisWeekBean.gettimeago());
 				BitmapFactory.Options bmOptions;
-
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				// Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
-				//
-				//
-				// imgNews.setImageBitmap(bm);
 				int loader = R.drawable.loader;
-
 				
-				ImageLoader imgLoader = new ImageLoader(getActivity()
-						.getApplicationContext());
+				try{
+					if(!thisWeekBean.getfoto().isEmpty()){
+						ImageLoader imgLoader = new ImageLoader(getActivity()
+								.getApplicationContext());
 
-				 imgLoader.DisplayImage(thisWeekBean.getfoto(), loader,
-				 imgNews);
-				LinearLayout rel = null;
-
-				for (int a = 0; a < arrayList.size(); a++) {
-
-					if (arrayList.get(a).equals(thisWeekBean.gettype())) {
-						if (lifePageCellContainerLayout
-								.findViewWithTag(arrayList.get(a)) == null) {
-							rel = new LinearLayout(getActivity());
-							rel.setTag(arrayList.get(a));
-							rel.setLayoutParams(new LinearLayout.LayoutParams(
-									LayoutParams.MATCH_PARENT,
-									LinearLayout.LayoutParams.WRAP_CONTENT));
-							rel.setOrientation(LinearLayout.VERTICAL);
-							View view = new View(getActivity());
-							view.setLayoutParams(new LinearLayout.LayoutParams(
-									LayoutParams.MATCH_PARENT, (int) 2));
-							view.setBackgroundColor(Color.parseColor("#1E1D1F"));
-							RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-									LayoutParams.MATCH_PARENT,
-									LayoutParams.MATCH_PARENT); // or
-																// wrap_content
-							layoutParams
-									.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-							layoutParams
-									.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-							rel.addView(view, layoutParams);
-
-							TextView tx = new TextView(getActivity());
-
-							tx.setText("from " + arrayList.get(a).toString());
-
-							rel.addView(tx);
-
-						} else {
-							rel = (LinearLayout) lifePageCellContainerLayout
-									.findViewWithTag(arrayList.get(a));
-						}
-						result_type = thisWeekBean.gettype();
-						View.OnClickListener myhandler1 = new View.OnClickListener() {
-							public void onClick(View v) {
-								Log.d("result_type", "result_type :"
-										+ result_type);
-								if (result_type.equals("news")) {
-									final FragmentTransaction ft = getFragmentManager()
-											.beginTransaction();
-									ft.remove(Search.this);
-
-									newContainer.setTag(nid);
-
-									ft.replace(R.id.content,
-											DetailNews.newInstance(),
-											"DetailNews");
-									ft.addToBackStack(null);
-
-									ft.commit();
-								}
-							}
-						};
-						cellViewMainLayout.setOnClickListener(myhandler1);
-						rel.addView(cellViewMainLayout);
+						 imgLoader.DisplayImage(thisWeekBean.getfoto(), loader,
+						 imgNews);	
 					}
+					
+	
+				}catch(Exception e){
+					e.printStackTrace();	
 				}
+				if(thisWeekBean.gettype().equals("Event")){
+					eventContainerLayout.addView(cellViewMainLayout);	
+				}else if(thisWeekBean.gettype().equals("News")){
+					View.OnClickListener myhandler1 = new View.OnClickListener() {
+					public void onClick(View v) {
+						
+						Bundle data = new Bundle();
+				        data.putString("NewsId", (String) v.getTag());
 
-				lifePageCellContainerLayout.addView(rel);
-
+				        FragmentTransaction t = getActivity().getSupportFragmentManager()
+				                .beginTransaction();
+				        DetailNews mFrag = new DetailNews();
+				        mFrag.setArguments(data);
+				        t.replace(R.id.content, mFrag);
+				        t.commit();
+					}
+				};
+				cellViewMainLayout.setOnClickListener(myhandler1);
+					newsContainerLayout.addView(cellViewMainLayout);
+				}else if(thisWeekBean.gettype().equals("Video")){
+					
+					cellViewMainLayout.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {					
+							
+							videoPlayer vp = new videoPlayer();
+							
+							Bundle b = new Bundle();
+							b.putString("myString",(String) v.getTag());
+							vp.setArguments(b);	
+							getActivity().getSupportFragmentManager()
+							.beginTransaction()
+							.add(R.id.content, vp,"detail")
+							.addToBackStack("")
+							.commit();
+						}
+					});
+					videoContainerLayout.addView(cellViewMainLayout);	
+				}	
 			}
 		}
-
+		
 	}
 
 	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
