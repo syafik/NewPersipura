@@ -10,6 +10,9 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -19,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.HasilBean;
 import com.persipura.bean.SejarahBean;
 import com.persipura.utils.Imageloader;
@@ -149,12 +154,60 @@ public class Sejarah extends SherlockFragment {
 //				TextView desc = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
 
 //				desc.setText(Html.fromHtml(thisWeekBean.getdesc()));
-				WebView webview = (WebView) lifePageCellContainerLayout.findViewById(R.id.webview);
+//				WebView webview = (WebView) lifePageCellContainerLayout.findViewById(R.id.webview);
 
 				 // OR, you can also load from an HTML string:
 				 String summary = thisWeekBean.getdesc();
-				 webview.loadData(summary, "text/html", null);
-
+				 
+//				 webview.loadData(summary, "text/html", null);
+				 ImageView imageView1 = (ImageView) lifePageCellContainerLayout.findViewById(R.id.imageView1);
+				 	int loader = R.drawable.loader;
+				 TextView nama = (TextView) lifePageCellContainerLayout.findViewById(R.id.nama);
+				 TextView berdiri = (TextView) lifePageCellContainerLayout.findViewById(R.id.berdiri);
+				 TextView alamat = (TextView) lifePageCellContainerLayout.findViewById(R.id.alamat);
+				 TextView telepon = (TextView) lifePageCellContainerLayout.findViewById(R.id.telepon);
+				 TextView julukan = (TextView) lifePageCellContainerLayout.findViewById(R.id.julukan);
+				 TextView detail = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
+				 LinearLayout detailLinear = (LinearLayout) lifePageCellContainerLayout.findViewById(R.id.detail);
+				 RelativeLayout relDetail = (RelativeLayout) lifePageCellContainerLayout.findViewById(R.id.relDetail);
+				 
+				 // unhide content
+				 imageView1.setVisibility(View.VISIBLE);
+				 nama.setVisibility(View.VISIBLE);
+				 berdiri.setVisibility(View.VISIBLE);
+				 alamat.setVisibility(View.VISIBLE);
+				 telepon.setVisibility(View.VISIBLE);
+				 julukan.setVisibility(View.VISIBLE);
+				 detail.setVisibility(View.VISIBLE);
+				 detailLinear.setVisibility(View.VISIBLE);
+				 relDetail.setVisibility(View.VISIBLE);
+				 
+				 
+				 // parsing html from string
+				 Document doc = Jsoup.parse(summary);
+				 Element logo = doc.select("img").first();
+				 Element p1 = doc.select("p").first();
+				 Element table_html = doc.select("table").first();
+				 
+				 
+				 // table element
+				 String nama_html = doc.select("td").get(2).text();
+				 String berdiri_html = doc.select("td").get(5).text();
+				 String alamat_html = doc.select("td").get(8).text();
+				 String telepon_html = doc.select("td").get(11).text();
+				 String julukan_html = doc.select("td").get(14).text();
+				 p1.remove();
+				 table_html.remove();
+				 
+				 nama.setText(nama.getText() + nama_html);
+				 berdiri.setText(berdiri.getText() + berdiri_html);
+				 alamat.setText(alamat.getText() + alamat_html);
+				 telepon.setText(telepon.getText() + telepon_html);
+				 julukan.setText(julukan.getText() + julukan_html);
+				 
+  				 ImageLoader imgLoader = new ImageLoader(getActivity().getApplicationContext());
+				 imgLoader.DisplayImage(logo.attr("src"), loader, imageView1);
+				 detail.setText(Html.fromHtml(doc.outerHtml()));
 
 			}
 		}
