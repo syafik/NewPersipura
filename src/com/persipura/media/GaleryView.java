@@ -354,7 +354,6 @@ public class GaleryView extends SherlockFragment {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				imageBean thisWeekBean = listThisWeekBean.get(i);
 
-				
 				TextView title = (TextView) getView()
 						.findViewById(R.id.title_text);
 				TextView created = (TextView) getView()

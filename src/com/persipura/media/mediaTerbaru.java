@@ -2,8 +2,11 @@ package com.persipura.media;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.R.integer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,24 +14,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-//import com.markupartist.android.widget.PullToRefreshListView;
-//import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.mediaBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
-import com.persipura.utils.PullDownListView.ListViewTouchEventListener;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
+//import com.markupartist.android.widget.PullToRefreshListView;
+//import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
 public class mediaTerbaru extends SherlockFragment {
 
 	private LayoutInflater mInflater;
 	List<mediaBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
+	PullToRefreshScrollView mPullRefreshScrollView;
+	ScrollView mScrollView;
+	int hitung = 2;
+	 int offset = 2;
+	
 
 	public static final String TAG = mediaTerbaru.class.getSimpleName();
 
@@ -39,11 +50,32 @@ public class mediaTerbaru extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		new fetchLocationFromServer().execute("");
+
+		Integer[] param = new Integer[] { hitung, 0 };
+		new fetchLocationFromServer().execute(param);
 		View rootView = inflater.inflate(R.layout.media_terbaru, container,
 				false);
 		mInflater = getLayoutInflater(savedInstanceState);
 
+		
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+//				new GetDataTask().execute();
+			  
+					Integer[] param = new Integer[] { hitung, offset };
+					new fetchLocationFromServer().execute(param);
+				offset = offset + 2;
+				
+			}
+		});
+
+		mScrollView = mPullRefreshScrollView.getRefreshableView();
+		
+		
+		
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 		
@@ -60,9 +92,34 @@ public class mediaTerbaru extends SherlockFragment {
 	}
 	
 	
+//	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+//
+//		@Override
+//		protected String[] doInBackground(Void... params) {
+//			// Simulates a background job.
+//			try {
+//				Thread.sleep(4000);
+//				new fetchLocationFromServer().execute(2);
+//			} catch (InterruptedException e) {
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(String[] result) {
+//			// Do some stuff here
+//
+//			// Call onRefreshComplete when the list has been refreshed.
+//			mPullRefreshScrollView.onRefreshComplete();
+//
+//			super.onPostExecute(result);
+//		}
+//	}
+	
+	
 
 	private class fetchLocationFromServer extends
-			AsyncTask<String, Void, String> {
+			AsyncTask<Integer, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -70,10 +127,10 @@ public class mediaTerbaru extends SherlockFragment {
 		}
 
 		@Override
-		protected String doInBackground(String... params) {
-
+		protected String doInBackground(Integer... param) {
+			
 			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/media");
+					.httpGetService("/restapi/get/media", "limit=" + param[0] + "&offset=" + param[1] );
 			return result;
 		}
 
@@ -100,8 +157,9 @@ public class mediaTerbaru extends SherlockFragment {
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
-
 					createSelectLocationListView(listThisWeekBean);
+				}else{
+					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
@@ -144,7 +202,7 @@ public class mediaTerbaru extends SherlockFragment {
 						getActivity(), img);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
-
+				mPullRefreshScrollView.onRefreshComplete();
 			}
 		}
 

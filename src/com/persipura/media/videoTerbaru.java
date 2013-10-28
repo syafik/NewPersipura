@@ -19,10 +19,14 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.persipura.bean.mediaBean;
 
 import com.persipura.utils.AppConstants;
@@ -43,11 +47,22 @@ public class videoTerbaru extends SherlockFragment {
 	LinearLayout videoContainer;
 	ViewGroup newContainer;
 	String nid;
+	PullToRefreshScrollView mPullRefreshScrollView;
+	ScrollView mScrollView;
+	int hitung = 2;
+	 int offset = 2;
 
 	public static final String TAG = videoTerbaru.class.getSimpleName();
 
 	public static videoTerbaru newInstance() {
 		return new videoTerbaru();
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		offset = 2;
 	}
 	
 	@SuppressLint("NewApi")
@@ -62,7 +77,26 @@ public class videoTerbaru extends SherlockFragment {
 		videoContainer = (LinearLayout) rootView
 				.findViewById(R.id.parent_video);
 		
-		new fetchLocationFromServer().execute("");
+		Integer[] param = new Integer[] { hitung, 0 };
+		new fetchLocationFromServer().execute(param);
+		
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+//				new GetDataTask().execute();
+			  
+					Integer[] param = new Integer[] { hitung, offset };
+					new fetchLocationFromServer().execute(param);
+				offset = offset + 2;
+				
+			}
+		});
+
+		mScrollView = mPullRefreshScrollView.getRefreshableView();
+		
+		
 		
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
@@ -78,7 +112,7 @@ public class videoTerbaru extends SherlockFragment {
 	}
 
 	private class fetchLocationFromServer extends
-			AsyncTask<String, Void, String> {
+			AsyncTask<Integer, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -86,10 +120,10 @@ public class videoTerbaru extends SherlockFragment {
 		}
 
 		@Override
-		protected String doInBackground(String... params) {
+		protected String doInBackground(Integer... param) {
 
 			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/video");
+					.httpGetService("/restapi/get/video", "limit=" + param[0] + "&offset=" + param[1]);
 			return result;
 		}
 
@@ -118,6 +152,8 @@ public class videoTerbaru extends SherlockFragment {
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 
 					createSelectLocationListView(listThisWeekBean);
+				}else{
+					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
@@ -177,7 +213,7 @@ public class videoTerbaru extends SherlockFragment {
 						.commit();
 					}
 				});
-		
+				mPullRefreshScrollView.onRefreshComplete();
 
 			}
 		}

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-	 <ScrollView
+<!-- 	 <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
@@ -20,7 +20,26 @@
             android:orientation="vertical"
             >
         </LinearLayout>
-    </ScrollView>
+    </ScrollView>  -->
+    
+     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_refresh_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrMode="both" >
+       <LinearLayout
+            android:id="@+id/location_linear_parentview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+        </LinearLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+        	
+ 
     
     <!-- <com.markupartist.android.widget.PullToRefreshListView
         android:id="@+id/android:list"
