@@ -76,26 +76,6 @@ public class News extends SherlockFragment {
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 		
-		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-
-			@Override
-			public void onLayoutChange(View v, int left, int top, int right,
-					int bottom, int oldLeft, int oldTop, int oldRight,
-					int oldBottom) {
-
-				View footerView = mInflater.inflate(R.layout.footer,
-						newContainer, false);
-				FrameLayout bottom_control_bar = (FrameLayout) footerView
-						.findViewById(R.id.bottom_control_bar);
-				ScrollView scrollBar = (ScrollView) v
-						.findViewById(R.id.list_news);
-				LayoutParams params = scrollBar.getLayoutParams();
-				int height = v.getHeight() - bottom_control_bar.getHeight();
-				params.height = height;
-
-			}
-		});
-
 		return rootView;
 	}
 
@@ -224,12 +204,11 @@ public class News extends SherlockFragment {
 				        Bundle data = new Bundle();
 				        data.putString("NewsId", (String) v.getTag());
 
-				        FragmentTransaction t = getActivity().getSupportFragmentManager()
+				        FragmentTransaction t = getFragmentManager()
 				                .beginTransaction();
 				        DetailNews mFrag = new DetailNews();
 				        mFrag.setArguments(data);
-				        t.replace(R.id.content, mFrag);
-				        t.commit();
+				        t.add(R.id.content, mFrag, DetailNews.TAG).commit();
 
 					}
 				};

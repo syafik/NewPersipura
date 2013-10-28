@@ -218,8 +218,8 @@ public class Home extends SherlockFragment {
 
 						newContainer.setTag(squadId);
 
-						ft.replace(R.id.content, DetailSquad.newInstance(),
-								"DetailNews");
+						ft.add(R.id.content, DetailSquad.newInstance(),
+								DetailSquad.TAG);
 						ft.addToBackStack(null);
 
 						ft.commit();
@@ -437,8 +437,7 @@ public class Home extends SherlockFragment {
 								.getSupportFragmentManager().beginTransaction();
 						DetailNews mFrag = new DetailNews();
 						mFrag.setArguments(data);
-						t.replace(R.id.content, mFrag);
-						t.commit();
+						t.add(R.id.content, mFrag, DetailNews.TAG).commit();
 
 					}
 				};

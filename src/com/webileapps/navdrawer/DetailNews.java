@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,6 +35,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.NewsBean;
 import com.persipura.utils.WebHTTPMethodClass;
 
+@SuppressLint("NewApi")
 public class DetailNews extends SherlockFragment {
 	public static final String TAG = DetailNews.class.getSimpleName();
 
@@ -48,6 +50,7 @@ public class DetailNews extends SherlockFragment {
 	String nid;
 	ProgressDialog progressDialog;
 
+	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -65,7 +68,8 @@ public class DetailNews extends SherlockFragment {
 		newContainer = container;
 		lifePageCellContainerLayout = (RelativeLayout) rootView
 				.findViewById(R.id.list_parent);
-
+		
+		MainActivity.newInstance().HideOtherActivities();
 		return rootView;
 	}
 	

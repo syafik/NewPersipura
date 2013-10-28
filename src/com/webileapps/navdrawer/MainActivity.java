@@ -26,11 +26,14 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -50,6 +53,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -113,7 +117,11 @@ public class MainActivity extends SherlockFragmentActivity {
 				R.layout.drawer_list_item, mPlanetTitles));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle(titleNav);
+		getActionBar().setTitle(null);
+		getActionBar().setHomeButtonEnabled(true);
+	    getActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#B61718")));
 		_initMenu();
@@ -176,13 +184,15 @@ public class MainActivity extends SherlockFragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
 			if (mDrawer.isDrawerOpen(mDrawerList)) {
+//				getSupportActionBar().setIcon(R.drawable.logo_persipura_close);
 				mDrawer.closeDrawer(mDrawerList);
 			} else {
+//				getSupportActionBar().setIcon(R.drawable.logo_persipura_open);
 				mDrawer.openDrawer(mDrawerList);
 
 			}
 
-			getSupportActionBar().setTitle(titleNav);
+//			getSupportActionBar().setTitle(titleNav);
 			break;
 		}
 
@@ -234,42 +244,134 @@ public class MainActivity extends SherlockFragmentActivity {
 		// Pass any configuration change to the drawer toggles
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+	
+	void HideOtherActivities(){
+		News newsFragment = (News) getSupportFragmentManager().findFragmentByTag(News.TAG);
+		Home homeFragment = (Home) getSupportFragmentManager().findFragmentByTag(Home.TAG);
+		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);
+		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager().findFragmentByTag(PageSlidingTabStripFragment.TAG);
+		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
+		DetailNews detailNewsFragment = (DetailNews) getSupportFragmentManager().findFragmentByTag(DetailNews.TAG);
+		DetailSquad detailSquadFragment = (DetailSquad) getSupportFragmentManager().findFragmentByTag(DetailSquad.TAG);
+		
+		if(newsFragment != null){
+			newsFragment.getView().setVisibility(View.GONE);
+		}
+		
+		if(homeFragment != null){
+			homeFragment.getView().setVisibility(View.GONE);
+		}
+
+		if(pageSlidingFragment != null){
+			pageSlidingFragment.getView().setVisibility(View.GONE);
+		}
+		
+		if(pageSlidingTabStripFragment != null){
+			pageSlidingTabStripFragment.getView().setVisibility(View.GONE);
+		}
+		
+		if(squadFragment != null){
+			squadFragment.getView().setVisibility(View.GONE);
+		}
+
+		if(detailNewsFragment != null){
+			detailNewsFragment.getView().setVisibility(View.GONE);
+		}
+		
+		if(detailSquadFragment != null){
+			detailSquadFragment.getView().setVisibility(View.GONE);
+		}
+		
+	}
 
 	private void selectItem(int position) {
-		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
-		mainLayout.removeAllViews();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		News newsFragment = (News) getSupportFragmentManager().findFragmentByTag(News.TAG);
+		Home homeFragment = (Home) getSupportFragmentManager().findFragmentByTag(Home.TAG);
+		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);
+		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager().findFragmentByTag(PageSlidingTabStripFragment.TAG);
+		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
+		DetailNews detailNewsFragment = (DetailNews) getSupportFragmentManager().findFragmentByTag(DetailNews.TAG);
+		
 		Bundle args = new Bundle();
 		Log.d("position", "position : " + position);
 		switch (position) {
 		case 0:
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, Home.newInstance(), Home.TAG).commit();
+			if(homeFragment != null){
+				HideOtherActivities();
+				homeFragment.getView().setVisibility(View.VISIBLE);
+			}else{
+				HideOtherActivities();
+				getSupportFragmentManager().beginTransaction()
+				.add(R.id.content, Home.newInstance(), Home.TAG).commit();
+			}
+			
 			titleNav = "Home";
+			
 			break;
 		case 1:
-
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, News.newInstance(), News.TAG).commit();
+			if(newsFragment != null){
+//				ft.attach(newsFragment);
+//				FragmentManager fragmentManager = getSupportFragmentManager();
+//				
+//				fragmentManager.beginTransaction()
+////				    .remove(fragment1)
+////				    .add(R.id.fragment_container, fragment2)
+//				    .show(newsFragment)
+//				    .hide(homeFragment)
+//				    .commit();
+				HideOtherActivities();
+				newsFragment.getView().setVisibility(View.VISIBLE);
+			}else{
+				HideOtherActivities();
+				getSupportFragmentManager().beginTransaction()
+				.add(R.id.content, News.newInstance(), News.TAG).commit();
+			}
+			
 			titleNav = "News";
 			break;
 		case 2:
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(R.id.content, pageSliding.newInstance(),
-							pageSliding.TAG).commit();
+			if(pageSlidingFragment != null){
+				HideOtherActivities();
+				pageSlidingFragment.getView().setVisibility(View.VISIBLE);
+			}else{
+				HideOtherActivities();
+				getSupportFragmentManager()
+				.beginTransaction()
+				.add(R.id.content, pageSliding.newInstance(),
+						pageSliding.TAG).commit();
+			}
+			
 			titleNav = "Media";
 			break;
 		case 3:
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(R.id.content,
-							PageSlidingTabStripFragment.newInstance(),
-							PageSlidingTabStripFragment.TAG).commit();
+			if(pageSlidingTabStripFragment != null){
+				HideOtherActivities();
+				pageSlidingTabStripFragment.getView().setVisibility(View.VISIBLE);
+			}else{
+				HideOtherActivities();
+				getSupportFragmentManager()
+				.beginTransaction()
+				.add(R.id.content,
+						PageSlidingTabStripFragment.newInstance(),
+						PageSlidingTabStripFragment.TAG).commit();
+			}
+			
 			titleNav = "Match";
 			break;
 		case 4:
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.content, Squad.newInstance(), Squad.TAG).commit();
+			if(squadFragment != null){
+				HideOtherActivities();
+				squadFragment.getView().setVisibility(View.VISIBLE);
+			}else{
+				HideOtherActivities();
+				getSupportFragmentManager()
+				.beginTransaction()
+				.add(R.id.content, Squad.newInstance(), Squad.TAG)
+				.commit();
+				
+			}
+			
 			titleNav = "Squad";
 			break;
 		case 5:
@@ -315,19 +417,21 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		public CustomActionBarDrawerToggle(Activity mActivity,
 				DrawerLayout mDrawerLayout) {
-			super(mActivity, mDrawerLayout, R.drawable.ic_drawer,
+			super(mActivity, mDrawerLayout, R.drawable.abs__ic_ab_back_holo_dark,
 					R.string.ns_menu_open, R.string.ns_menu_close);
 		}
 
 		@Override
 		public void onDrawerClosed(View view) {
-			getActionBar().setTitle(titleNav);
+//			getActionBar().setTitle(titleNav);
+//			getSupportActionBar().setIcon(R.drawable.logo_persipura_close);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
-			getActionBar().setTitle(titleNav);
+//			getActionBar().setTitle(titleNav);
+//			getSupportActionBar().setIcon(R.drawable.logo_persipura_open);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 	}
