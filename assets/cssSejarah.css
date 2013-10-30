@@ -1,0 +1,21 @@
+@font-face { font-family: 'Roboto-Medium'; src: url('Roboto-Medium.ttf'); src: url('Roboto-Medium.ttf?#iefix') format('embedded-opentype'); font-weight: normal; font-style: normal; }
+body {background: #2E2C2C !important; color: #fff !important}
+
+img {
+width: 50px !important;
+height: 120px !important;
+}
+
+p:not(:first-child){
+background-color: #46434A;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+table {
+width: auto !important
+}
+
+p:first-child
+{ 
+ float:left !important;
+}

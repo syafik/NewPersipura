@@ -1,0 +1,25 @@
+@font-face { font-family: 'Roboto-Medium'; src: url('Roboto-Medium.ttf'); src: url('Roboto-Medium.ttf?#iefix') format('embedded-opentype'); font-weight: normal; font-style: normal; }
+body {background: #2E2C2C !important}
+p {text-align:center !important}
+span, td {color: #fff}
+td strong{color: #46434A !important}
+table { 
+    border-spacing:0 !important;
+    border-collapse:collapse !important;
+    border: 0px solid important;
+}
+tbody > tr:first-child td{
+font-size : 13px !important;
+}
+tbody > tr:nth-child(even):not(:first-child) > td{
+background-color: #46434A;
+font-size: 11px;
+}
+
+tbody > tr:nth-child(odd):not(:first-child) > td{
+font-size: 11px;
+}
+
+img {
+width: 90% !important;
+}

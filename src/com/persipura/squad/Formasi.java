@@ -153,7 +153,12 @@ public class Formasi extends SherlockFragment {
 
 				 // OR, you can also load from an HTML string:
 				 String summary = thisWeekBean.getdesc();
-				 webview.loadData(summary, "text/html", null);
+//				 summary += "<style>body {background: #2E2C2C !important;}</style>";
+				 String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" + summary;
+				 webview.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null);
+
+//				 webview.loadData(Html.fromHtml(summary).toString(), "text/html", null);
+				 
 
 
 			}

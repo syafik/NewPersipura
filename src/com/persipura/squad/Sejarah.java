@@ -31,12 +31,15 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.HasilBean;
 import com.persipura.bean.SejarahBean;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -155,11 +158,16 @@ public class Sejarah extends SherlockFragment {
 
 //				desc.setText(Html.fromHtml(thisWeekBean.getdesc()));
 //				WebView webview = (WebView) lifePageCellContainerLayout.findViewById(R.id.webview);
-
-				 // OR, you can also load from an HTML string:
+//
+//				 // OR, you can also load from an HTML string:
 				 String summary = thisWeekBean.getdesc();
+//				 String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"cssSejarah.css\" />" + summary;
+//				 webview.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null);
 				 
-//				 webview.loadData(summary, "text/html", null);
+				 
+				 
+				 
+				 // new code here
 				 ImageView imageView1 = (ImageView) lifePageCellContainerLayout.findViewById(R.id.imageView1);
 				 	int loader = R.drawable.loader;
 				 TextView nama = (TextView) lifePageCellContainerLayout.findViewById(R.id.nama);
@@ -170,6 +178,7 @@ public class Sejarah extends SherlockFragment {
 				 TextView detail = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
 				 LinearLayout detailLinear = (LinearLayout) lifePageCellContainerLayout.findViewById(R.id.detail);
 				 RelativeLayout relDetail = (RelativeLayout) lifePageCellContainerLayout.findViewById(R.id.relDetail);
+				 TableLayout tableLayout1 = (TableLayout) lifePageCellContainerLayout.findViewById(R.id.tableLayout1);
 				 
 				 // unhide content
 				 imageView1.setVisibility(View.VISIBLE);
@@ -179,8 +188,9 @@ public class Sejarah extends SherlockFragment {
 				 telepon.setVisibility(View.VISIBLE);
 				 julukan.setVisibility(View.VISIBLE);
 				 detail.setVisibility(View.VISIBLE);
-				 detailLinear.setVisibility(View.VISIBLE);
+				 detailLinear.setVisibility(View.VISIBLE);	
 				 relDetail.setVisibility(View.VISIBLE);
+				 tableLayout1.setVisibility(View.VISIBLE);
 				 
 				 
 				 // parsing html from string
@@ -199,11 +209,25 @@ public class Sejarah extends SherlockFragment {
 				 p1.remove();
 				 table_html.remove();
 				 
-				 nama.setText(nama.getText() + nama_html);
-				 berdiri.setText(berdiri.getText() + berdiri_html);
-				 alamat.setText(alamat.getText() + alamat_html);
-				 telepon.setText(telepon.getText() + telepon_html);
-				 julukan.setText(julukan.getText() + julukan_html);
+				 nama.setText(nama_html);
+				 berdiri.setText(berdiri_html);
+				 alamat.setText(alamat_html);
+				 telepon.setText(telepon_html);
+				 julukan.setText(julukan_html);
+
+				 for(int a = 1; a <= 15; a++){ 
+					 Log.d("avalue", "A value : " + a);
+				     TextView tv = (TextView) lifePageCellContainerLayout.findViewWithTag("textView" + a);
+				     AppConstants.fontrobotoTextViewBold((TextView) tv, 12, "ffffff",
+							getActivity().getApplicationContext().getAssets());
+				 }
+				 
+				 AppConstants.fontrobotoTextView((TextView)detail, 12, "ffffff",
+							getActivity().getApplicationContext().getAssets());
+			
+				  
+				 
+				 
 				 
   				 ImageLoader imgLoader = new ImageLoader(getActivity().getApplicationContext());
 				 imgLoader.DisplayImage(logo.attr("src"), loader, imageView1);

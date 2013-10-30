@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+        android:id="@+id/scrollBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:scrollbars="vertical" 
+        android:layout_marginBottom="10dp"
+         xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2E2C2C"
@@ -33,69 +41,125 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/logo"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical"
-        android:visibility="gone" >
-
-    <TextView
+         >
+<TableLayout
+    android:id="@+id/tableLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:visibility="gone" >
+ 
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dip" >
+ 
+        <TextView
+            android:id="@+id/textView1"
+            android:text="Nama "
+            android:layout_marginRight="30sp"
+            android:tag="textView1"/>
+        <TextView
+            android:text=":"
+            android:layout_marginRight="10sp"
+            android:tag="textView2"/>
+        <TextView
             android:id="@+id/nama"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nama_klub" 
+            android:tag="textView3"
             />
-
+ 
+    </TableRow>
+ 
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dip" >
+ 
+        
+        <TextView
+            android:id="@+id/textView2"
+            android:text="Berdiri"
+            android:tag="textView4"/>
+        <TextView
+            android:text=":"
+            android:tag="textView5"
+            />
         <TextView
             android:id="@+id/berdiri"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/berdiri_klub"
+            android:tag="textView6"
             />
+    </TableRow>
+ 
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dip" >
+ 
         
+        <TextView
+            android:id="@+id/textView3"
+            android:text="Alamat"
+            android:tag="textView7"/>
+        <TextView
+            android:text=":"
+            android:tag="textView8"
+            />
         <TextView
             android:id="@+id/alamat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/alamat_klub" />
+            android:tag="textView9"
+            />
+    </TableRow>
+    
+    
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dip" >
+ 
         
+        <TextView
+            android:id="@+id/textView4"
+            android:text="Telepon"
+            android:tag="textView10"/>
+        <TextView
+            android:text=":"
+            android:tag="textView11"
+            />
         <TextView
             android:id="@+id/telepon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/telepon_klub" />
+            android:tag="textView12"
+            />
+    </TableRow>
+    
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dip" >
+ 
         
+        <TextView
+            android:id="@+id/textView5"
+            android:text="Julukan"
+            android:tag="textView13"/>
+        <TextView
+            android:text=":"
+            android:tag="textView14"
+            />
         <TextView
             android:id="@+id/julukan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/julukan_klub" />
-        
-        <TextView
-            android:id="@+id/ketua"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ketua_klub"
+            android:tag="textView15"
             />
-        
-        <TextView
-            android:id="@+id/manager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/manager_klub" 
-			/>
-        
-        <TextView
-            android:id="@+id/pelatih"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pelatih_klub" 
-            />
-        
-        <TextView
-            android:id="@+id/stadion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stadion_klub" 
-			/>
-        
+    </TableRow>
+    
+    
+ 
+</TableLayout>
         
     </LinearLayout>
 
@@ -105,24 +169,24 @@
         android:layout_below="@+id/detail"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dip"
+        android:padding="5dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/gradient_box"
-        android:padding="5dp"
+        android:visibility="gone"
         android:id="@+id/relDetail"
-        android:visibility="gone" >
+         >
 
         <TextView
             android:id="@+id/textViewList2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="21dp"
-
-            android:ellipsize="none"
-            android:singleLine="false"
+			android:visibility="gone"
             android:text="@string/hello_world"
             android:textSize="12sp"
-            android:visibility="gone" />
+            />
     </RelativeLayout>
 
 </RelativeLayout>
+</ScrollView>
