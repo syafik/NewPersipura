@@ -107,7 +107,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 		
-		getSupportActionBar().setIcon(R.drawable.logo_persipura);
+		getSupportActionBar().setIcon(R.drawable.logo_open);
 		mTitle = mDrawerTitle = getTitle();
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -119,7 +119,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle(null);
 		getActionBar().setHomeButtonEnabled(true);
-	    getActionBar().setDisplayHomeAsUpEnabled(true);
+//	    getActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 		getSupportActionBar().setBackgroundDrawable(
@@ -184,10 +184,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
 			if (mDrawer.isDrawerOpen(mDrawerList)) {
-//				getSupportActionBar().setIcon(R.drawable.logo_persipura_close);
+				getSupportActionBar().setIcon(R.drawable.logo_open);
 				mDrawer.closeDrawer(mDrawerList);
 			} else {
-//				getSupportActionBar().setIcon(R.drawable.logo_persipura_open);
+				getSupportActionBar().setIcon(R.drawable.logo_close);
 				mDrawer.openDrawer(mDrawerList);
 
 			}

@@ -7,12 +7,18 @@ import com.persipura.utils.AppConstants;
 import com.persipura.utils.Utility;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class Splash extends Activity {
 	private Timer my_timer;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,7 +36,26 @@ public class Splash extends Activity {
 			}, 2000);
 		} else {
 			AppConstants.DIALOG_MSG = "Could not connect. Check your connection and try again later.";
-			showDialog(AppConstants.DIALOG_ALERT);
+			try {
+
+				AlertDialog alertDialog1 = new AlertDialog.Builder(Splash.this).create();
+	            alertDialog1.setTitle("Info");
+	            alertDialog1.setCancelable(false);
+	            alertDialog1.setMessage(AppConstants.DIALOG_MSG);
+	 
+	            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int which) {
+	                	finish();          
+	                    moveTaskToBack(true);
+	                }
+	            });
+	 
+	            alertDialog1.show();
+			}
+	            catch(Exception e)
+	            {
+	                Log.d("ConnectionProblem", "Show Dialog: "+e.getMessage());
+	            }
 		}
 	}
 
