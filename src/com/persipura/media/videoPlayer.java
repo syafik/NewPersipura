@@ -2,10 +2,12 @@ package com.persipura.media;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnLayoutChangeListener;
-
-import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -24,7 +23,6 @@ import android.widget.VideoView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.mediaBean;
-
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
@@ -146,16 +144,21 @@ public class videoPlayer extends SherlockFragment {
 				created.setText(thisWeekBean.getcreated());
 				description.setText(Html.fromHtml(thisWeekBean.getdescription()));
 
+				
+				
 				videoView
 						.setMediaController(new MediaController(getActivity()));
 				Uri uri = Uri
 						.parse(thisWeekBean.getvideo_uri());
+				
 				videoView.setVideoURI(uri);
 				videoView.start();
 				videoView.requestFocus();
 
 			}
 		}
+		
+
 
 	}
 

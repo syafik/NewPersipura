@@ -5,17 +5,25 @@
     android:orientation="vertical"
     android:background="@color/abs__background_holo_dark" >
 
+    <RelativeLayout 
+          android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:layout_weight="1"
+        android:background="@color/abs__background_holo_dark"
+        >
     <VideoView
         android:id="@+id/videoView1"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_weight="0.05" 
+        android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:clickable="false"
         android:layout_gravity="center_horizontal"/>
+</RelativeLayout>
 
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.07"
+        android:layout_weight="1"
         android:layout_margin="5dip"
         android:background="@drawable/gradient_box"
         android:padding="10px" >

@@ -153,6 +153,7 @@ public class videoTerbaru extends SherlockFragment {
 
 					createSelectLocationListView(listThisWeekBean);
 				}else{
+					offset = offset - 2;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
 
@@ -204,6 +205,9 @@ public class videoTerbaru extends SherlockFragment {
 						videoPlayer vp = new videoPlayer();
 						
 						Bundle b = new Bundle();
+						
+						
+						
 						b.putString("myString",(String) v.getTag());
 						vp.setArguments(b);	
 						getActivity().getSupportFragmentManager()
