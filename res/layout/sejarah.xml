@@ -54,7 +54,7 @@
         android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dip" >
+        android:padding="1dip" >
  
         <TextView
             android:id="@+id/textView1"
@@ -76,7 +76,7 @@
         android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dip" >
+        android:padding="1dip" >
  
         
         <TextView
@@ -97,7 +97,7 @@
         android:id="@+id/tableRow3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dip" >
+        android:padding="1dip" >
  
         
         <TextView
@@ -119,7 +119,7 @@
         android:id="@+id/tableRow4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dip" >
+        android:padding="1dip" >
  
         
         <TextView
@@ -140,7 +140,7 @@
         android:id="@+id/tableRow5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dip" >
+        android:padding="1dip" >
  
         
         <TextView

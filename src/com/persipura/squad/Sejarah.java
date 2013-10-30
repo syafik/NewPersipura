@@ -218,11 +218,11 @@ public class Sejarah extends SherlockFragment {
 				 for(int a = 1; a <= 15; a++){ 
 					 Log.d("avalue", "A value : " + a);
 				     TextView tv = (TextView) lifePageCellContainerLayout.findViewWithTag("textView" + a);
-				     AppConstants.fontrobotoTextViewBold((TextView) tv, 12, "ffffff",
+				     AppConstants.fontrobotoTextViewBold((TextView) tv, 11, "ffffff",
 							getActivity().getApplicationContext().getAssets());
 				 }
 				 
-				 AppConstants.fontrobotoTextView((TextView)detail, 12, "ffffff",
+				 AppConstants.fontrobotoTextView((TextView)detail, 11, "ffffff",
 							getActivity().getApplicationContext().getAssets());
 			
 				  
