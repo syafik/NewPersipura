@@ -245,7 +245,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 	
-	void HideOtherActivities(){
+	public void HideOtherActivities(){
 		News newsFragment = (News) getSupportFragmentManager().findFragmentByTag(News.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager().findFragmentByTag(Home.TAG);
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);

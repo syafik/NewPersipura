@@ -53,7 +53,7 @@ public class Formasi extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		showProgressDialog();
+//		showProgressDialog();
 		 new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.formasi, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);

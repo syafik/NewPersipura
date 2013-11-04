@@ -12,8 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,9 +34,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
+import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.home.HomeSquad;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 
 public class DetailSquad extends SherlockFragment {
@@ -45,6 +52,10 @@ public class DetailSquad extends SherlockFragment {
 
 	private LayoutInflater mInflater;
 	List<HomeSquad> listThisWeekBean;
+	List<FooterBean> listFooterBean;
+	FrameLayout footerLayout;
+	String LinkId;
+
 	LinearLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
@@ -61,6 +72,7 @@ public class DetailSquad extends SherlockFragment {
 		showProgressDialog();
 
 		new fetchLocationFromServer().execute("");
+		new fetchFooterFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.squad_profile, container,
 				false);
@@ -69,15 +81,15 @@ public class DetailSquad extends SherlockFragment {
 		newContainer = container;
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.list_parent);
+		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
+
+		TextView footerTitle = (TextView) rootView
+				.findViewById(R.id.footerText);
+		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
+				.getApplicationContext().getAssets());
+		MainActivity.newInstance().HideOtherActivities();
 
 		return rootView;
-	}
-
-	private void hideProgressDialog() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-		}
-
 	}
 
 	private void showProgressDialog() {
@@ -260,5 +272,104 @@ public class DetailSquad extends SherlockFragment {
 
 		}
 	}
+	
+	private class fetchFooterFromServer extends
+	AsyncTask<String, Void, String> {
+
+@Override
+protected void onPreExecute() {
+
+}
+
+@Override
+protected String doInBackground(String... params) {
+	String result = WebHTTPMethodClass.httpGetService(
+			"/restapi/get/footer", "id=68");
+
+	return result;
+}
+
+@Override
+protected void onProgressUpdate(Void... values) {
+
+}
+
+@Override
+protected void onPostExecute(String result) {
+	try {
+		JSONArray jsonArray = new JSONArray(result);
+		Log.d("test1", "test1 : " + jsonArray);
+		listFooterBean = new ArrayList<FooterBean>();
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject resObject = jsonArray.getJSONObject(i);
+			FooterBean thisWeekBean = new FooterBean();
+			thisWeekBean.setclickable(resObject.getString("clickable"));
+			thisWeekBean.setfooter_logo(resObject.getString("footer_logo"));
+			thisWeekBean.setlink(resObject.getString("link"));
+//
+			listFooterBean.add(thisWeekBean);
+
+		}
+		if (listFooterBean != null && listFooterBean.size() > 0) {
+			createFooterView(listFooterBean);
+		}
+
+	} catch (Exception e) {
+		e.printStackTrace();
+		Toast.makeText(getActivity().getApplicationContext(),
+				"Failed to retrieve data from server",
+				Toast.LENGTH_LONG).show();
+	}
+
+}
+
+private void createFooterView(List<FooterBean> listFooterBean)
+		throws IOException {
+	for (int i = 0; i < listFooterBean.size(); i++) {
+		FooterBean thisWeekBean = listFooterBean.get(i);
+		
+		
+		ImageView imgNews = (ImageView) footerLayout
+				.findViewById(R.id.footerImg);
+
+		
+		
+		BitmapFactory.Options bmOptions;
+
+		bmOptions = new BitmapFactory.Options();
+		bmOptions.inSampleSize = 1;
+		int loader = R.drawable.loader;
+
+		ImageLoader imgLoader = new ImageLoader(getActivity()
+				.getApplicationContext());
+
+		if(!thisWeekBean.getfooter_logo().isEmpty()){
+			imgLoader.DisplayImage(thisWeekBean.getfooter_logo(), loader,
+					imgNews);
+
+			LinkId = null;
+			LinkId = thisWeekBean.getlink();
+			Log.d("clickable", "clickable : " + thisWeekBean.getclickable());
+			if(thisWeekBean.getclickable().equals("1")){
+				
+			 imgNews.setOnClickListener(new View.OnClickListener() {
+                 public void onClick(View v) {
+
+                	 Uri uri = Uri.parse(LinkId);
+                	 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                	 startActivity(intent);
+
+                 }
+             });
+	
+			}
+	
+		}
+		
+
+	}
+}
+
+}
 
 }

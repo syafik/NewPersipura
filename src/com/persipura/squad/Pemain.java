@@ -58,7 +58,7 @@ public class Pemain extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		showProgressDialog();
+//		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.pemain, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);

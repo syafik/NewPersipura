@@ -27,5 +27,7 @@
     
 </android.support.v4.view.ViewPager>
 
-<include layout="@layout/footer"/>
+<include
+    android:id="@+id/outer"
+    layout="@layout/footer" />
 </FrameLayout>
