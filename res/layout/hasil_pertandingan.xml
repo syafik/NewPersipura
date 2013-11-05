@@ -9,10 +9,9 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
 		android:layout_weight="4"
-        android:layout_below="@+id/list_hasil"
         android:layout_margin="3dp"
         android:padding="2dp"
-        android:scrollbars="none" >
+        android:scrollbars="vertical" >
 
         <LinearLayout
             android:id="@+id/location_linear_parentview"

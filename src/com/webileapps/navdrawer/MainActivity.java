@@ -17,6 +17,8 @@
 package com.webileapps.navdrawer;
 
 import android.annotation.SuppressLint;
+
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.view.Window;
 import android.app.Activity;
 import android.app.Fragment;
@@ -127,7 +129,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		_initMenu();
 		mDrawerToggle = new CustomActionBarDrawerToggle(this, mDrawer);
 		mDrawer.setDrawerListener(mDrawerToggle);
-		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.content);
 
 	
 
@@ -155,20 +156,38 @@ public class MainActivity extends SherlockFragmentActivity {
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		 MenuItem menuItem = menu.findItem(1);
+	        menuItem.setOnActionExpandListener(new OnActionExpandListener() {
+	            @Override
+	            public boolean onMenuItemActionCollapse(MenuItem item) {
+	                // Do something when collapsed
+	            	getSupportActionBar().setIcon(R.drawable.logo_open);
+	            	Log.d("collapsed", "collapsed");
+	                return true; // Return true to collapse action view
+	            }
 
+	            @Override
+	            public boolean onMenuItemActionExpand(MenuItem item) {
+	            	getSupportActionBar().setIcon(R.drawable.logo_persipura);
+	            	Log.d("expanded", "expanded");
+	                return true; // Return true to expand action view
+	            }
+	        });
+	    
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
-
+		
 		switch (item.getItemId()) {
 		case 1:
 			search = (EditText) item.getActionView().findViewById(
 					R.id.descrizione);
 			search.addTextChangedListener(filterTextWatcher);
 			search.requestFocus();
+			
 			scelta1 = (Button) item.getActionView().findViewById(R.id.scelta1);
 			scelta1.setOnClickListener(new OnClickListener() {
 
