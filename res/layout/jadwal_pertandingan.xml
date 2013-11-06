@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!--
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -21,21 +22,41 @@
             android:padding="5dp" >
         </LinearLayout>
     </ScrollView>
-    
-    <FrameLayout android:id="@+id/bottom_control_bar"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:background="#000"
-        >
+    -->
 
-         <ImageView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:src="@drawable/btm_logo" 
-             android:layout_gravity="center"/>
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_refresh_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrMode="both" >
 
+        <LinearLayout
+            android:id="@+id/location_linear_parentview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="5dp" >
+        </LinearLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
+    <FrameLayout
+        android:id="@+id/bottom_control_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btm_logo" />
     </FrameLayout>
 
-    <!-- <RelativeLayout
+    <!--
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -47,6 +68,7 @@
             android:layout_centerHorizontal="true"
             android:padding="5dp"
             android:src="@drawable/btm_logo" />
-    </RelativeLayout> -->
+    </RelativeLayout>
+    -->
 
 </LinearLayout>

@@ -2,21 +2,20 @@ package com.persipura.media;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -25,19 +24,17 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.mediaBean;
-
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.DetailNews;
-//import com.webileapps.navdrawer.DetailNews;
 //import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R;
-import com.persipura.home.Home;
-import com.persipura.media.*;
+import com.webileapps.navdrawer.R.id;
+import com.webileapps.navdrawer.R.layout;
+
 
 
 public class videoTerbaru extends SherlockFragment {
@@ -49,8 +46,8 @@ public class videoTerbaru extends SherlockFragment {
 	String nid;
 	PullToRefreshScrollView mPullRefreshScrollView;
 	ScrollView mScrollView;
-	int hitung = 2;
-	 int offset = 2;
+	int hitung = 10;
+	 int offset = 10;
 
 	public static final String TAG = videoTerbaru.class.getSimpleName();
 
@@ -58,12 +55,7 @@ public class videoTerbaru extends SherlockFragment {
 		return new videoTerbaru();
 	}
 	
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		offset = 2;
-	}
+
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -89,7 +81,7 @@ public class videoTerbaru extends SherlockFragment {
 			  
 					Integer[] param = new Integer[] { hitung, offset };
 					new fetchLocationFromServer().execute(param);
-				offset = offset + 2;
+				offset = offset + 10;
 				
 			}
 		});
@@ -153,7 +145,7 @@ public class videoTerbaru extends SherlockFragment {
 
 					createSelectLocationListView(listThisWeekBean);
 				}else{
-					offset = offset - 2;
+					offset = offset - 10;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
 
@@ -205,16 +197,22 @@ public class videoTerbaru extends SherlockFragment {
 						videoPlayer vp = new videoPlayer();
 						
 						Bundle b = new Bundle();
-						
-						
-						
+					
 						b.putString("myString",(String) v.getTag());
 						vp.setArguments(b);	
-						getActivity().getSupportFragmentManager()
-						.beginTransaction()
-						.add(R.id.content, vp,"detail")
+						getActivity().getSupportFragmentManager().beginTransaction()
+						.add(R.id.parentpager, vp,videoPlayer.TAG)
 						.addToBackStack("")
 						.commit();
+						
+//						 Bundle data = new Bundle();
+//					        data.putString("NewsId", (String) v.getTag());
+//
+//					        FragmentTransaction t = getFragmentManager()
+//					                .beginTransaction();
+//					        DetailNews mFrag = new DetailNews();
+//					        mFrag.setArguments(data);
+//					        t.add(R.id.content, mFrag, DetailNews.TAG).commit();
 					}
 				});
 				mPullRefreshScrollView.onRefreshComplete();

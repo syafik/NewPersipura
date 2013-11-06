@@ -37,8 +37,8 @@ public class mediaTerbaru extends SherlockFragment {
 	LinearLayout lifePageCellContainerLayout;
 	PullToRefreshScrollView mPullRefreshScrollView;
 	ScrollView mScrollView;
-	int hitung = 2;
-	 int offset = 2;
+	int hitung = 10;
+	 int offset = 10;
 	
 
 	public static final String TAG = mediaTerbaru.class.getSimpleName();
@@ -67,7 +67,7 @@ public class mediaTerbaru extends SherlockFragment {
 			  
 					Integer[] param = new Integer[] { hitung, offset };
 					new fetchLocationFromServer().execute(param);
-				offset = offset + 2;
+				offset = offset + 10;
 				
 			}
 		});
@@ -159,6 +159,7 @@ public class mediaTerbaru extends SherlockFragment {
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
 				}else{
+					offset = offset - 10;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
 

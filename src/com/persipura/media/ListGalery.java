@@ -9,8 +9,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +33,6 @@ import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
-
-
-
 public class ListGalery extends SherlockFragment {
 
 	private LayoutInflater mInflater;
@@ -41,27 +40,52 @@ public class ListGalery extends SherlockFragment {
 	LinearLayout videoContainer;
 	ViewGroup newContainer;
 	String nid;
+	PullToRefreshScrollView mPullRefreshScrollView;
+	ScrollView mScrollView;
+	int hitung = 10;
+	int offset = 10;
 
 	public static final String TAG = ListGalery.class.getSimpleName();
 
 	public static ListGalery newInstance() {
 		return new ListGalery();
 	}
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		View rootView = inflater.inflate(R.layout.galery, container, false);
 		newContainer = container;
 		mInflater = getLayoutInflater(savedInstanceState);
 
 		videoContainer = (LinearLayout) rootView
 				.findViewById(R.id.parent_Image);
-		
-		new fetchLocationFromServer().execute("");
-		
+
+		Integer[] param = new Integer[] { hitung, 0 };
+		new fetchLocationFromServer().execute(param);
+		// new fetchLocationFromServer().execute("");
+
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
+				.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView
+				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ScrollView> refreshView) {
+						// new GetDataTask().execute();
+
+						Integer[] param = new Integer[] { hitung, offset };
+						new fetchLocationFromServer().execute(param);
+						offset = offset + 10;
+
+					}
+				});
+
+		mScrollView = mPullRefreshScrollView.getRefreshableView();
+
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
 			@Override
@@ -76,7 +100,7 @@ public class ListGalery extends SherlockFragment {
 	}
 
 	private class fetchLocationFromServer extends
-			AsyncTask<String, Void, String> {
+			AsyncTask<Integer, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -84,10 +108,11 @@ public class ListGalery extends SherlockFragment {
 		}
 
 		@Override
-		protected String doInBackground(String... params) {
+		protected String doInBackground(Integer... param) {
 
-			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/pictures");
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/pictures", "limit=" + param[0] + "&offset="
+							+ param[1]);
 			return result;
 		}
 
@@ -109,13 +134,15 @@ public class ListGalery extends SherlockFragment {
 					thisWeekBean.setNid(resObject.getString("id"));
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setcreated(resObject.getString("created"));
-					thisWeekBean.setimg_uri(resObject
-							.getString("picture_url"));
+					thisWeekBean.setimg_uri(resObject.getString("picture_url"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 
 					createSelectLocationListView(listThisWeekBean);
+				}else{
+					offset = offset - 10;
+					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
@@ -142,43 +169,42 @@ public class ListGalery extends SherlockFragment {
 				ImageView img = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 
-				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", getActivity().getApplicationContext().getAssets());
-				
+				AppConstants.fontrobotoTextView(created, 11, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+
 				title.setText("");
 				created.setText("");
 				nid = thisWeekBean.getId();
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
-				
+
 				String[] parts = thisWeekBean.getpictureUrl().split(" | ");
 				Log.d("---------------------", parts[0]);
-				
+
 				Imageloader imageLoader = new Imageloader(getSherlockActivity()
 						.getApplicationContext());
 				img.setTag(parts[0]);
-				imageLoader.DisplayImage(parts[0],
-						getActivity(), img);
+				imageLoader.DisplayImage(parts[0], getActivity(), img);
 
 				videoContainer.addView(cellViewMainLayout);
 				cellViewMainLayout.setTag(nid);
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {					
+					public void onClick(View v) {
 						newContainer.setTag(nid);
 						GaleryView vp = new GaleryView();
-						
+
 						Bundle b = new Bundle();
-						b.putString("myString",(String) v.getTag());
-						vp.setArguments(b);	
+						b.putString("myString", (String) v.getTag());
+						vp.setArguments(b);
 						getActivity().getSupportFragmentManager()
-						.beginTransaction()
-						.add(R.id.content, vp,"detail")
-						.addToBackStack("")
-						.commit();
+								.beginTransaction()
+								.add(R.id.content, vp, "detail")
+								.addToBackStack("").commit();
 					}
 				});
-		
-
+				mPullRefreshScrollView.onRefreshComplete();
 			}
 		}
 

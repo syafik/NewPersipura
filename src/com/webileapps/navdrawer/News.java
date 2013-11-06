@@ -14,20 +14,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
-
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.utils.*;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,7 +61,11 @@ public class News extends SherlockFragment {
 	String nid;
 	String LinkId;
 	private ProgressDialog progressDialog;
-
+	PullToRefreshScrollView mPullRefreshScrollView;
+	ScrollView mScrollView;
+	int hitung = 10;
+	 int offset = 10;
+	 
 	public static final String TAG = News.class.getSimpleName();
 
 	public static News newInstance() {
@@ -74,12 +76,34 @@ public class News extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		showProgressDialog();
-		new fetchLocationFromServer().execute("");
+//		new fetchLocationFromServer().execute("");
 		new fetchFooterFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.news, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
+		
+		
+		Integer[] param = new Integer[] { hitung, 0 };
+		new fetchLocationFromServer().execute(param);
+		
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+//				new GetDataTask().execute();
+			  
+					Integer[] param = new Integer[] { hitung, offset };
+					new fetchLocationFromServer().execute(param);
+				offset = offset + 10;
+				
+			}
+		});
+
+		mScrollView = mPullRefreshScrollView.getRefreshableView();
+		
+		
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
@@ -119,7 +143,7 @@ public class News extends SherlockFragment {
 	}
 
 	private class fetchLocationFromServer extends
-			AsyncTask<String, Void, String> {
+			AsyncTask<Integer, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -127,9 +151,9 @@ public class News extends SherlockFragment {
 		}
 
 		@Override
-		protected String doInBackground(String... params) {
+		protected String doInBackground(Integer... param) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "limit=20" + "&offset=0");
+					"/restapi/get/news", "limit=" + param[0] + "&offset=" + param[1]);
 
 			return result;
 		}
@@ -157,6 +181,9 @@ public class News extends SherlockFragment {
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
+				}else{
+					offset = offset - 10;
+					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
@@ -225,6 +252,7 @@ public class News extends SherlockFragment {
 
 					}
 				};
+				mPullRefreshScrollView.onRefreshComplete();
 				cellViewMainLayout.setOnClickListener(myhandler1);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);

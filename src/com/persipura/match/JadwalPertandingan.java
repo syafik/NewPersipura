@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,9 @@ import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R.id;
 import com.webileapps.navdrawer.R.layout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 public class JadwalPertandingan extends SherlockFragment {
 
@@ -42,6 +46,10 @@ public class JadwalPertandingan extends SherlockFragment {
 	List<HasilBean> listThisWeekBean;
 	LinearLayout lifePageCellContainerLayout;
 	private ProgressDialog progressDialog;
+	PullToRefreshScrollView mPullRefreshScrollView;
+	ScrollView mScrollView;
+	int hitung = 10;
+	int offset = 10;
 
 	public static final String TAG = JadwalPertandingan.class.getSimpleName();
 
@@ -53,11 +61,29 @@ public class JadwalPertandingan extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		showProgressDialog();
-		new fetchLocationFromServer().execute("");
+//		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.jadwal_pertandingan,
 				container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
+		Integer[] param = new Integer[] { hitung, 0 };
+		new fetchLocationFromServer().execute(param);
+		
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
 
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+//				new GetDataTask().execute();
+			  
+					Integer[] param = new Integer[] { hitung, offset };
+					new fetchLocationFromServer().execute(param);
+				offset = offset + 10;
+				
+			}
+		});
+
+		mScrollView = mPullRefreshScrollView.getRefreshableView();
+		
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 
@@ -91,7 +117,7 @@ public class JadwalPertandingan extends SherlockFragment {
 	}
 
 	private class fetchLocationFromServer extends
-			AsyncTask<String, Void, String> {
+			AsyncTask<Integer, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -101,9 +127,9 @@ public class JadwalPertandingan extends SherlockFragment {
 		}
 
 		@Override
-		protected String doInBackground(String... params) {
+		protected String doInBackground(Integer... param) {
 			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/match_results");
+					.httpGetService("/restapi/get/match_results", "limit=" + param[0] + "&offset=" + param[1]);
 			return result;
 		}
 
@@ -138,6 +164,9 @@ public class JadwalPertandingan extends SherlockFragment {
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 
 					createSelectLocationListView(listThisWeekBean);
+				}else{
+					offset = offset - 10;
+					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
@@ -173,14 +202,17 @@ public class JadwalPertandingan extends SherlockFragment {
 						.findViewById(R.id.imageView1);
 				ImageView imgTeamB = (ImageView) cellViewMainLayout
 						.findViewById(R.id.ImageTeam2);
-				
-				
-				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextViewBold(NameTeamB, 12, "ffffff", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(ListTime, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(ListDate, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(Place, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				
+
+				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(NameTeamB, 12, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(ListTime, 11, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(ListDate, 11, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(Place, 11, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
 
 				ListDate.setText("");
 				ListTime.setText("");
@@ -190,7 +222,7 @@ public class JadwalPertandingan extends SherlockFragment {
 				cellnumTextView.setText("");
 
 				ListDate.setText(thisWeekBean.getDate());
-				ListTime.setText(thisWeekBean.getTime()+ " WIT");
+				ListTime.setText(thisWeekBean.getTime() + " WIT");
 				NameTeamA.setText(thisWeekBean.getHteam());
 				NameTeamB.setText(thisWeekBean.getAteam());
 				Place.setText(thisWeekBean.getPlace());
@@ -215,12 +247,10 @@ public class JadwalPertandingan extends SherlockFragment {
 						getActivity(), imgTeamB);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
-
+				mPullRefreshScrollView.onRefreshComplete();
 			}
 		}
 
 	}
-
-	
 
 }
