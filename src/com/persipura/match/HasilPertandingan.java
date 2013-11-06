@@ -63,7 +63,7 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		showProgressDialog();
+//		showProgressDialog();
 //		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);

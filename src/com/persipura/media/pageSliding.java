@@ -110,7 +110,6 @@ public class pageSliding extends SherlockFragment {
 				// + 1);
 				fragment.setArguments(args);
 				return fragment;
-
 			}
 			return fragment;
 		}

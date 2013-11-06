@@ -13,15 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.persipura.bean.HasilBean;
 import com.persipura.bean.calenderBean;
-import com.persipura.bean.clasementBean;
-import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
-import android.R.integer;
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,6 +88,7 @@ public class CalendarView extends SherlockFragment {
 			public void onClick(View v) {
 				setPreviousMonth();
 				refreshCalendar();
+				new fetchEventFromServer().execute("");
 			}
 		});
 
@@ -103,7 +99,7 @@ public class CalendarView extends SherlockFragment {
 			public void onClick(View v) {
 				setNextMonth();
 				refreshCalendar();
-
+				new fetchEventFromServer().execute("");
 			}
 		});
 
