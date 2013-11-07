@@ -266,7 +266,7 @@ public class News extends SherlockFragment {
 		}
 
 	}
-	
+
 	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
 
 		@Override
@@ -403,19 +403,19 @@ public class News extends SherlockFragment {
 					switch (screenSize) {
 					case Configuration.SCREENLAYOUT_SIZE_LARGE:
 						thisWeekBean.setimage(resObject
-								.getString("ad_img_ldpi"));
+								.getString("ad_image_ldpi"));
 						break;
 					case Configuration.SCREENLAYOUT_SIZE_NORMAL:
 						thisWeekBean.setimage(resObject
-								.getString("ad_img_hdpi"));
+								.getString("ad_image_hdpi"));
 						break;
 					case Configuration.SCREENLAYOUT_SIZE_SMALL:
 						thisWeekBean.setimage(resObject
-								.getString("ad_img_mdpi"));
+								.getString("ad_image_mdpi"));
 						break;
 					default:
 						thisWeekBean.setimage(resObject
-								.getString("ad_img_xhdpi"));
+								.getString("ad_image_xhdpi"));
 					}
 
 					thisWeekBean.setclickcounter(resObject

@@ -598,16 +598,16 @@ public class Home extends SherlockFragment {
 
 					switch(screenSize) {
 					    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-					    	thisWeekBean.setimage(resObject.getString("ad_img_ldpi"));
+					    	thisWeekBean.setimage(resObject.getString("ad_image_ldpi"));
 					        break;
 					    case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-					    	thisWeekBean.setimage(resObject.getString("ad_img_hdpi"));
+					    	thisWeekBean.setimage(resObject.getString("ad_image_hdpi"));
 					        break;
 					    case Configuration.SCREENLAYOUT_SIZE_SMALL:
-					    	thisWeekBean.setimage(resObject.getString("ad_img_mdpi"));
+					    	thisWeekBean.setimage(resObject.getString("ad_image_mdpi"));
 					        break;
 					    default:
-					    	thisWeekBean.setimage(resObject.getString("ad_img_xhdpi"));
+					    	thisWeekBean.setimage(resObject.getString("ad_image_xhdpi"));
 					}
 					
 					

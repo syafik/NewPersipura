@@ -74,6 +74,8 @@ import com.persipura.media.pageSliding;
 import com.persipura.search.Search;
 import com.persipura.socialize.Facebook;
 import com.persipura.socialize.Twitter;
+import com.persipura.socialize.TwitterConnectDialog;
+import com.persipura.socialize.TwitterSocial;
 import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 
@@ -275,7 +277,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		DetailSquad detailSquadFragment = (DetailSquad) getSupportFragmentManager().findFragmentByTag(DetailSquad.TAG);
 		Search searhFragment = (Search) getSupportFragmentManager().findFragmentByTag(Search.TAG);
 		detailPertandingan detailPertandinganFragment = (detailPertandingan) getSupportFragmentManager().findFragmentByTag(detailPertandingan.TAG); 
+		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
 		
+		if(twitterFragment != null){
+			twitterFragment.getView().setVisibility(View.GONE);
+		}
 		if(detailPertandinganFragment != null){
 			detailPertandinganFragment.getView().setVisibility(View.GONE);
 		}
@@ -320,6 +326,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager().findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
+		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
 		
 		Bundle args = new Bundle();
 		Log.d("position", "position : " + position);
@@ -407,8 +414,22 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Facebook";
 			break;	
 		case 7:
-			getSupportFragmentManager().beginTransaction()
-			.add(R.id.content, Twitter.newInstance(), Twitter.TAG).commit();
+//			getSupportFragmentManager().beginTransaction()
+//			.add(R.id.content, Twitter.newInstance(), Twitter.TAG).commit();
+			
+//			if(squadFragment != null){
+//				HideOtherActivities();
+//				twitterFragment.getView().setVisibility(View.VISIBLE);
+//			}else{
+//				HideOtherActivities();
+//				getSupportFragmentManager()
+//				.beginTransaction()
+//				.add(R.id.content, TwitterSocial.newInstance(), TwitterSocial.TAG)
+//				.commit();
+//				
+//			}
+			TwitterConnectDialog cdd = new TwitterConnectDialog(MainActivity.this);
+			cdd.show();
 			titleNav = "Twitter";
 			break;	
 		case 8:
