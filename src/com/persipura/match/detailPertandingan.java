@@ -24,6 +24,7 @@ import com.persipura.bean.matchResult;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 
 public class detailPertandingan extends SherlockFragment {
@@ -61,6 +62,8 @@ public class detailPertandingan extends SherlockFragment {
 				.findViewById(R.id.location_linear1_parentview);
 		lifePageCellContainerLayout2 = (LinearLayout) rootView
 				.findViewById(R.id.location_linear2_parentview);
+		MainActivity.newInstance().HideOtherActivities();
+
 		return rootView;
 	}
 	

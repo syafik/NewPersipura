@@ -56,7 +56,7 @@ public class StaffAndManagement extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		showProgressDialog();
+		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.pemain, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
@@ -71,6 +71,8 @@ public class StaffAndManagement extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
+		
 		final Handler h = new Handler();
 		final Runnable r2 = new Runnable() {
 

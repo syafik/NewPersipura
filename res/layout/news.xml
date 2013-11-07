@@ -35,7 +35,8 @@
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_refresh_scrollview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrMode="both" >
 

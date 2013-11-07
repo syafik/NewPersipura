@@ -69,6 +69,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.persipura.home.Home;
 import com.persipura.match.PageSlidingTabStripFragment;
+import com.persipura.match.detailPertandingan;
 import com.persipura.media.pageSliding;
 import com.persipura.search.Search;
 import com.persipura.socialize.Facebook;
@@ -272,6 +273,16 @@ public class MainActivity extends SherlockFragmentActivity {
 		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
 		DetailNews detailNewsFragment = (DetailNews) getSupportFragmentManager().findFragmentByTag(DetailNews.TAG);
 		DetailSquad detailSquadFragment = (DetailSquad) getSupportFragmentManager().findFragmentByTag(DetailSquad.TAG);
+		Search searhFragment = (Search) getSupportFragmentManager().findFragmentByTag(Search.TAG);
+		detailPertandingan detailPertandinganFragment = (detailPertandingan) getSupportFragmentManager().findFragmentByTag(detailPertandingan.TAG); 
+		
+		if(detailPertandinganFragment != null){
+			detailPertandinganFragment.getView().setVisibility(View.GONE);
+		}
+		
+		if(searhFragment != null){
+			searhFragment.getView().setVisibility(View.GONE);
+		}
 		
 		if(newsFragment != null){
 			newsFragment.getView().setVisibility(View.GONE);
@@ -304,13 +315,11 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private void selectItem(int position) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		News newsFragment = (News) getSupportFragmentManager().findFragmentByTag(News.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager().findFragmentByTag(Home.TAG);
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager().findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
-		DetailNews detailNewsFragment = (DetailNews) getSupportFragmentManager().findFragmentByTag(DetailNews.TAG);
 		
 		Bundle args = new Bundle();
 		Log.d("position", "position : " + position);
@@ -330,15 +339,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			break;
 		case 1:
 			if(newsFragment != null){
-//				ft.attach(newsFragment);
-//				FragmentManager fragmentManager = getSupportFragmentManager();
-//				
-//				fragmentManager.beginTransaction()
-////				    .remove(fragment1)
-////				    .add(R.id.fragment_container, fragment2)
-//				    .show(newsFragment)
-//				    .hide(homeFragment)
-//				    .commit();
 				HideOtherActivities();
 				newsFragment.getView().setVisibility(View.VISIBLE);
 			}else{
@@ -412,11 +412,15 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Twitter";
 			break;	
 		case 8:
+			
+			HideOtherActivities();
+			
+			
 			args.putString("q", search.getText().toString());
 			Search searchFragment = new Search();
 			searchFragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.content, searchFragment).commit();
+					.add(R.id.content, searchFragment, Search.TAG).commit();
 			titleNav = "Search";
 			break;
 		

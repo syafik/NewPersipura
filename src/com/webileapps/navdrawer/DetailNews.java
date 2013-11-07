@@ -63,7 +63,7 @@ public class DetailNews extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		nid = (String) container.getTag();
+		// nid = (String) container.getTag();
 		Bundle extras = getArguments();
 		nid = extras.getString("NewsId");
 		showProgressDialog();
@@ -78,18 +78,21 @@ public class DetailNews extends SherlockFragment {
 		newContainer = container;
 		lifePageCellContainerLayout = (RelativeLayout) rootView
 				.findViewById(R.id.list_parent);
-		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
+		footerLayout = (FrameLayout) rootView
+				.findViewById(R.id.bottom_control_bar);
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
-				.getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+				getActivity().getApplicationContext().getAssets());
 		MainActivity.newInstance().HideOtherActivities();
 		return rootView;
 	}
-	
+
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
+
 		final Handler h = new Handler();
 		final Runnable r2 = new Runnable() {
 
@@ -193,9 +196,12 @@ public class DetailNews extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
+				int loader = R.drawable.loader;
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
 
-				imgNews.setImageBitmap(bm);
+				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
+						imgNews);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
@@ -204,134 +210,101 @@ public class DetailNews extends SherlockFragment {
 
 	}
 
-	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
-		try {
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-						.permitAll().build();
-				StrictMode.setThreadPolicy(policy);
+	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/footer", "id=68");
+
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "test1 : " + jsonArray);
+				listFooterBean = new ArrayList<FooterBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					FooterBean thisWeekBean = new FooterBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setfooter_logo(resObject
+							.getString("footer_logo"));
+					thisWeekBean.setlink(resObject.getString("link"));
+					//
+					listFooterBean.add(thisWeekBean);
+
+				}
+				if (listFooterBean != null && listFooterBean.size() > 0) {
+					createFooterView(listFooterBean);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
 
-			URL url = new URL(imgurl);
-			InputStream in = url.openConnection().getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(in, 1024 * 8);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+		}
 
-			int len = 0;
-			byte[] buffer = new byte[1024];
-			while ((len = bis.read(buffer)) != -1) {
-				out.write(buffer, 0, len);
+		private void createFooterView(List<FooterBean> listFooterBean)
+				throws IOException {
+			for (int i = 0; i < listFooterBean.size(); i++) {
+				FooterBean thisWeekBean = listFooterBean.get(i);
+
+				ImageView imgNews = (ImageView) footerLayout
+						.findViewById(R.id.footerImg);
+
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+
+				if (!thisWeekBean.getfooter_logo().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
+							loader, imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					Log.d("clickable",
+							"clickable : " + thisWeekBean.getclickable());
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+
 			}
-			out.close();
-			bis.close();
-
-			byte[] data = out.toByteArray();
-			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-			return bitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-
 		}
-	}
-	
-	private class fetchFooterFromServer extends
-	AsyncTask<String, Void, String> {
-
-@Override
-protected void onPreExecute() {
-
-}
-
-@Override
-protected String doInBackground(String... params) {
-	String result = WebHTTPMethodClass.httpGetService(
-			"/restapi/get/footer", "id=68");
-
-	return result;
-}
-
-@Override
-protected void onProgressUpdate(Void... values) {
-
-}
-
-@Override
-protected void onPostExecute(String result) {
-	try {
-		JSONArray jsonArray = new JSONArray(result);
-		Log.d("test1", "test1 : " + jsonArray);
-		listFooterBean = new ArrayList<FooterBean>();
-		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObject resObject = jsonArray.getJSONObject(i);
-			FooterBean thisWeekBean = new FooterBean();
-			thisWeekBean.setclickable(resObject.getString("clickable"));
-			thisWeekBean.setfooter_logo(resObject.getString("footer_logo"));
-			thisWeekBean.setlink(resObject.getString("link"));
-//
-			listFooterBean.add(thisWeekBean);
-
-		}
-		if (listFooterBean != null && listFooterBean.size() > 0) {
-			createFooterView(listFooterBean);
-		}
-
-	} catch (Exception e) {
-		e.printStackTrace();
-		Toast.makeText(getActivity().getApplicationContext(),
-				"Failed to retrieve data from server",
-				Toast.LENGTH_LONG).show();
-	}
-
-}
-
-private void createFooterView(List<FooterBean> listFooterBean)
-		throws IOException {
-	for (int i = 0; i < listFooterBean.size(); i++) {
-		FooterBean thisWeekBean = listFooterBean.get(i);
-		
-		
-		ImageView imgNews = (ImageView) footerLayout
-				.findViewById(R.id.footerImg);
-
-		
-		
-		BitmapFactory.Options bmOptions;
-
-		bmOptions = new BitmapFactory.Options();
-		bmOptions.inSampleSize = 1;
-		int loader = R.drawable.loader;
-
-		ImageLoader imgLoader = new ImageLoader(getActivity()
-				.getApplicationContext());
-
-		if(!thisWeekBean.getfooter_logo().isEmpty()){
-			imgLoader.DisplayImage(thisWeekBean.getfooter_logo(), loader,
-					imgNews);
-
-			LinkId = null;
-			LinkId = thisWeekBean.getlink();
-			Log.d("clickable", "clickable : " + thisWeekBean.getclickable());
-			if(thisWeekBean.getclickable().equals("1")){
-				
-			 imgNews.setOnClickListener(new View.OnClickListener() {
-                 public void onClick(View v) {
-
-                	 Uri uri = Uri.parse(LinkId);
-                	 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                	 startActivity(intent);
-
-                 }
-             });
-	
-			}
-	
-		}
-		
 
 	}
-}
-
-}
 
 }

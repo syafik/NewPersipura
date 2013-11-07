@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -63,7 +64,7 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		showProgressDialog();
+		showProgressDialog();
 //		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);
@@ -96,6 +97,7 @@ public class HasilPertandingan extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
 		final Handler h = new Handler();
 		final Runnable r2 = new Runnable() {
 
@@ -180,6 +182,7 @@ public class HasilPertandingan extends SherlockFragment {
 
 		}
 
+		@SuppressLint("UseValueOf")
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
 				List<HasilBean> listThisWeekBean) {
@@ -262,7 +265,7 @@ public class HasilPertandingan extends SherlockFragment {
 						vp.setArguments(b);	
 						getActivity().getSupportFragmentManager()
 						.beginTransaction()
-						.add(R.id.content, vp,"detail")
+						.add(R.id.content, vp, detailPertandingan.TAG)
 						.addToBackStack("")
 						.commit();
 					}

@@ -93,6 +93,8 @@ public class JadwalPertandingan extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
+		
 		final Handler h = new Handler();
 		final Runnable r2 = new Runnable() {
 

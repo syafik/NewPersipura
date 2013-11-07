@@ -15,23 +15,23 @@ import org.json.JSONObject;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 
+import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.bean.SearchBean;
 import com.persipura.media.videoPlayer;
 import com.persipura.utils.*;
 import com.webileapps.navdrawer.DetailNews;
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.News;
 import com.webileapps.navdrawer.R;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,6 +66,10 @@ public class Search extends SherlockFragment {
 	private ProgressDialog progressDialog;
 	ArrayList<String> arrayList;
 	String result_type;
+	List<FooterBean> listFooterBean;
+	FrameLayout footerLayout;
+	String LinkId;
+	
 	public static final String TAG = Search.class.getSimpleName();
 
 	public static Search newInstance() {
@@ -82,6 +86,7 @@ public class Search extends SherlockFragment {
 
 		}
 		new fetchLocationFromServer().execute("");
+		new fetchFooterFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.result, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
@@ -95,8 +100,15 @@ public class Search extends SherlockFragment {
 				.findViewById(R.id.resultlabel);
 		resultlabel.setText(Html.fromHtml(resultlabel.getText() + "&quot;" + q
 				+ "&quot;"));
-		
+		MainActivity.newInstance().HideOtherActivities();
 
+		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
+
+		TextView footerTitle = (TextView) rootView
+				.findViewById(R.id.footerText);
+		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
+				.getApplicationContext().getAssets());
+		
 		return rootView;
 	}
 
@@ -117,11 +129,11 @@ public class Search extends SherlockFragment {
 			@Override
 			public void run() {
 				progressDialog.show();
-				h.postDelayed(r2, 5000);
+				h.postDelayed(r2, 10000);
 			}
 		};
 
-		h.postDelayed(r1, 500);
+		h.postDelayed(r1, 1000);
 
 		progressDialog.show();
 	}
@@ -322,6 +334,103 @@ public class Search extends SherlockFragment {
 			return null;
 
 		}
+	}
+	
+	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/footer", "id=68");
+
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "test1 : " + jsonArray);
+				listFooterBean = new ArrayList<FooterBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					FooterBean thisWeekBean = new FooterBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setfooter_logo(resObject
+							.getString("footer_logo"));
+					thisWeekBean.setlink(resObject.getString("link"));
+					//
+					listFooterBean.add(thisWeekBean);
+
+				}
+				if (listFooterBean != null && listFooterBean.size() > 0) {
+					createFooterView(listFooterBean);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		private void createFooterView(List<FooterBean> listFooterBean)
+				throws IOException {
+			for (int i = 0; i < listFooterBean.size(); i++) {
+				FooterBean thisWeekBean = listFooterBean.get(i);
+
+				ImageView imgNews = (ImageView) footerLayout
+						.findViewById(R.id.footerImg);
+
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+
+				if (!thisWeekBean.getfooter_logo().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
+							loader, imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					Log.d("clickable",
+							"clickable : " + thisWeekBean.getclickable());
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+
+			}
+		}
+
 	}
 
 }

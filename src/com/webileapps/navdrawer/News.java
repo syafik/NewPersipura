@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,13 +19,14 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.utils.*;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -40,6 +43,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,6 +59,7 @@ public class News extends SherlockFragment {
 	private LayoutInflater mInflater;
 	List<NewsBean> listThisWeekBean;
 	List<FooterBean> listFooterBean;
+	List<AdsBean> listAdsBean;
 	LinearLayout lifePageCellContainerLayout;
 	FrameLayout footerLayout;
 	ViewGroup newContainer;
@@ -64,8 +69,8 @@ public class News extends SherlockFragment {
 	PullToRefreshScrollView mPullRefreshScrollView;
 	ScrollView mScrollView;
 	int hitung = 10;
-	 int offset = 10;
-	 
+	int offset = 10;
+
 	public static final String TAG = News.class.getSimpleName();
 
 	public static News newInstance() {
@@ -76,49 +81,54 @@ public class News extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		showProgressDialog();
-//		new fetchLocationFromServer().execute("");
+		// new fetchLocationFromServer().execute("");
+
 		new fetchFooterFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.news, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
-		
-		
+
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
-		
-		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
-		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
 
-			@Override
-			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-//				new GetDataTask().execute();
-			  
-					Integer[] param = new Integer[] { hitung, offset };
-					new fetchLocationFromServer().execute(param);
-				offset = offset + 10;
-				
-			}
-		});
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
+				.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView
+				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ScrollView> refreshView) {
+						// new GetDataTask().execute();
+
+						Integer[] param = new Integer[] { hitung, offset };
+						new fetchLocationFromServer().execute(param);
+						offset = offset + 10;
+
+					}
+				});
 
 		mScrollView = mPullRefreshScrollView.getRefreshableView();
-		
-		
+
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
+		footerLayout = (FrameLayout) rootView
+				.findViewById(R.id.bottom_control_bar);
 
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
-				.getApplicationContext().getAssets());
-		
+		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+				getActivity().getApplicationContext().getAssets());
+		new fetchAdsFromServer().execute("");
 		return rootView;
 	}
 
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
+
 		final Handler h = new Handler();
 		final Runnable r2 = new Runnable() {
 
@@ -133,11 +143,11 @@ public class News extends SherlockFragment {
 			@Override
 			public void run() {
 				progressDialog.show();
-				h.postDelayed(r2, 5000);
+				h.postDelayed(r2, 12000);
 			}
 		};
 
-		h.postDelayed(r1, 500);
+		h.postDelayed(r1, 1200);
 
 		progressDialog.show();
 	}
@@ -153,7 +163,8 @@ public class News extends SherlockFragment {
 		@Override
 		protected String doInBackground(Integer... param) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "limit=" + param[0] + "&offset=" + param[1]);
+					"/restapi/get/news", "limit=" + param[0] + "&offset="
+							+ param[1]);
 
 			return result;
 		}
@@ -181,7 +192,7 @@ public class News extends SherlockFragment {
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
-				}else{
+				} else {
 					offset = offset - 10;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
@@ -213,10 +224,9 @@ public class News extends SherlockFragment {
 				titleNews.setText("");
 				descNews.setText("");
 				cellnumTextView.setText("");
-				// cellViewMainLayout.setTag(thisWeekBean.getNid());
 				nid = null;
 				nid = thisWeekBean.getNid();
-				
+
 				cellViewMainLayout.setTag(nid);
 				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 
@@ -226,12 +236,7 @@ public class News extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				// Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
-				//
-				//
-				// imgNews.setImageBitmap(bm);
 				int loader = R.drawable.loader;
-
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
 
@@ -241,14 +246,14 @@ public class News extends SherlockFragment {
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
 
-				        Bundle data = new Bundle();
-				        data.putString("NewsId", (String) v.getTag());
+						Bundle data = new Bundle();
+						data.putString("NewsId", (String) v.getTag());
 
-				        FragmentTransaction t = getFragmentManager()
-				                .beginTransaction();
-				        DetailNews mFrag = new DetailNews();
-				        mFrag.setArguments(data);
-				        t.add(R.id.content, mFrag, DetailNews.TAG).commit();
+						FragmentTransaction t = getFragmentManager()
+								.beginTransaction();
+						DetailNews mFrag = new DetailNews();
+						mFrag.setArguments(data);
+						t.add(R.id.content, mFrag, DetailNews.TAG).commit();
 
 					}
 				};
@@ -261,132 +266,252 @@ public class News extends SherlockFragment {
 		}
 
 	}
-
-	public static Bitmap loadBitmap(String imgurl, BitmapFactory.Options options) {
-		try {
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-						.permitAll().build();
-				StrictMode.setThreadPolicy(policy);
-			}
-
-			URL url = new URL(imgurl);
-			InputStream in = url.openConnection().getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(in, 1024 * 8);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			int len = 0;
-			byte[] buffer = new byte[1024];
-			while ((len = bis.read(buffer)) != -1) {
-				out.write(buffer, 0, len);
-			}
-			out.close();
-			bis.close();
-			byte[] data = out.toByteArray();
-			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-			return bitmap;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-
-		}
-	}
-	private class fetchFooterFromServer extends
-	AsyncTask<String, Void, String> {
-
-@Override
-protected void onPreExecute() {
-
-}
-
-@Override
-protected String doInBackground(String... params) {
-	String result = WebHTTPMethodClass.httpGetService(
-			"/restapi/get/footer", "id=68");
-
-	return result;
-}
-
-@Override
-protected void onProgressUpdate(Void... values) {
-
-}
-
-@Override
-protected void onPostExecute(String result) {
-	try {
-		JSONArray jsonArray = new JSONArray(result);
-		Log.d("test1", "test1 : " + jsonArray);
-		listFooterBean = new ArrayList<FooterBean>();
-		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObject resObject = jsonArray.getJSONObject(i);
-			FooterBean thisWeekBean = new FooterBean();
-			thisWeekBean.setclickable(resObject.getString("clickable"));
-			thisWeekBean.setfooter_logo(resObject.getString("footer_logo"));
-			thisWeekBean.setlink(resObject.getString("link"));
-//
-			listFooterBean.add(thisWeekBean);
-
-		}
-		if (listFooterBean != null && listFooterBean.size() > 0) {
-			createFooterView(listFooterBean);
-		}
-
-	} catch (Exception e) {
-		e.printStackTrace();
-		Toast.makeText(getActivity().getApplicationContext(),
-				"Failed to retrieve data from server",
-				Toast.LENGTH_LONG).show();
-	}
-
-}
-
-private void createFooterView(List<FooterBean> listFooterBean)
-		throws IOException {
-	for (int i = 0; i < listFooterBean.size(); i++) {
-		FooterBean thisWeekBean = listFooterBean.get(i);
-		
-		
-		ImageView imgNews = (ImageView) footerLayout
-				.findViewById(R.id.footerImg);
-
-		
-		
-		BitmapFactory.Options bmOptions;
-
-		bmOptions = new BitmapFactory.Options();
-		bmOptions.inSampleSize = 1;
-		int loader = R.drawable.loader;
-
-		ImageLoader imgLoader = new ImageLoader(getActivity()
-				.getApplicationContext());
-
-		if(!thisWeekBean.getfooter_logo().isEmpty()){
-			imgLoader.DisplayImage(thisWeekBean.getfooter_logo(), loader,
-					imgNews);
-
-			LinkId = null;
-			LinkId = thisWeekBean.getlink();
-			Log.d("clickable", "clickable : " + thisWeekBean.getclickable());
-			if(thisWeekBean.getclickable().equals("1")){
-				
-			 imgNews.setOnClickListener(new View.OnClickListener() {
-                 public void onClick(View v) {
-
-                	 Uri uri = Uri.parse(LinkId);
-                	 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                	 startActivity(intent);
-
-                 }
-             });
 	
-			}
-	
+	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+
 		}
-		
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/footer", "id=68");
+
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "test1 : " + jsonArray);
+				listFooterBean = new ArrayList<FooterBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					FooterBean thisWeekBean = new FooterBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setfooter_logo(resObject
+							.getString("footer_logo"));
+					thisWeekBean.setlink(resObject.getString("link"));
+					//
+					listFooterBean.add(thisWeekBean);
+
+				}
+				if (listFooterBean != null && listFooterBean.size() > 0) {
+					createFooterView(listFooterBean);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		private void createFooterView(List<FooterBean> listFooterBean)
+				throws IOException {
+			for (int i = 0; i < listFooterBean.size(); i++) {
+				FooterBean thisWeekBean = listFooterBean.get(i);
+
+				ImageView imgNews = (ImageView) footerLayout
+						.findViewById(R.id.footerImg);
+
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+
+				if (!thisWeekBean.getfooter_logo().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
+							loader, imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					Log.d("clickable",
+							"clickable : " + thisWeekBean.getclickable());
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+
+			}
+		}
 
 	}
-}
 
-}
+	private class fetchAdsFromServer extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/ads", "ad_location=berita_terbaru");
+
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "result ads : " + jsonArray);
+				listAdsBean = new ArrayList<AdsBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					AdsBean thisWeekBean = new AdsBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setad_rank(resObject.getString("ad_rank"));
+					thisWeekBean.setlink(resObject.getString("ad_link"));
+
+					int screenSize = getResources().getConfiguration().screenLayout
+							& Configuration.SCREENLAYOUT_SIZE_MASK;
+
+					switch (screenSize) {
+					case Configuration.SCREENLAYOUT_SIZE_LARGE:
+						thisWeekBean.setimage(resObject
+								.getString("ad_img_ldpi"));
+						break;
+					case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+						thisWeekBean.setimage(resObject
+								.getString("ad_img_hdpi"));
+						break;
+					case Configuration.SCREENLAYOUT_SIZE_SMALL:
+						thisWeekBean.setimage(resObject
+								.getString("ad_img_mdpi"));
+						break;
+					default:
+						thisWeekBean.setimage(resObject
+								.getString("ad_img_xhdpi"));
+					}
+
+					thisWeekBean.setclickcounter(resObject
+							.getString("clickcounter"));
+
+					//
+					listAdsBean.add(thisWeekBean);
+
+				}
+				Collections.sort(listAdsBean, new Comparator<AdsBean>() {
+					@Override
+					public int compare(AdsBean o1, AdsBean o2) {
+						Log.d("o1", "o1 obj :" + o1);
+						Log.d("o2", "o2 obj :" + o2);
+						return o1.getad_rank().compareToIgnoreCase(
+								o2.getad_rank());
+					}
+				});
+
+				if (listAdsBean != null && listAdsBean.size() > 0) {
+					createAdsView(listAdsBean);
+				}
+
+				// Collections.sort(listAdsBean, new CustomComparator());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		private void createAdsView(List<AdsBean> listAdsBean)
+				throws IOException {
+			int counter = 3; // will use API ads
+			int newI = 1;
+			Log.d("listAdsBean.size()",
+					"listAdsBean.size() : " + listAdsBean.size());
+			for (int i = 0; i < listAdsBean.size(); i++) {
+				AdsBean thisWeekBean = listAdsBean.get(i);
+
+				View cellViewMainLayout = mInflater.inflate(R.layout.ads_list,
+						null);
+
+				ImageView imgNews = (ImageView) cellViewMainLayout
+						.findViewById(R.id.ads_img);
+
+				imgNews.setVisibility(View.VISIBLE);
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+
+				if (!thisWeekBean.getimage().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getimage(), loader,
+							imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+				counter = counter * newI;
+				newI++;
+				Log.d("rank", "rank of ads : " + thisWeekBean.getad_rank());
+				lifePageCellContainerLayout
+						.addView(cellViewMainLayout, counter);
+
+			}
+		}
+
+	}
+
+	public class CustomComparator implements Comparator<AdsBean> {
+		@Override
+		public int compare(AdsBean o1, AdsBean o2) {
+			return o2.getad_rank().compareTo(o1.getad_rank());
+		}
+	}
 }

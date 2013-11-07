@@ -170,43 +170,40 @@
                         android:textSize="10dp" />
                 </RelativeLayout>
 
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/relativeLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="#2E2C2C"
+                android:orientation="vertical" >
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dip"
-                    android:background="@drawable/gradient_box"
-                    android:padding="10px" >
+                    android:id="@+id/eksklusive_ads"
+                     >
 
                     <ImageView
-                        android:id="@+id/imageViewList2"
-                        android:layout_width="50dp"
+                        android:id="@+id/ads_img"
+                        android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:scaleType="fitXY"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/venus" />
+                        android:visibility="gone"
+                        android:src="@drawable/venus"
+                         />
 
-                    <TextView
-                        android:id="@+id/textViewList2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/imageViewList2"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="21dp"
-                        android:layout_toRightOf="@+id/imageViewList2"
-                        android:ellipsize="none"
-                        android:singleLine="false"
-                        android:text="Patrick wanggai Hatrick, Persipura unggul 3 - 0 atas persiram"
-                        android:textSize="11dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/textViewList2"
-                        android:layout_below="@+id/textViewList2"
-                        android:text="3 jam yang lalu"
-                        android:textSize="10dp" />
                 </RelativeLayout>
+
+
+                
             </LinearLayout>
 
             <View
