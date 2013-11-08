@@ -50,7 +50,7 @@
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
     
-    <FrameLayout
+    <!-- <FrameLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -72,7 +72,15 @@
             android:layout_gravity="right"
             android:layout_margin="10dp"
             android:src="@drawable/btm_logo" />
-    </FrameLayout>
+    </FrameLayout> -->
+   <FrameLayout
+        android:id="@+id/bottom_control_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+         >
+	<include layout="@layout/footer"/>
+	</FrameLayout>
 </LinearLayout>
 
 

@@ -86,9 +86,11 @@ public class CalendarView extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
+				
 				setPreviousMonth();
-				refreshCalendar();
 				new fetchEventFromServer().execute("");
+				refreshCalendar();
+				
 			}
 		});
 
@@ -97,9 +99,11 @@ public class CalendarView extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
+				
 				setNextMonth();
-				refreshCalendar();
 				new fetchEventFromServer().execute("");
+				refreshCalendar();
+				
 			}
 		});
 
@@ -117,9 +121,11 @@ public class CalendarView extends SherlockFragment {
 				// navigate to next or previous month on clicking offdays.
 				if ((gridvalue > 10) && (position < 8)) {
 					setPreviousMonth();
+					new fetchEventFromServer().execute("");
 					refreshCalendar();
 				} else if ((gridvalue < 7) && (position > 28)) {
 					setNextMonth();
+					new fetchEventFromServer().execute("");
 					refreshCalendar();
 				}
 				((CalendarAdapter) parent.getAdapter()).setSelected(v);
@@ -205,9 +211,11 @@ public class CalendarView extends SherlockFragment {
 				.getActualMaximum(GregorianCalendar.MONTH)) {
 			month.set((month.get(GregorianCalendar.YEAR) + 1),
 					month.getActualMinimum(GregorianCalendar.MONTH), 1);
+			new fetchEventFromServer().execute("");
 		} else {
 			month.set(GregorianCalendar.MONTH,
 					month.get(GregorianCalendar.MONTH) + 1);
+			new fetchEventFromServer().execute("");
 		}
 
 	}
@@ -217,9 +225,11 @@ public class CalendarView extends SherlockFragment {
 				.getActualMinimum(GregorianCalendar.MONTH)) {
 			month.set((month.get(GregorianCalendar.YEAR) - 1),
 					month.getActualMaximum(GregorianCalendar.MONTH), 1);
+			new fetchEventFromServer().execute("");
 		} else {
 			month.set(GregorianCalendar.MONTH,
 					month.get(GregorianCalendar.MONTH) - 1);
+			new fetchEventFromServer().execute("");
 		}
 
 	}
@@ -230,45 +240,45 @@ public class CalendarView extends SherlockFragment {
 	}
 
 	public void refreshCalendar() {
+		Log.d("---------------------", "jjjjjjjjjjjjjjjjjjjjj");
 		TextView title = (TextView) getView().findViewById(R.id.title);
-
 		adapter.refreshDays();
 		adapter.notifyDataSetChanged();
 		handler.post(calendarUpdater); // generate some calendar items
-
 		title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
+		new fetchEventFromServer().execute("");
 	}
 
 	public Runnable calendarUpdater = new Runnable() {
 
 		@Override
 		public void run() {
-			// items.clear();
+			 items.clear();
 			//
 			// // Print dates of the current week
-			// DateFormat df = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
-			// String itemvalue;
-			// for (int i = 0; i < 7; i++) {
-			// itemvalue = df.format(itemmonth.getTime());
-			// itemmonth.add(GregorianCalendar.DATE, 1);
-			// items.add("2013-10-10");
-			// items.add("2012-10-07");
-			// items.add("2012-10-15");
-			// items.add("2012-10-20");
-			// items.add("2012-11-30");
-			// items.add("2012-11-28");
-			// }
-			//
-			// for (int i = 0; i < listThisWeekBean.size(); i++) {
-			// calenderBean thisWeekBean = listThisWeekBean.get(i);
-			// itemvalue = df.format(itemmonth.getTime());
-			// itemmonth.add(GregorianCalendar.DATE, 1);
-			//
-			// items.add("2013-10-10");
-			// }
+			 DateFormat df = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+			 String itemvalue;
+			 for (int i = 0; i < 7; i++) {
+			 itemvalue = df.format(itemmonth.getTime());
+			 itemmonth.add(GregorianCalendar.DATE, 1);
+			 items.add("2013-10-10");
+			 items.add("2012-10-07");
+			 items.add("2012-10-15");
+			 items.add("2012-10-20");
+			 items.add("2012-11-30");
+			 items.add("2013-11-07");
+			 }
+			
+//			 for (int i = 0; i < listThisWeekBean.size(); i++) {
+//			 calenderBean thisWeekBean = listThisWeekBean.get(i);
+//			 itemvalue = df.format(itemmonth.getTime());
+//			 itemmonth.add(GregorianCalendar.DATE, 1);
+//			
+//			 items.add("2013-11-10");
+//			 }
 
-			// adapter.setItems(items);
-			// adapter.notifyDataSetChanged();
+			 adapter.setItems(items);
+			 adapter.notifyDataSetChanged();
 		}
 	};
 
@@ -287,8 +297,9 @@ public class CalendarView extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 
-			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/match_event", "yearmonth=" + date);
+			String result = WebHTTPMethodClass.httpGetServiceWithoutparam(
+//					"/restapi/get/match_event", "yearmonth=" + date);
+					"/restapi/get/match_event");
 			return result;
 		}
 

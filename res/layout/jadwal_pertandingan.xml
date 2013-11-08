@@ -27,33 +27,33 @@
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_refresh_scrollview"
+        android:layout_weight="4"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrMode="both" >
 
         <LinearLayout
             android:id="@+id/location_linear_parentview"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="5dp" >
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
-    <FrameLayout
+   <FrameLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#000" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/btm_logo" />
-    </FrameLayout>
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+         >
+	<include layout="@layout/footer"/>
+    
+    </FrameLayout> 
+    
 
     <!--
     <RelativeLayout

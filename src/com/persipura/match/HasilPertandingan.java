@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,7 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.persipura.bean.FooterBean;
 import com.persipura.bean.HasilBean;
+
 import com.persipura.media.videoPlayer;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
@@ -56,6 +59,9 @@ public class HasilPertandingan extends SherlockFragment {
 	ScrollView mScrollView;
 	int hitung = 10;
 	int offset = 10;
+	FrameLayout footerLayout;
+	List<FooterBean> listFooterBean;
+	String LinkId;
 	
 	public static HasilPertandingan newInstance() {
 		return new HasilPertandingan();
@@ -64,7 +70,7 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		showProgressDialog();
+//		showProgressDialog();
 //		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);
@@ -72,6 +78,7 @@ public class HasilPertandingan extends SherlockFragment {
 		
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
+//		new fetchFooterFromServer().execute("");
 		
 		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
 		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {

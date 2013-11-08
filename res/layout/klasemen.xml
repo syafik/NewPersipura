@@ -96,16 +96,13 @@
             android:padding="3dp" >
         </LinearLayout>
     </ScrollView>
-	<FrameLayout android:id="@+id/bottom_control_bar"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:background="#000"
-        >
-
-         <ImageView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:src="@drawable/btm_logo" 
-             android:layout_gravity="center"/>
-
-    </FrameLayout>
+    
+	<FrameLayout
+        android:id="@+id/bottom_control_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+         >
+	<include layout="@layout/footer"/>
+	</FrameLayout>
 </LinearLayout>

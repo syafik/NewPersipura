@@ -68,9 +68,13 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.persipura.home.Home;
+import com.persipura.match.HasilPertandingan;
 import com.persipura.match.PageSlidingTabStripFragment;
 import com.persipura.match.detailPertandingan;
+import com.persipura.media.ListGalery;
 import com.persipura.media.pageSliding;
+import com.persipura.media.videoPlayer;
+import com.persipura.media.videoTerbaru;
 import com.persipura.search.Search;
 import com.persipura.socialize.Facebook;
 import com.persipura.socialize.Twitter;
@@ -278,6 +282,9 @@ public class MainActivity extends SherlockFragmentActivity {
 		Search searhFragment = (Search) getSupportFragmentManager().findFragmentByTag(Search.TAG);
 		detailPertandingan detailPertandinganFragment = (detailPertandingan) getSupportFragmentManager().findFragmentByTag(detailPertandingan.TAG); 
 		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
+		videoTerbaru videoTerbaruFragment = (videoTerbaru) getSupportFragmentManager().findFragmentByTag(videoPlayer.TAG);
+		ListGalery listgaleryFragment = (ListGalery) getSupportFragmentManager().findFragmentByTag(ListGalery.TAG);
+		HasilPertandingan hasilpertandinganFragment = (HasilPertandingan) getSupportFragmentManager().findFragmentByTag(HasilPertandingan.TAG);
 		
 		if(twitterFragment != null){
 			twitterFragment.getView().setVisibility(View.GONE);
@@ -316,6 +323,15 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		if(detailSquadFragment != null){
 			detailSquadFragment.getView().setVisibility(View.GONE);
+		}
+		if(listgaleryFragment != null){
+			listgaleryFragment.getView().setVisibility(View.GONE);
+		}
+		if(hasilpertandinganFragment != null){
+			hasilpertandinganFragment.getView().setVisibility(View.GONE);
+		}
+		if(videoTerbaruFragment != null){
+			videoTerbaruFragment.getView().setVisibility(View.GONE);
 		}
 		
 	}

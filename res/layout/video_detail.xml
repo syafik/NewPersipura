@@ -67,5 +67,11 @@
             />
 
     </RelativeLayout>
-
+<FrameLayout
+        android:id="@+id/bottom_control_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000" >
+<include layout="@layout/footer"/>
+</FrameLayout>
 </LinearLayout>

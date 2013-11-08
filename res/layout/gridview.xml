@@ -34,5 +34,5 @@
         />
         
     </LinearLayout>
-
+<include layout="@layout/footer"/>
 </FrameLayout>

@@ -343,22 +343,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#000" >
-
-        <TextView
-            android:id="@+id/footerText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:gravity="center_vertical"
-            android:text="Proudly Sponsored by"
-            android:textSize="13dp" />
-
-        <ImageView
-            android:id="@+id/footerImg"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right"
-            android:layout_margin="10dp"
-            android:src="@drawable/btm_logo" />
+<include layout="@layout/footer"/>
+        
     </FrameLayout>
 </LinearLayout>

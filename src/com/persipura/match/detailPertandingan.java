@@ -49,6 +49,7 @@ public class detailPertandingan extends SherlockFragment {
 			Bundle savedInstanceState) {
 		Bundle b = getArguments();
 		nid = b.getString("myString");
+		MainActivity.newInstance().HideOtherActivities();
 		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		new fetchMatchResult().execute("");
@@ -62,8 +63,8 @@ public class detailPertandingan extends SherlockFragment {
 				.findViewById(R.id.location_linear1_parentview);
 		lifePageCellContainerLayout2 = (LinearLayout) rootView
 				.findViewById(R.id.location_linear2_parentview);
-		MainActivity.newInstance().HideOtherActivities();
-
+		
+//		MainActivity.newInstance().HideOtherActivities();
 		return rootView;
 	}
 	
