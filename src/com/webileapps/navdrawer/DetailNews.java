@@ -84,7 +84,7 @@ public class DetailNews extends SherlockFragment {
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
 				getActivity().getApplicationContext().getAssets());
-		MainActivity.newInstance().HideOtherActivities();
+		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
 

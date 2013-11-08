@@ -35,13 +35,13 @@ public class Splash extends Activity {
 				}
 			}, 2000);
 		} else {
-			AppConstants.DIALOG_MSG = "Could not connect. Check your connection and try again later.";
+			String msg = "Could not connect. Check your connection and try again later.";
 			try {
 
 				AlertDialog alertDialog1 = new AlertDialog.Builder(Splash.this).create();
 	            alertDialog1.setTitle("Info");
 	            alertDialog1.setCancelable(false);
-	            alertDialog1.setMessage(AppConstants.DIALOG_MSG);
+	            alertDialog1.setMessage(msg);
 	 
 	            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int which) {

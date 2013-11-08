@@ -1,37 +1,40 @@
-/*
- * Copyright (C) 2013 Andreas Stuetz <andreas.stuetz@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.webileapps.navdrawer;
+
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.jsoup.Connection.Request;
 
 import android.annotation.SuppressLint;
 
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.view.Window;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.service.textservice.SpellCheckerService.Session;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +44,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,12 +65,23 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.dg.android.facebook.BaseRequestListener;
+import com.dg.android.facebook.SessionEvents;
+import com.dg.android.facebook.SessionStore;
+import com.dg.android.facebook.SessionEvents.AuthListener;
+import com.dg.android.facebook.SessionEvents.LogoutListener;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 import com.persipura.home.Home;
 import com.persipura.match.HasilPertandingan;
 import com.persipura.match.PageSlidingTabStripFragment;
@@ -76,48 +91,68 @@ import com.persipura.media.pageSliding;
 import com.persipura.media.videoPlayer;
 import com.persipura.media.videoTerbaru;
 import com.persipura.search.Search;
-import com.persipura.socialize.Facebook;
+
+import com.persipura.socialize.FacebookConnectDialog;
+import com.persipura.socialize.FacebookLikePage;
 import com.persipura.socialize.Twitter;
 import com.persipura.socialize.TwitterConnectDialog;
 import com.persipura.socialize.TwitterSocial;
 import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
+import com.persipura.utils.AppConstants;
+import com.persipura.utils.WebHTTPMethodClass;
 
 @SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
-	private static final String TAG = "TAG";
-	// DrawerLayout mDrawer;
 	ListView mDrawerList;
 	// ActionBarDrawerToggle mDrawerToggle;
 	private DrawerLayout mDrawer;
 	private CustomActionBarDrawerToggle mDrawerToggle;
 	private String[] menuItems;
 	private String[] connectItems;
-	private CharSequence mDrawerTitle;
-	private CharSequence mTitle;
 	private String[] mPlanetTitles;
 	private EditText search;
 	private Button scelta1;
 	private ProgressDialog progressDialog;
 	String squadId;
 	String titleNav = "Home";
+	// Your Facebook APP ID
+	private static String APP_ID = "457180554390902"; // Replace your App ID
+	private SessionListener mSessionListener = new SessionListener();
+										// here
 
-	public static MainActivity newInstance() {
-		return new MainActivity();
+	// Instance of Facebook Class
+	private Facebook facebook;
+	private AsyncFacebookRunner mAsyncRunner;
+	String FILENAME = "AndroidSSO_data";
+	SharedPreferences mPrefs;
+
+	static MainActivity mTabbars;
+
+	public static MainActivity getInstance() {
+		
+		return mTabbars;
 	}
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mTabbars = this;
+		
 		setContentView(R.layout.activity_main);
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		facebook = new Facebook(APP_ID);
+		mAsyncRunner = new AsyncFacebookRunner(facebook);
+		SessionStore.restore(facebook, this);
+		SessionEvents.addAuthListener(mSessionListener);
+		SessionEvents.addLogoutListener(mSessionListener);
 		
 		getSupportActionBar().setIcon(R.drawable.logo_open);
-		mTitle = mDrawerTitle = getTitle();
+
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -128,8 +163,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle(null);
 		getActionBar().setHomeButtonEnabled(true);
-//	    getActionBar().setDisplayHomeAsUpEnabled(true);
-
+		// getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#B61718")));
@@ -137,13 +171,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerToggle = new CustomActionBarDrawerToggle(this, mDrawer);
 		mDrawer.setDrawerListener(mDrawerToggle);
 
-	
-
 		if (savedInstanceState == null) {
 
 			Bundle extras = getIntent().getExtras();
 			if (extras == null) {
-				
+
 				selectItem(0);
 			} else {
 				squadId = extras.getString("squadId");
@@ -151,10 +183,32 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 
 		}
+		Log.d("fbToken", "fbToken : " + facebook.getAccessToken());
 
 	}
 	
-	
+	private class SessionListener implements AuthListener, LogoutListener {
+
+		public void onAuthSucceed() {
+			SessionStore.save(facebook, mTabbars);
+			if (progressDialog != null && progressDialog.isShowing())
+				progressDialog.cancel();
+		}
+
+		public void onAuthFail(String error) {
+			if (progressDialog != null && progressDialog.isShowing())
+				progressDialog.cancel();
+		}
+
+		public void onLogoutBegin() {
+		}
+
+		public void onLogoutFinish() {
+			SessionStore.clear(mTabbars);
+			if (progressDialog != null && progressDialog.isShowing())
+				progressDialog.cancel();
+		}
+	}
 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		menu.add(0, 1, 1, "search")
@@ -163,38 +217,38 @@ public class MainActivity extends SherlockFragmentActivity {
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		 MenuItem menuItem = menu.findItem(1);
-	        menuItem.setOnActionExpandListener(new OnActionExpandListener() {
-	            @Override
-	            public boolean onMenuItemActionCollapse(MenuItem item) {
-	                // Do something when collapsed
-	            	getSupportActionBar().setIcon(R.drawable.logo_open);
-	            	Log.d("collapsed", "collapsed");
-	                return true; // Return true to collapse action view
-	            }
+		MenuItem menuItem = menu.findItem(1);
+		menuItem.setOnActionExpandListener(new OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				// Do something when collapsed
+				getSupportActionBar().setIcon(R.drawable.logo_open);
+				Log.d("collapsed", "collapsed");
+				return true; // Return true to collapse action view
+			}
 
-	            @Override
-	            public boolean onMenuItemActionExpand(MenuItem item) {
-	            	getSupportActionBar().setIcon(R.drawable.logo_persipura);
-	            	Log.d("expanded", "expanded");
-	                return true; // Return true to expand action view
-	            }
-	        });
-	    
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				getSupportActionBar().setIcon(R.drawable.logo_persipura);
+				Log.d("expanded", "expanded");
+				return true; // Return true to expand action view
+			}
+		});
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
-		
+
 		switch (item.getItemId()) {
 		case 1:
 			search = (EditText) item.getActionView().findViewById(
 					R.id.descrizione);
 			search.addTextChangedListener(filterTextWatcher);
 			search.requestFocus();
-			
+
 			scelta1 = (Button) item.getActionView().findViewById(R.id.scelta1);
 			scelta1.setOnClickListener(new OnClickListener() {
 
@@ -218,7 +272,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			}
 
-//			getSupportActionBar().setTitle(titleNav);
+			// getSupportActionBar().setTitle(titleNav);
 			break;
 		}
 
@@ -270,150 +324,170 @@ public class MainActivity extends SherlockFragmentActivity {
 		// Pass any configuration change to the drawer toggles
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
-	
-	public void HideOtherActivities(){
-		News newsFragment = (News) getSupportFragmentManager().findFragmentByTag(News.TAG);
-		Home homeFragment = (Home) getSupportFragmentManager().findFragmentByTag(Home.TAG);
-		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);
-		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager().findFragmentByTag(PageSlidingTabStripFragment.TAG);
-		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
-		DetailNews detailNewsFragment = (DetailNews) getSupportFragmentManager().findFragmentByTag(DetailNews.TAG);
-		DetailSquad detailSquadFragment = (DetailSquad) getSupportFragmentManager().findFragmentByTag(DetailSquad.TAG);
-		Search searhFragment = (Search) getSupportFragmentManager().findFragmentByTag(Search.TAG);
-		detailPertandingan detailPertandinganFragment = (detailPertandingan) getSupportFragmentManager().findFragmentByTag(detailPertandingan.TAG); 
-		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
-		videoTerbaru videoTerbaruFragment = (videoTerbaru) getSupportFragmentManager().findFragmentByTag(videoPlayer.TAG);
-		ListGalery listgaleryFragment = (ListGalery) getSupportFragmentManager().findFragmentByTag(ListGalery.TAG);
-		HasilPertandingan hasilpertandinganFragment = (HasilPertandingan) getSupportFragmentManager().findFragmentByTag(HasilPertandingan.TAG);
-		
-		if(twitterFragment != null){
+
+	public void HideOtherActivities() {
+		News newsFragment = (News) getSupportFragmentManager()
+				.findFragmentByTag(News.TAG);
+		Home homeFragment = (Home) getSupportFragmentManager()
+				.findFragmentByTag(Home.TAG);
+		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
+				.findFragmentByTag(pageSliding.TAG);
+		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
+				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
+		Squad squadFragment = (Squad) getSupportFragmentManager()
+				.findFragmentByTag(Squad.TAG);
+		DetailNews detailNewsFragment = (DetailNews) getSupportFragmentManager()
+				.findFragmentByTag(DetailNews.TAG);
+		DetailSquad detailSquadFragment = (DetailSquad) getSupportFragmentManager()
+				.findFragmentByTag(DetailSquad.TAG);
+		Search searhFragment = (Search) getSupportFragmentManager()
+				.findFragmentByTag(Search.TAG);
+		detailPertandingan detailPertandinganFragment = (detailPertandingan) getSupportFragmentManager()
+				.findFragmentByTag(detailPertandingan.TAG);
+		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager()
+				.findFragmentByTag(TwitterSocial.TAG);
+		videoTerbaru videoTerbaruFragment = (videoTerbaru) getSupportFragmentManager()
+				.findFragmentByTag(videoPlayer.TAG);
+		ListGalery listgaleryFragment = (ListGalery) getSupportFragmentManager()
+				.findFragmentByTag(ListGalery.TAG);
+		HasilPertandingan hasilpertandinganFragment = (HasilPertandingan) getSupportFragmentManager()
+				.findFragmentByTag(HasilPertandingan.TAG);
+
+		if (twitterFragment != null) {
 			twitterFragment.getView().setVisibility(View.GONE);
 		}
-		if(detailPertandinganFragment != null){
+		if (detailPertandinganFragment != null) {
 			detailPertandinganFragment.getView().setVisibility(View.GONE);
 		}
-		
-		if(searhFragment != null){
+
+		if (searhFragment != null) {
 			searhFragment.getView().setVisibility(View.GONE);
 		}
-		
-		if(newsFragment != null){
+
+		if (newsFragment != null) {
 			newsFragment.getView().setVisibility(View.GONE);
 		}
-		
-		if(homeFragment != null){
+
+		if (homeFragment != null) {
 			homeFragment.getView().setVisibility(View.GONE);
 		}
 
-		if(pageSlidingFragment != null){
+		if (pageSlidingFragment != null) {
 			pageSlidingFragment.getView().setVisibility(View.GONE);
 		}
-		
-		if(pageSlidingTabStripFragment != null){
+
+		if (pageSlidingTabStripFragment != null) {
 			pageSlidingTabStripFragment.getView().setVisibility(View.GONE);
 		}
-		
-		if(squadFragment != null){
+
+		if (squadFragment != null) {
 			squadFragment.getView().setVisibility(View.GONE);
 		}
 
-		if(detailNewsFragment != null){
+		if (detailNewsFragment != null) {
 			detailNewsFragment.getView().setVisibility(View.GONE);
 		}
-		
-		if(detailSquadFragment != null){
+
+		if (detailSquadFragment != null) {
 			detailSquadFragment.getView().setVisibility(View.GONE);
 		}
-		if(listgaleryFragment != null){
+		if (listgaleryFragment != null) {
 			listgaleryFragment.getView().setVisibility(View.GONE);
 		}
-		if(hasilpertandinganFragment != null){
+		if (hasilpertandinganFragment != null) {
 			hasilpertandinganFragment.getView().setVisibility(View.GONE);
 		}
-		if(videoTerbaruFragment != null){
+		if (videoTerbaruFragment != null) {
 			videoTerbaruFragment.getView().setVisibility(View.GONE);
 		}
-		
+
 	}
 
 	private void selectItem(int position) {
-		News newsFragment = (News) getSupportFragmentManager().findFragmentByTag(News.TAG);
-		Home homeFragment = (Home) getSupportFragmentManager().findFragmentByTag(Home.TAG);
-		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager().findFragmentByTag(pageSliding.TAG);
-		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager().findFragmentByTag(PageSlidingTabStripFragment.TAG);
-		Squad squadFragment = (Squad) getSupportFragmentManager().findFragmentByTag(Squad.TAG);
-		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
+		News newsFragment = (News) getSupportFragmentManager()
+				.findFragmentByTag(News.TAG);
+		Home homeFragment = (Home) getSupportFragmentManager()
+				.findFragmentByTag(Home.TAG);
+		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
+				.findFragmentByTag(pageSliding.TAG);
+		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
+				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
+		Squad squadFragment = (Squad) getSupportFragmentManager()
+				.findFragmentByTag(Squad.TAG);
 		
+
 		Bundle args = new Bundle();
 		Log.d("position", "position : " + position);
 		switch (position) {
 		case 0:
-			if(homeFragment != null){
+			if (homeFragment != null) {
 				HideOtherActivities();
 				homeFragment.getView().setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				HideOtherActivities();
 				getSupportFragmentManager().beginTransaction()
-				.add(R.id.content, Home.newInstance(), Home.TAG).commit();
+						.add(R.id.content, Home.newInstance(), Home.TAG)
+						.commit();
 			}
-			
+
 			titleNav = "Home";
-			
+
 			break;
 		case 1:
-			if(newsFragment != null){
+			if (newsFragment != null) {
 				HideOtherActivities();
 				newsFragment.getView().setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				HideOtherActivities();
 				getSupportFragmentManager().beginTransaction()
-				.add(R.id.content, News.newInstance(), News.TAG).commit();
+						.add(R.id.content, News.newInstance(), News.TAG)
+						.commit();
 			}
-			
+
 			titleNav = "News";
 			break;
 		case 2:
-			if(pageSlidingFragment != null){
+			if (pageSlidingFragment != null) {
 				HideOtherActivities();
 				pageSlidingFragment.getView().setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				HideOtherActivities();
 				getSupportFragmentManager()
-				.beginTransaction()
-				.add(R.id.content, pageSliding.newInstance(),
-						pageSliding.TAG).commit();
+						.beginTransaction()
+						.add(R.id.content, pageSliding.newInstance(),
+								pageSliding.TAG).commit();
 			}
-			
+
 			titleNav = "Media";
 			break;
 		case 3:
-			if(pageSlidingTabStripFragment != null){
+			if (pageSlidingTabStripFragment != null) {
 				HideOtherActivities();
-				pageSlidingTabStripFragment.getView().setVisibility(View.VISIBLE);
-			}else{
+				pageSlidingTabStripFragment.getView().setVisibility(
+						View.VISIBLE);
+			} else {
 				HideOtherActivities();
 				getSupportFragmentManager()
-				.beginTransaction()
-				.add(R.id.content,
-						PageSlidingTabStripFragment.newInstance(),
-						PageSlidingTabStripFragment.TAG).commit();
+						.beginTransaction()
+						.add(R.id.content,
+								PageSlidingTabStripFragment.newInstance(),
+								PageSlidingTabStripFragment.TAG).commit();
 			}
-			
+
 			titleNav = "Match";
 			break;
 		case 4:
-			if(squadFragment != null){
+			if (squadFragment != null) {
 				HideOtherActivities();
 				squadFragment.getView().setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				HideOtherActivities();
-				getSupportFragmentManager()
-				.beginTransaction()
-				.add(R.id.content, Squad.newInstance(), Squad.TAG)
-				.commit();
-				
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.content, Squad.newInstance(), Squad.TAG)
+						.commit();
+
 			}
-			
+
 			titleNav = "Squad";
 			break;
 		case 5:
@@ -425,34 +499,43 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Squad";
 			break;
 		case 6:
-			getSupportFragmentManager().beginTransaction()
-			.add(R.id.content, Facebook.newInstance(), Facebook.TAG).commit();
+			if (facebook.isSessionValid()) {
+				Log.d("valid", "validSession");
+				FacebookLikePage cdd = new FacebookLikePage(MainActivity.this);
+				cdd.show();
+			} else {
+				FacebookConnectDialog cdd = new FacebookConnectDialog(
+						MainActivity.this);
+				cdd.show();
+
+			}
 			titleNav = "Facebook";
-			break;	
+			break;
 		case 7:
-//			getSupportFragmentManager().beginTransaction()
-//			.add(R.id.content, Twitter.newInstance(), Twitter.TAG).commit();
-			
-//			if(squadFragment != null){
-//				HideOtherActivities();
-//				twitterFragment.getView().setVisibility(View.VISIBLE);
-//			}else{
-//				HideOtherActivities();
-//				getSupportFragmentManager()
-//				.beginTransaction()
-//				.add(R.id.content, TwitterSocial.newInstance(), TwitterSocial.TAG)
-//				.commit();
-//				
-//			}
-			TwitterConnectDialog cdd = new TwitterConnectDialog(MainActivity.this);
+			// getSupportFragmentManager().beginTransaction()
+			// .add(R.id.content, Twitter.newInstance(), Twitter.TAG).commit();
+
+			// if(squadFragment != null){
+			// HideOtherActivities();
+			// twitterFragment.getView().setVisibility(View.VISIBLE);
+			// }else{
+			// HideOtherActivities();
+			// getSupportFragmentManager()
+			// .beginTransaction()
+			// .add(R.id.content, TwitterSocial.newInstance(),
+			// TwitterSocial.TAG)
+			// .commit();
+			//
+			// }
+			TwitterConnectDialog cdd = new TwitterConnectDialog(
+					MainActivity.this);
 			cdd.show();
 			titleNav = "Twitter";
-			break;	
+			break;
 		case 8:
-			
+
 			HideOtherActivities();
-			
-			
+
 			args.putString("q", search.getText().toString());
 			Search searchFragment = new Search();
 			searchFragment.setArguments(args);
@@ -460,49 +543,65 @@ public class MainActivity extends SherlockFragmentActivity {
 					.add(R.id.content, searchFragment, Search.TAG).commit();
 			titleNav = "Search";
 			break;
-		
+
 		}
 
-		
-//		 View view2 = getLayoutInflater().inflate(R.layout.footer, mainLayout,
-//		 false);
-//		
-//		 mainLayout.addView(view2);
-
-		
 		mDrawer.closeDrawer(mDrawerList);
+	}
+
+	private final class LoginDialogListener implements DialogListener {
+
+		public void onComplete(Bundle values) {
+			Log.i("inside>>", "LoginDialogListener calles......");
+			SessionEvents.onLoginSuccess();
+			FacebookLikePage cdd = new FacebookLikePage(MainActivity.this);
+			cdd.show();
+
+		}
+
+		public void onFacebookError(FacebookError error) {
+			Log.i("inside>>",
+					"onFacebookError calles......" + error.getMessage());
+			SessionEvents.onLoginError(error.getMessage());
+		}
+
+		public void onError(DialogError error) {
+			Log.i("inside>>", "onError calles......");
+			SessionEvents.onLoginError(error.getMessage());
+		}
+
+		public void onCancel() {
+			Log.i("inside>>", "onCancel calles......");
+			SessionEvents.onLoginError("Action Canceled");
+		}
 	}
 
 	private class CustomActionBarDrawerToggle extends ActionBarDrawerToggle {
 
 		public CustomActionBarDrawerToggle(Activity mActivity,
 				DrawerLayout mDrawerLayout) {
-			super(mActivity, mDrawerLayout, R.drawable.abs__ic_ab_back_holo_dark,
+			super(mActivity, mDrawerLayout,
+					R.drawable.abs__ic_ab_back_holo_dark,
 					R.string.ns_menu_open, R.string.ns_menu_close);
 		}
 
 		@Override
 		public void onDrawerClosed(View view) {
-//			getActionBar().setTitle(titleNav);
-//			getSupportActionBar().setIcon(R.drawable.logo_persipura_close);
+			// getActionBar().setTitle(titleNav);
+			// getSupportActionBar().setIcon(R.drawable.logo_persipura_close);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
-//			getActionBar().setTitle(titleNav);
-//			getSupportActionBar().setIcon(R.drawable.logo_persipura_open);
+			// getActionBar().setTitle(titleNav);
+			// getSupportActionBar().setIcon(R.drawable.logo_persipura_open);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 	}
 
 	private void _initMenu() {
 		NsMenuAdapter mAdapter = new NsMenuAdapter(this);
-
-		// Add Header
-		// mAdapter.addHeader(R.string.ns_menu_main_header);
-
-		// Add first block
 		menuItems = getResources().getStringArray(R.array.ns_menu_items);
 		connectItems = getResources().getStringArray(
 				R.array.ns_menu_items_connect);
@@ -518,14 +617,11 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			int id_title = getResources().getIdentifier(item, "string",
 					this.getPackageName());
-			
+
 			int id_icon = getResources().getIdentifier(menuItemsIcon[res],
 					"drawable", this.getPackageName());
 
 			NsMenuItemModel mItem = new NsMenuItemModel(id_title, id_icon);
-			// if (res==1) mItem.counter=12; //it is just an example...
-			// if (res==3) mItem.counter=3; //it is just an example...
-			
 			mAdapter.addItem(mItem);
 
 			res++;
@@ -555,6 +651,64 @@ public class MainActivity extends SherlockFragmentActivity {
 			mDrawerList.setAdapter(mAdapter);
 
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+	}
+
+	public void loginToFacebook() {
+		facebook.authorize(MainActivity.this,
+				AppConstants.FACEBOOK_PERMISSIONARR, new LoginDialogListener());
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		facebook.authorizeCallback(requestCode, resultCode, data);
+	}
+
+	public void likeFacebookPage() {
+
+//		if (facebook.getAccessToken() != null) {
+//			Bundle params = new Bundle();
+//			params.putString("access_token", facebook.getAccessToken());
+//			Uri uri = Uri.parse("https://facebook.com" + og_object_url);
+//			params.putString("og_object_url", uri.toString());
+//
+//			mAsyncRunner.request("me/og.likes", params, "POST",
+//					new BaseRequestListener() {
+//						@Override
+//						public void onComplete(final String response,
+//								final Object state) {
+//							// handle success
+//							if(response.contains("Error validating access token")){
+//							loginToFacebook();
+//							}
+//							
+//						}
+//					}, null);
+//		}
+		String page1 = "572779142753263";
+		String page2 = "536852216398619";
+		
+		Uri uri1 = Uri.parse("https://facebook.com" + page1);
+		Uri uri2 = Uri.parse("https://facebook.com" + page2);
+		
+		List<NameValuePair> nameparams = new ArrayList<NameValuePair>();
+		nameparams.add(new BasicNameValuePair("access_token", facebook.getAccessToken()));
+		nameparams.add(new BasicNameValuePair("object", uri1.toString()));
+		
+		String result = WebHTTPMethodClass
+				.executeHttPost("https://graph.facebook.com/me/og.likes/" + page1, nameparams);
+		Log.d("resultLike", "resultLike1 :" + result);
+		
+		List<NameValuePair> nameparams2 = new ArrayList<NameValuePair>();
+		nameparams2.add(new BasicNameValuePair("access_token", facebook.getAccessToken()));
+		nameparams2.add(new BasicNameValuePair("object", uri2.toString()));
+		
+		String result2 = WebHTTPMethodClass
+				.executeHttPost("https://graph.facebook.com/me/og.likes/" + page2, nameparams);
+		Log.d("resultLike", "resultLike2 :" + result2);
+		
+		
+
 
 	}
 

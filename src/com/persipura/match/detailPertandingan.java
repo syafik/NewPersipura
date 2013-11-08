@@ -49,7 +49,7 @@ public class detailPertandingan extends SherlockFragment {
 			Bundle savedInstanceState) {
 		Bundle b = getArguments();
 		nid = b.getString("myString");
-		MainActivity.newInstance().HideOtherActivities();
+		MainActivity.getInstance().HideOtherActivities();
 		showProgressDialog();
 		new fetchLocationFromServer().execute("");
 		new fetchMatchResult().execute("");

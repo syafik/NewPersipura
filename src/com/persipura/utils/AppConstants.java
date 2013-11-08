@@ -52,39 +52,6 @@ public class AppConstants {
 
 	// INTENT_EXTRA CONSTATNS
 
-	// PREF CONSTATNS
-
-	public static final String PREF_HOME_ISOPENHOMEPAGE = "PREFHOMEPAGE_ISOPEN";
-	public static final String PREF_SNAP_ISNOTOPENSTARTPAGE = "PREFSNAPSTART_ISOPEN";
-
-	// PREF CONSTATNS
-
-	// DIALOG CONSTATNS
-	public static final String TAG_APP = "RotiTAG ** ";
-	public static final int DIALOG_ALERT = 101;
-	public static final int DIALOG_PROGRESS = 105;
-	public static String PROGRESS_MSG = null;
-	public static String DIALOG_MSG = "";
-	public static String CONNECTION_FAILURE = "A connection failure occurred";
-	public static String ClaimRewardPageHeader = "Are you done?";
-	public static String ClaimRewardPageMessage = "Do NOT exit this page until the cashier has seen your 3-digit code. \n\n"
-			+ "Tapping \"Continue\" will return you to My Goddies. You will not be able to access this code again.";
-	public static String TIME_OUT = "The request timed out";
-	public static final String DEVICE_TYPE = "android";
-	public static final String REGISTERTYPE = "1";
-	public static final String REGISTERTYPEFB = "2";
-
-	public static final String EMAILCONTACT_US = "roti@rlvt.net";
-	public static final String EMAILFAQ_CONTACT_US = "roti@rlvt.net";// "zoes@rlvt.net";
-	public static final String EMAILSUBJECT = "Roti promo code query";
-	public static final String EMAILSUBJECTFAQ = "Roti query";
-	public static String EMAILSUBJECT1 = "Roti";
-	public static String EMAILBODY = "Roti";
-	public static String EMAILSUBJECTFB = "Roti";
-	public static String EMAILBODYFB = "Roti";
-	public static String EMAILSUBJECTTWT = "Roti";
-	public static String EMAILBODYTWT = "Roti";
-	public static String CONSTANTTITLEMESSAGE = "Roti";
 
 	public static final String ERROR401SERVICES = "Please login with different id";
 	public static String ERROR401 = "";
@@ -92,24 +59,17 @@ public class AppConstants {
 	public static final String ERRORNETWORKCONNECTION = "Could not connect to server, please check your network connection";
 	public static final String ERRORGOALCOMPLETE = "Mark this goal as complete?";
 
-	// PUSH PARAMS
-
-	public static final String PUSH_NOTIFICATION_KEY = "389484218706";
-	public static final String PUSH_NOTIFICATION_TAG = "Roti Message";
-	public static final int PUSH_NOTIFICATION_ID = 1234;
-	public static final String PUSH_NOTIFICATION_MESSAGE = "packageName.push.message";
-	public static final String PUSH_NOTIFICATION_CLASS = "packageName.push.classname";
+	
 
 	// FACEBOOK PARAMS
 
-	public static final String FACEBOOK_APPID = "469864033052889"; // ROTI
+	public static final String FACEBOOK_APPID = "457180554390902"; // ROTI
 	public static final String[] FACEBOOK_PERMISSIONARR = new String[] {
 			"read_stream", "email", "user_photos", "publish_checkins",
-			"publish_stream", "offline_access", "photo_upload" };
-	public static String FB_APPID = "407799879277636";
+			"publish_stream", "offline_access", "photo_upload" , "offline_access", "publish_actions"};
+	public static String FB_APPID = "457180554390902";
 	public static final String POSTID = "postid";
 
-	// FACEBOOK PARAMS
 
 	// TWITTER KEY
 
@@ -225,41 +185,7 @@ public class AppConstants {
 
 	private static boolean isConfirm = false;
 
-	public static boolean showConfirmMsgDialog(String title,
-			final String message, final String billid, Context context) {
-		isConfirm = false;
-		try {
-			AlertDialog.Builder alt_bld = new AlertDialog.Builder(context);
-			alt_bld.setMessage(message)
-					.setCancelable(false)
-					.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									isConfirm = false;
-									dialog.cancel();
-								}
-							})
-					.setPositiveButton("Confirm",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									isConfirm = true;
-									dialog.cancel();
-									// new
-									// deleteBillFromServer().execute(billid);
-								}
-							});
-			AlertDialog alert = alt_bld.create();
-			// alert.setTitle(title);
-			alert.setTitle(CONSTANTTITLEMESSAGE);
-			alert.setIcon(AlertDialog.BUTTON_NEUTRAL);
-			alert.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return isConfirm;
-	}
+	
 
 	// public static void parseInput(String result, Activity mHomePage) {
 	// if (result != null && !result.equals("")) {
@@ -350,62 +276,7 @@ public class AppConstants {
 	// return responseData;
 	// }
 
-	static AlertDialog.Builder alertDialogBuilder;
-
-	public static void showMsgDialog(String title, final String message,
-			Context context) {
-		try {
-			if (alertDialogBuilder == null) {
-				alertDialogBuilder = new AlertDialog.Builder(context);
-				alertDialogBuilder
-						.setMessage(message)
-						.setCancelable(false)
-						.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
-										alertDialogBuilder = null;
-										dialog.cancel();
-									}
-								});
-				AlertDialog alert = alertDialogBuilder.create();
-				if (title.equals("")) {
-					alert.setTitle(CONSTANTTITLEMESSAGE);
-					alert.setIcon(AlertDialog.BUTTON_NEGATIVE);
-				} else {
-					alert.setTitle(title);
-					alert.setIcon(AlertDialog.BUTTON_NEUTRAL);
-				}
-				alert.show();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void showMessageDialogWithNewIntent(String message,
-			Context context) {
-		if (alertDialogBuilder == null) {
-			alertDialogBuilder = new AlertDialog.Builder(context);
-			alertDialogBuilder
-					.setMessage(message)
-					.setCancelable(false)
-					.setPositiveButton("Ok",
-							new DialogInterface.OnClickListener() {
-
-								public void onClick(DialogInterface dialog,
-										int id) {
-									alertDialogBuilder = null;
-									dialog.cancel();
-									// HomePage.getInstance().showLoginOptionPage(
-									// false);//TODO
-								}
-							});
-			AlertDialog alert = alertDialogBuilder.create();
-			alert.show();
-		}
-	}
-
+	
 	// Fast Implementation
 	public static StringBuilder inputStreamToString(InputStream is)
 			throws IOException {

@@ -171,9 +171,8 @@ public class WebHTTPMethodClass {
 		HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
 
 		// DefaultHttpClient client = new DefaultHttpClient(httpParameters);
-		HttpPost post = new HttpPost(AppConstants.BASE_URL_HTTPS + serviceName);
-		Log.e(serviceName + " postURL = ", AppConstants.BASE_URL + serviceName
-				+ " " + mParams.toArray());
+		HttpPost post = new HttpPost(serviceName);
+		
 		try {
 			post.setEntity(new UrlEncodedFormEntity(mParams/* , HTTP.UTF_8 */));
 			HttpResponse response = httpClient.execute(post);

@@ -100,7 +100,7 @@ public class Search extends SherlockFragment {
 				.findViewById(R.id.resultlabel);
 		resultlabel.setText(Html.fromHtml(resultlabel.getText() + "&quot;" + q
 				+ "&quot;"));
-		MainActivity.newInstance().HideOtherActivities();
+		MainActivity.getInstance().HideOtherActivities();
 
 		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
 
