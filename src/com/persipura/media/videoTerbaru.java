@@ -30,6 +30,7 @@ import com.persipura.bean.mediaBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.MainActivity;
 //import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R.id;
@@ -88,7 +89,7 @@ public class videoTerbaru extends SherlockFragment {
 
 		mScrollView = mPullRefreshScrollView.getRefreshableView();
 		
-		
+		MainActivity.getInstance().HideOtherActivities();
 		
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
