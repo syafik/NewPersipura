@@ -150,6 +150,7 @@ public class Home extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d("result", "result home squad : " + result);
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 				listSquadBean = new ArrayList<HomeSquad>();
@@ -270,6 +271,7 @@ public class Home extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d("result", "result home match: " + result);
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
@@ -370,6 +372,7 @@ public class Home extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d("result", "result news : " + result);
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 				Log.d("test1", "test1 : " + jsonArray);

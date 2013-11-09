@@ -453,9 +453,11 @@ public class News extends SherlockFragment {
 		private void createAdsView(List<AdsBean> listAdsBean)
 				throws IOException {
 			int counter = 3; // will use API ads
-			int newI = 1;
-			Log.d("listAdsBean.size()",
-					"listAdsBean.size() : " + listAdsBean.size());
+			
+			int newCount;
+			Log.d("listAdsBean.size()", "listAdsBean.size() : " + listAdsBean.size());
+			
+			
 			for (int i = 0; i < listAdsBean.size(); i++) {
 				AdsBean thisWeekBean = listAdsBean.get(i);
 
@@ -497,11 +499,15 @@ public class News extends SherlockFragment {
 					}
 
 				}
-				counter = counter * newI;
-				newI++;
-				Log.d("rank", "rank of ads : " + thisWeekBean.getad_rank());
-				lifePageCellContainerLayout
-						.addView(cellViewMainLayout, counter);
+				newCount = counter * (i + 1) + i;
+				Log.d("lifePageCellContainerLayout.size()", "lifePageCellContainerLayout.size() : " + lifePageCellContainerLayout.getChildCount());
+				Log.d("lifePageCellContainerLayout.size()", "counter : " + newCount);
+				
+				if(newCount >= lifePageCellContainerLayout.getChildCount()){
+					newCount = lifePageCellContainerLayout.getChildCount();
+				}
+				
+				lifePageCellContainerLayout.addView(cellViewMainLayout, newCount);
 
 			}
 		}

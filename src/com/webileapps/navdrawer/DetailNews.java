@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
@@ -85,6 +87,9 @@ public class DetailNews extends SherlockFragment {
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
 				getActivity().getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
+		MainActivity.getInstance().changeItemSearchToShare(true);
+		
+		
 		return rootView;
 	}
 
@@ -153,6 +158,7 @@ public class DetailNews extends SherlockFragment {
 					thisWeekBean.setteaser(resObject.getString("teaser"));
 					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
 					thisWeekBean.setcreated(resObject.getString("created"));
+					thisWeekBean.setshared_url(resObject.getString("share_url"));
 
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -202,7 +208,7 @@ public class DetailNews extends SherlockFragment {
 
 				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
 						imgNews);
-
+				MainActivity.getInstance().setFacebookContentShare(thisWeekBean.gettitle(), thisWeekBean.getshared_url());
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
 			}
@@ -244,6 +250,8 @@ public class DetailNews extends SherlockFragment {
 							.getString("footer_logo"));
 					thisWeekBean.setlink(resObject.getString("link"));
 					//
+					
+					
 					listFooterBean.add(thisWeekBean);
 
 				}

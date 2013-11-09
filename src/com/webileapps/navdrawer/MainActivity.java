@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Connection.Request;
 
 import android.annotation.SuppressLint;
@@ -22,6 +25,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -34,6 +38,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.service.textservice.SpellCheckerService.Session;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -72,6 +77,7 @@ import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.ShareActionProvider;
 import com.dg.android.facebook.BaseRequestListener;
 import com.dg.android.facebook.SessionEvents;
 import com.dg.android.facebook.SessionStore;
@@ -94,6 +100,7 @@ import com.persipura.search.Search;
 
 import com.persipura.socialize.FacebookConnectDialog;
 import com.persipura.socialize.FacebookLikePage;
+import com.persipura.socialize.ShareDialog;
 import com.persipura.socialize.Twitter;
 import com.persipura.socialize.TwitterConnectDialog;
 import com.persipura.socialize.TwitterSocial;
@@ -116,41 +123,46 @@ public class MainActivity extends SherlockFragmentActivity {
 	private ProgressDialog progressDialog;
 	String squadId;
 	String titleNav = "Home";
+	boolean flag = false;
+
 	// Your Facebook APP ID
-	private static String APP_ID = "457180554390902"; // Replace your App ID
+	private static String APP_ID = "171262573080320"; // Replace your App ID
 	private SessionListener mSessionListener = new SessionListener();
-										// here
+	// here
 
 	// Instance of Facebook Class
-	private Facebook facebook;
+	public Facebook facebook;
 	private AsyncFacebookRunner mAsyncRunner;
+	private ShareActionProvider mShareActionProvider;
+
 	String FILENAME = "AndroidSSO_data";
-	SharedPreferences mPrefs;
+	
 
 	static MainActivity mTabbars;
 
 	public static MainActivity getInstance() {
-		
-		return mTabbars;
+		return new MainActivity();
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mTabbars = this;
-		
+
 		setContentView(R.layout.activity_main);
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		
+
 		facebook = new Facebook(APP_ID);
 		mAsyncRunner = new AsyncFacebookRunner(facebook);
 		SessionStore.restore(facebook, this);
 		SessionEvents.addAuthListener(mSessionListener);
 		SessionEvents.addLogoutListener(mSessionListener);
-		
+
 		getSupportActionBar().setIcon(R.drawable.logo_open);
 
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
@@ -183,10 +195,12 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 
 		}
-		Log.d("fbToken", "fbToken : " + facebook.getAccessToken());
+
+		Boolean validFb = facebook.isSessionValid();
+		Log.d("validFb", "validFb : " + validFb);
 
 	}
-	
+
 	private class SessionListener implements AuthListener, LogoutListener {
 
 		public void onAuthSucceed() {
@@ -211,6 +225,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		// create search menu
 		menu.add(0, 1, 1, "search")
 				.setIcon(R.drawable.action_search)
 				.setActionView(R.layout.search)
@@ -218,6 +233,7 @@ public class MainActivity extends SherlockFragmentActivity {
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		MenuItem menuItem = menu.findItem(1);
+		menuItem.setVisible(true);
 		menuItem.setOnActionExpandListener(new OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
@@ -235,13 +251,21 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		});
 
+		// create share menu
+		if (mTabbars.flag) {
+			menu.add(Menu.NONE, 2, 2, "share")
+					.setIcon(R.drawable.ic_action_share)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menuItem.setVisible(false);
+		}
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
-
+		Log.d("item.getItemId()", "item.getItemId() : " + item.getItemId());
 		switch (item.getItemId()) {
 		case 1:
 			search = (EditText) item.getActionView().findViewById(
@@ -259,8 +283,14 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				}
 			});
+			break;
+		case 2:
+			ShareDialog sd = new ShareDialog(MainActivity.this, facebook);
+			sd.show();
 
+			break;
 		}
+
 		switch (item.getItemId()) {
 		case android.R.id.home: {
 			if (mDrawer.isDrawerOpen(mDrawerList)) {
@@ -325,7 +355,14 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	public void changeItemSearchToShare(Boolean show) {
+		mTabbars.flag = show;
+		mTabbars.supportInvalidateOptionsMenu();
+	}
+
 	public void HideOtherActivities() {
+		changeItemSearchToShare(false);
+		
 		News newsFragment = (News) getSupportFragmentManager()
 				.findFragmentByTag(News.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager()
@@ -414,7 +451,6 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager()
 				.findFragmentByTag(Squad.TAG);
-		
 
 		Bundle args = new Bundle();
 		Log.d("position", "position : " + position);
@@ -512,21 +548,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Facebook";
 			break;
 		case 7:
-			// getSupportFragmentManager().beginTransaction()
-			// .add(R.id.content, Twitter.newInstance(), Twitter.TAG).commit();
-
-			// if(squadFragment != null){
-			// HideOtherActivities();
-			// twitterFragment.getView().setVisibility(View.VISIBLE);
-			// }else{
-			// HideOtherActivities();
-			// getSupportFragmentManager()
-			// .beginTransaction()
-			// .add(R.id.content, TwitterSocial.newInstance(),
-			// TwitterSocial.TAG)
-			// .commit();
-			//
-			// }
 			TwitterConnectDialog cdd = new TwitterConnectDialog(
 					MainActivity.this);
 			cdd.show();
@@ -639,8 +660,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			NsMenuItemModel mItemConnect = new NsMenuItemModel(
 					id_title_connect, id_icon_connect);
-			// if (res==1) mItem.counter=12; //it is just an example...
-			// if (res==3) mItem.counter=3; //it is just an example...
 			mAdapter.addItem(mItemConnect);
 
 			resConnect++;
@@ -666,49 +685,96 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	public void likeFacebookPage() {
 
-//		if (facebook.getAccessToken() != null) {
-//			Bundle params = new Bundle();
-//			params.putString("access_token", facebook.getAccessToken());
-//			Uri uri = Uri.parse("https://facebook.com" + og_object_url);
-//			params.putString("og_object_url", uri.toString());
-//
-//			mAsyncRunner.request("me/og.likes", params, "POST",
-//					new BaseRequestListener() {
-//						@Override
-//						public void onComplete(final String response,
-//								final Object state) {
-//							// handle success
-//							if(response.contains("Error validating access token")){
-//							loginToFacebook();
-//							}
-//							
-//						}
-//					}, null);
-//		}
+		// if (facebook.getAccessToken() != null) {
+		// Bundle params = new Bundle();
+		// params.putString("access_token", facebook.getAccessToken());
+		// Uri uri = Uri.parse("https://facebook.com" + og_object_url);
+		// params.putString("og_object_url", uri.toString());
+		//
+		// mAsyncRunner.request("me/og.likes", params, "POST",
+		// new BaseRequestListener() {
+		// @Override
+		// public void onComplete(final String response,
+		// final Object state) {
+		// // handle success
+		// if(response.contains("Error validating access token")){
+		// loginToFacebook();
+		// }
+		//
+		// }
+		// }, null);
+		// }
 		String page1 = "572779142753263";
 		String page2 = "536852216398619";
-		
+
 		Uri uri1 = Uri.parse("https://facebook.com" + page1);
 		Uri uri2 = Uri.parse("https://facebook.com" + page2);
-		
+
 		List<NameValuePair> nameparams = new ArrayList<NameValuePair>();
-		nameparams.add(new BasicNameValuePair("access_token", facebook.getAccessToken()));
+		nameparams.add(new BasicNameValuePair("access_token", facebook
+				.getAccessToken()));
 		nameparams.add(new BasicNameValuePair("object", uri1.toString()));
+
+		String result = WebHTTPMethodClass.executeHttPost(
+				"https://graph.facebook.com/me/og.likes/" + page1, nameparams);
 		
-		String result = WebHTTPMethodClass
-				.executeHttPost("https://graph.facebook.com/me/og.likes/" + page1, nameparams);
+		try {
+			JSONArray jsonArray = new JSONArray(result);
+			JSONObject resObject = jsonArray.getJSONObject(0);
+			Log.d("errorCode", "errorCode : " + resObject);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Log.d("resultLike", "resultLike1 :" + result);
-		
+
 		List<NameValuePair> nameparams2 = new ArrayList<NameValuePair>();
-		nameparams2.add(new BasicNameValuePair("access_token", facebook.getAccessToken()));
+		nameparams2.add(new BasicNameValuePair("access_token", facebook
+				.getAccessToken()));
 		nameparams2.add(new BasicNameValuePair("object", uri2.toString()));
-		
-		String result2 = WebHTTPMethodClass
-				.executeHttPost("https://graph.facebook.com/me/og.likes/" + page2, nameparams);
+
+		String result2 = WebHTTPMethodClass.executeHttPost(
+				"https://graph.facebook.com/me/og.likes/" + page2, nameparams);
 		Log.d("resultLike", "resultLike2 :" + result2);
 		
-		
 
+	}
+	
+	public void setFacebookContentShare(String title, String shared_url){
+		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mTabbars);
+
+		Editor editor = mPrefs.edit();
+		editor.putString("title", title);
+		editor.putString("shared_url", shared_url);
+		editor.commit();
+	}
+	
+	
+
+	public void shareToFacebook() {
+
+		if (facebook.getAccessToken() != null) {
+			SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mTabbars);
+			Bundle params = new Bundle();
+			params.putString("access_token", facebook.getAccessToken());
+
+            params.putString("name", mPrefs.getString("title", ""));
+            params.putString("link", mPrefs.getString("shared_url", ""));
+	
+			mAsyncRunner.request("me/feed", params, "POST",
+					new BaseRequestListener() {
+						@Override
+						public void onComplete(final String response,
+								final Object state) {
+							// handle success
+							if (response
+									.contains("Error validating access token")) {
+								loginToFacebook();
+							}
+
+						}
+					}, null);
+		}
 
 	}
 

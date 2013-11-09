@@ -7,6 +7,18 @@ public class NewsBean {
 	String title = "";
 	String img_uri = "";
 	String teaser = "";
+	String shared_url = "";
+
+	public String getshared_url() {
+		return shared_url;
+	}
+
+	public void setshared_url(String shared_url) {
+		if (shared_url.equals("null")) {
+			shared_url = "";
+		}
+		this.shared_url = shared_url;
+	}
 
 	public String getNid() {
 		return nid;
