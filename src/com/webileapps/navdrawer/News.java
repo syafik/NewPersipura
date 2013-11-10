@@ -22,11 +22,15 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
+import com.persipura.home.Home;
 import com.persipura.utils.*;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
@@ -192,6 +197,8 @@ public class News extends SherlockFragment {
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setteaser(resObject.getString("teaser"));
 					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
+					thisWeekBean.setcreated(resObject.getString("created"));
+					
 
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -235,7 +242,12 @@ public class News extends SherlockFragment {
 				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 
 				titleNews.setText(thisWeekBean.gettitle());
-				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
+				descNews.setText(Html.fromHtml(thisWeekBean.getcreated()));
+				
+				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -246,13 +258,19 @@ public class News extends SherlockFragment {
 
 				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
 						imgNews);
-
+				
+				
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
-
+						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
+						Editor editor = mPrefs.edit();
+						
+						editor.putString("currentFragment", Home.TAG);
+						editor.putString("prevFragment", News.TAG);
+						editor.commit();
+						
 						Bundle data = new Bundle();
 						data.putString("NewsId", (String) v.getTag());
-
 						FragmentTransaction t = getFragmentManager()
 								.beginTransaction();
 						DetailNews mFrag = new DetailNews();
@@ -450,10 +468,14 @@ public class News extends SherlockFragment {
 				failedRetrieveCount++;
 			}
 			
-			if(failedRetrieveCount >0)
-				Toast.makeText(attachingActivityLock.getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+			if(failedRetrieveCount >0){
+				if(progressDialog != null){
+					progressDialog.dismiss();
+					Toast.makeText(attachingActivityLock.getApplicationContext(),
+							"Failed to retrieve data from server",
+							Toast.LENGTH_LONG).show();
+				}
+			}
 
 		}
 

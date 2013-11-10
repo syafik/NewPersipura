@@ -1,27 +1,19 @@
 package com.webileapps.navdrawer;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,14 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
@@ -46,11 +35,6 @@ import com.persipura.utils.WebHTTPMethodClass;
 @SuppressLint("NewApi")
 public class DetailNews extends SherlockFragment {
 	public static final String TAG = DetailNews.class.getSimpleName();
-
-	public static DetailNews newInstance() {
-		return new DetailNews();
-	}
-
 	private LayoutInflater mInflater;
 	List<NewsBean> listThisWeekBean;
 	List<FooterBean> listFooterBean;
@@ -60,6 +44,34 @@ public class DetailNews extends SherlockFragment {
 	ViewGroup newContainer;
 	String nid;
 	ProgressDialog progressDialog;
+	int failedRetrieveCount = 0;
+	MainActivity attachingActivityLock;
+	
+	public static DetailNews newInstance() {
+		return new DetailNews();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
+	}
+
+	
+
 
 	@SuppressLint("NewApi")
 	@Override
@@ -94,30 +106,9 @@ public class DetailNews extends SherlockFragment {
 	}
 
 	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(getActivity());
+		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
-
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
 		progressDialog.show();
 	}
 
@@ -156,7 +147,14 @@ public class DetailNews extends SherlockFragment {
 					thisWeekBean.setNid(resObject.getString("nid"));
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setteaser(resObject.getString("body"));
-					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
+					String img = resObject.getString("big_img");
+					
+					if(img != null && !img.isEmpty() && img != "null"){
+						img = resObject.getString("big_img");
+					}else{
+						img = resObject.getString("img_uri");
+					}
+					thisWeekBean.setimg_uri(img);
 					thisWeekBean.setcreated(resObject.getString("created"));
 					thisWeekBean.setshared_url(resObject.getString("share_url"));
 
@@ -168,9 +166,8 @@ public class DetailNews extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
+
 			}
 		}
 
@@ -198,6 +195,14 @@ public class DetailNews extends SherlockFragment {
 				titleNews.setText(thisWeekBean.gettitle());
 				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
 				time.setText(thisWeekBean.getcreated());
+				
+				AppConstants.fontrobotoTextViewBold(titleNews, 15, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(descNews, 12, "ffffff",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(time, 11, "cccccc",
+						getActivity().getApplicationContext().getAssets());
+				
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -258,12 +263,24 @@ public class DetailNews extends SherlockFragment {
 				if (listFooterBean != null && listFooterBean.size() > 0) {
 					createFooterView(listFooterBean);
 				}
+				
+				if (progressDialog != null) {
+					progressDialog.dismiss();
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
+			}
+			
+			if (failedRetrieveCount > 0) {
+				if (progressDialog != null) {
+					progressDialog.dismiss();
+					Toast.makeText(
+							attachingActivityLock.getApplicationContext(),
+							"Failed to retrieve data from server",
+							Toast.LENGTH_LONG).show();
+				}
 			}
 
 		}
@@ -313,6 +330,25 @@ public class DetailNews extends SherlockFragment {
 			}
 		}
 
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d("onDestroy", "onDestroyCalled");
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d("onPause", "onPauseCalled");
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+
+		}
 	}
 
 }
