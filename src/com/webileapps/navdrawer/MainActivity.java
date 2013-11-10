@@ -3,6 +3,10 @@ package com.webileapps.navdrawer;
 import java.util.ArrayList;
 import java.util.List;
 
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -22,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -42,6 +47,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -76,7 +82,6 @@ import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.ppierson.t4jtwitterlogin.T4JTwitterLoginActivity;
 
 @SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
@@ -95,27 +100,11 @@ public class MainActivity extends SherlockFragmentActivity {
 	boolean flag = false;
 	
 	
-	//twitter account 
-	 static String TWITTER_CONSUMER_KEY = "qzooqEGzPmfB5Da2qVdsw";
-	   static String TWITTER_CONSUMER_SECRET = "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo";
-	 
-	 
-	    private static Twitter twitter;
-	    private static RequestToken requestToken;
-	    private AccessToken accessToken;
-	    private static final int TWITTER_LOGIN_REQUEST_CODE = 1;
-//	    // Preference Constants
-//	    static String PREFERENCE_NAME = "twitter_oauth";
-//	    static final String PREF_KEY_OAUTH_TOKEN = "oauth_token";
-//	    static final String PREF_KEY_OAUTH_SECRET = "oauth_token_secret";
-//	    static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
-//	 
-//	    static final String TWITTER_CALLBACK_URL = "oauth://t4jsample";
-//	 
-//	    // Twitter oauth urls
-//	    static final String URL_TWITTER_AUTH = "auth_url";
-//	    static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
-//	    static final String URL_TWITTER_OAUTH_TOKEN = "oauth_token";
+	private CommonsHttpOAuthConsumer httpOauthConsumer;
+    private OAuthProvider httpOauthprovider;
+    public final static String consumerKey = "qzooqEGzPmfB5Da2qVdsw";
+    public final static String consumerSecret = "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo";
+    private final String CALLBACKURL = "app://twitter";
 
 	// Your Facebook APP ID
 	private static String APP_ID = "171262573080320"; // Replace your App ID
@@ -268,7 +257,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				public void onClick(View v) {
 					if (search.length() > 0) {
-						selectItem(8);
+						selectItem(9);
 					}
 
 				}
@@ -327,6 +316,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			Log.d("logging", "logging item menu : " + view.getId());
 			selectItem(position);
 		}
 	}
@@ -600,6 +590,33 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Twitter";
 			break;
 		case 8:
+			 final ProgressDialog pd = new ProgressDialog(mTabbars);
+			   pd.setMessage("Sorry, We are underconstruction");
+			   pd.setCancelable(false);
+				
+				final Handler h = new Handler();
+				final Runnable r2 = new Runnable() {
+
+					@Override
+					public void run() {
+						pd.dismiss();
+					}
+				};
+
+				Runnable r1 = new Runnable() {
+
+					@Override
+					public void run() {
+						pd.show();
+						h.postDelayed(r2, 5000);
+					}
+				};
+
+				h.postDelayed(r1, 500);
+
+				pd.show();
+			break;
+		case 9:
 
 			HideOtherActivities();
 
@@ -610,6 +627,7 @@ public class MainActivity extends SherlockFragmentActivity {
 					.add(R.id.content, searchFragment, Search.TAG).commit();
 			titleNav = "Search";
 			break;
+
 		default:
 			Log.d("default123", "goto default");
 
@@ -726,31 +744,40 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 	
 	public void loginToTwitter() {
-		  if (!T4JTwitterLoginActivity.isConnected(this)){
-			    Intent twitterLoginIntent = new Intent(this, T4JTwitterLoginActivity.class);
-			    twitterLoginIntent.putExtra(T4JTwitterLoginActivity.TWITTER_CONSUMER_KEY, "qzooqEGzPmfB5Da2qVdsw");
-			    twitterLoginIntent.putExtra(T4JTwitterLoginActivity.TWITTER_CONSUMER_SECRET, "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo");
-			    startActivityForResult(twitterLoginIntent, TWITTER_LOGIN_REQUEST_CODE);
-			  }
-    }
+		   final ProgressDialog pd = new ProgressDialog(mTabbars);
+		   pd.setMessage("Sorry, We are underconstruction");
+		   pd.setCancelable(false);
+			
+			final Handler h = new Handler();
+			final Runnable r2 = new Runnable() {
 
+				@Override
+				public void run() {
+					pd.dismiss();
+				}
+			};
+
+			Runnable r1 = new Runnable() {
+
+				@Override
+				public void run() {
+					pd.show();
+					h.postDelayed(r2, 5000);
+				}
+			};
+
+			h.postDelayed(r1, 500);
+
+			pd.show();
+		   
+    }
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		facebook.authorizeCallback(requestCode, resultCode, data);
 		
 		super.onActivityResult(requestCode, resultCode, data);
-	    Log.d("TAG", "ON ACTIVITY RESULT!");
-	    if(requestCode == TWITTER_LOGIN_REQUEST_CODE){
-	        Log.d("TAG", "TWITTER LOGIN REQUEST CODE");
-	        if(resultCode == T4JTwitterLoginActivity.TWITTER_LOGIN_RESULT_CODE_SUCCESS){
-	            Log.d("TAG", "TWITTER LOGIN SUCCESS");
-	        }else if(resultCode == T4JTwitterLoginActivity.TWITTER_LOGIN_RESULT_CODE_FAILURE){
-	            Log.d("TAG", "TWITTER LOGIN FAIL");
-	        }else{
-	        //
-	        }
-	    }
+	    
 	}
 
 	public void likeFacebookPage() {

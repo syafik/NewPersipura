@@ -149,7 +149,7 @@ public class News extends SherlockFragment {
 
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
 				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchAdsFromServer().execute("");
 		return rootView;

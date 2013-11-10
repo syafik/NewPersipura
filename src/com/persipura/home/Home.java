@@ -114,7 +114,7 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.homeNewsTitle);
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
 				attachingActivityLock.getApplicationContext().getAssets());
 		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2",
 				attachingActivityLock.getApplicationContext().getAssets());
@@ -569,8 +569,6 @@ public class Home extends SherlockFragment {
 
 					LinkId = null;
 					LinkId = thisWeekBean.getlink();
-					Log.d("clickable",
-							"clickable : " + thisWeekBean.getclickable());
 					if (thisWeekBean.getclickable().equals("1")) {
 
 						imgNews.setOnClickListener(new View.OnClickListener() {
