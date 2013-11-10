@@ -21,15 +21,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:id="@+id/logo"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"  
          >
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:src="@drawable/splash"
+            android:layout_margin="10dp"
             android:contentDescription="@string/hello_world" 
             android:visibility="gone"/>
 

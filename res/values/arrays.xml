@@ -12,6 +12,7 @@
     <string-array name="ns_menu_items_connect">
         <item>ns_menu_items_connect1</item>
         <item>ns_menu_items_connect2</item>
+        <item>ns_menu_items_connect3</item>
     </string-array>
 
     <array name="ns_menu_items_icon">
@@ -34,6 +35,7 @@
     <array name="ns_menu_items_icon_connect">
         <item>slidebar_fb_icon</item>
         <item>slidebar_tw_icon</item>
+        <item>slidebar_stream_icon</item>
     </array>
     
 
