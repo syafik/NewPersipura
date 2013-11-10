@@ -28,6 +28,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.imageBean;
 import com.persipura.bean.mediaBean;
 
+import com.persipura.match.detailPertandingan;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
@@ -200,8 +201,18 @@ public class ListGalery extends SherlockFragment {
 						vp.setArguments(b);
 						getActivity().getSupportFragmentManager()
 								.beginTransaction()
-								.add(R.id.content, vp, "detail")
+								.add(R.id.parentpagermedia, vp, GaleryView.TAG)
 								.addToBackStack("").commit();
+						
+						
+//						GaleryView vp = new GaleryView();
+//						Bundle b = new Bundle();
+//						b.putString("myString",(String) v.getTag());
+//						vp.setArguments(b);	
+//						getActivity().getSupportFragmentManager()
+//						.beginTransaction()
+//						.add(R.id.parentpagermedia, vp, GaleryView.TAG)
+//						.commit();
 					}
 				});
 				mPullRefreshScrollView.onRefreshComplete();
