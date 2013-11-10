@@ -37,6 +37,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
+import com.persipura.home.Home;
 import com.persipura.home.HomeSquad;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
@@ -88,6 +89,7 @@ public class DetailSquad extends SherlockFragment {
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
 				.getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
+		getActivity().getSupportFragmentManager().findFragmentByTag(Home.TAG).getView().setVisibility(View.GONE);
 
 		return rootView;
 	}

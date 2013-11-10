@@ -244,7 +244,7 @@ public class Home extends SherlockFragment {
 
 						Bundle data = new Bundle();
 						data.putString("squadId", (String) squadId);
-
+						
 						FragmentTransaction t = attachingActivityLock
 								.getSupportFragmentManager().beginTransaction();
 						DetailSquad mFrag = new DetailSquad();
