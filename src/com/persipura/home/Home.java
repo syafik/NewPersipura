@@ -9,12 +9,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,43 +62,40 @@ public class Home extends SherlockFragment {
 	int failedRetrieveCount = 0;
 	String LinkId;
 	MainActivity attachingActivityLock;
-	
+
 	public static Home newInstance() {
 		return new Home();
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
-	  super.onAttach(activity);
-	  attachingActivityLock = (MainActivity) activity;
-	  
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
 	}
-	
-	 @Override
-	  public void onDetach() {
-	    super.onDetach();
-	    attachingActivityLock = null;
-	  }
-	 
-	  @Override
-	    public void onActivityCreated(Bundle savedInstanceState) {
-	        super.onActivityCreated(savedInstanceState);
-	        setRetainInstance(true);
-	    }
-	  
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
+	}
+
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		setRetainInstance(true);
-		 showProgressDialog();
+		// setRetainInstance(true);
+		showProgressDialog();
 
 		mInflater = getLayoutInflater(savedInstanceState);
 
-		
 		View rootView = inflater.inflate(R.layout.home, container, false);
-		
-		
 
 		newsContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.relativeLayout3);
@@ -116,8 +116,8 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
 				attachingActivityLock.getApplicationContext().getAssets());
-		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2", attachingActivityLock
-				.getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2",
+				attachingActivityLock.getApplicationContext().getAssets());
 		AppConstants.fontrobotoTextView(homeNewsTitle, 15, "A6A5A2",
 				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchHomeLatestFromServer().execute("");
@@ -220,11 +220,14 @@ public class Home extends SherlockFragment {
 				detail.setText(squad.getposisi() + "\n" + squad.getage()
 						+ " tahun" + ", " + squad.getwarganegara());
 				AppConstants.fontrobotoTextViewBold(nama, 11, "ffffff",
-						attachingActivityLock.getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
 				AppConstants.fontrobotoTextView(no_punggung, 15, "A6A5A2",
-						attachingActivityLock.getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
 				AppConstants.fontrobotoTextView(detail, 11, "A6A5A2",
-						attachingActivityLock.getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
 				BitmapFactory.Options bmOptions;
 				squadId = squad.getId();
 
@@ -232,8 +235,8 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
-						.getApplicationContext());
+				ImageLoader imgLoader = new ImageLoader(
+						attachingActivityLock.getApplicationContext());
 
 				imgLoader.DisplayImage(squad.getfoto(), loader, imgNews);
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
@@ -241,7 +244,7 @@ public class Home extends SherlockFragment {
 
 						Bundle data = new Bundle();
 						data.putString("squadId", (String) squadId);
-
+						
 						FragmentTransaction t = attachingActivityLock
 								.getSupportFragmentManager().beginTransaction();
 						DetailSquad mFrag = new DetailSquad();
@@ -330,9 +333,11 @@ public class Home extends SherlockFragment {
 				team2.setText(thisWeekBean.getTeam2());
 
 				AppConstants.fontrobotoTextViewBold(team1, 13, "ffffff",
-						attachingActivityLock.getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
 				AppConstants.fontrobotoTextViewBold(team2, 13, "ffffff",
-						attachingActivityLock.getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
 				nextMatchContainerLayout.addView(cellViewMainLayout);
 
 				BitmapFactory.Options bmOptions;
@@ -341,8 +346,8 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
-						.getApplicationContext());
+				ImageLoader imgLoader = new ImageLoader(
+						attachingActivityLock.getApplicationContext());
 				ImageView imgNews = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 				ImageView imgNews2 = (ImageView) cellViewMainLayout
@@ -429,18 +434,18 @@ public class Home extends SherlockFragment {
 
 				titleNews.setText(thisWeekBean.gettitle());
 				timeNews.setText(thisWeekBean.getcreated());
-				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
-						attachingActivityLock.getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(titleNews, 11, "ffffff",
-						attachingActivityLock.getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(titleNews, 11, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
-						.getApplicationContext());
+				ImageLoader imgLoader = new ImageLoader(
+						attachingActivityLock.getApplicationContext());
 
 				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
 						imgNews);
@@ -453,7 +458,12 @@ public class Home extends SherlockFragment {
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 
 					public void onClick(View v) {
-
+						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
+						Editor editor = mPrefs.edit();
+						editor.putString("currentFragment", Home.TAG);
+						editor.putString("prevFragment", Home.TAG);
+						editor.commit();
+						
 						Bundle data = new Bundle();
 						data.putString("NewsId", (String) v.getTag());
 
@@ -513,20 +523,26 @@ public class Home extends SherlockFragment {
 				if (listFooterBean != null && listFooterBean.size() > 0) {
 					createFooterView(listFooterBean);
 				}
-				
-				if(progressDialog != null){
+
+				if (progressDialog != null) {
 					progressDialog.dismiss();
 				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				failedRetrieveCount++;
+
 			}
-			
-			if(failedRetrieveCount >0)
-				Toast.makeText(attachingActivityLock.getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+
+			if (failedRetrieveCount > 0) {
+				if (progressDialog != null) {
+					progressDialog.dismiss();
+					Toast.makeText(
+							attachingActivityLock.getApplicationContext(),
+							"Failed to retrieve data from server",
+							Toast.LENGTH_LONG).show();
+				}
+			}
 
 		}
 
@@ -544,8 +560,8 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
-						.getApplicationContext());
+				ImageLoader imgLoader = new ImageLoader(
+						attachingActivityLock.getApplicationContext());
 
 				if (!thisWeekBean.getfooter_logo().isEmpty()) {
 					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
@@ -610,7 +626,9 @@ public class Home extends SherlockFragment {
 					thisWeekBean.setad_rank(resObject.getString("ad_rank"));
 					thisWeekBean.setlink(resObject.getString("ad_link"));
 
-					int screenSize = attachingActivityLock.getApplicationContext().getResources().getConfiguration().screenLayout
+					int screenSize = attachingActivityLock
+							.getApplicationContext().getResources()
+							.getConfiguration().screenLayout
 							& Configuration.SCREENLAYOUT_SIZE_MASK;
 
 					switch (screenSize) {
@@ -663,8 +681,8 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
-						.getApplicationContext());
+				ImageLoader imgLoader = new ImageLoader(
+						attachingActivityLock.getApplicationContext());
 
 				if (!thisWeekBean.getimage().isEmpty()) {
 					imgLoader.DisplayImage(thisWeekBean.getimage(), loader,
@@ -700,18 +718,18 @@ public class Home extends SherlockFragment {
 	public void onDestroy() {
 		super.onDestroy();
 		Log.d("onDestroy", "onDestroyCalled");
-		if(progressDialog != null){
+		if (progressDialog != null) {
 			progressDialog.dismiss();
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		Log.d("onPause", "onPauseCalled");
-		if (progressDialog != null){
+		if (progressDialog != null) {
 			progressDialog.dismiss();
-		
+
 		}
 	}
 }

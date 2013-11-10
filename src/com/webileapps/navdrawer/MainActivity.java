@@ -30,6 +30,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -416,7 +420,9 @@ public class MainActivity extends SherlockFragmentActivity {
 			newsFragment.getView().setVisibility(View.GONE);
 		}
 		if (homeFragment != null) {
+
 			Log.d("homeFragment", "homeFragment : " + homeFragment);
+
 			homeFragment.getView().setVisibility(View.GONE);
 		}
 		if (pageSlidingFragment != null) {
@@ -468,11 +474,18 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager()
 				.findFragmentByTag(Squad.TAG);
-
+		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mTabbars);
+		String prevFragment = mPrefs.getString("currentFragment", Home.TAG);
+		Editor editor = mPrefs.edit();
+		
+		
 		Bundle args = new Bundle();
 		Log.d("position", "position : " + position);
 		switch (position) {
 		case 0:
+			editor.putString("currentFragment", Home.TAG);
+			editor.putString("prevFragment", prevFragment);
+			editor.commit();
 			if (homeFragment != null) {
 				HideOtherActivities();
 				homeFragment.getView().setVisibility(View.VISIBLE);
@@ -487,6 +500,9 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			break;
 		case 1:
+			editor.putString("currentFragment", News.TAG);
+			editor.putString("prevFragment", prevFragment);
+			editor.commit();
 			if (newsFragment != null) {
 				HideOtherActivities();
 				newsFragment.getView().setVisibility(View.VISIBLE);
@@ -500,6 +516,9 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "News";
 			break;
 		case 2:
+			editor.putString("currentFragment", pageSliding.TAG);
+			editor.putString("prevFragment", prevFragment);
+			editor.commit();
 			if (pageSlidingFragment != null) {
 				HideOtherActivities();
 				pageSlidingFragment.getView().setVisibility(View.VISIBLE);
@@ -519,6 +538,9 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Media";
 			break;
 		case 3:
+			editor.putString("currentFragment", PageSlidingTabStripFragment.TAG);
+			editor.putString("prevFragment", prevFragment);
+			editor.commit();
 			if (pageSlidingTabStripFragment != null) {
 				HideOtherActivities();
 				pageSlidingTabStripFragment.getView().setVisibility(
@@ -534,6 +556,9 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Match";
 			break;
 		case 4:
+			editor.putString("currentFragment", Squad.TAG);
+			editor.putString("prevFragment", prevFragment);
+			editor.commit();
 			if (squadFragment != null) {
 				HideOtherActivities();
 				squadFragment.getView().setVisibility(View.VISIBLE);
@@ -589,7 +614,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			Log.d("default123", "goto default");
 
 		}
-
+		
 		mDrawer.closeDrawer(mDrawerList);
 	}
 
@@ -820,6 +845,25 @@ public class MainActivity extends SherlockFragmentActivity {
 					}, null);
 		}
 
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	Log.d("keyUp", "KeyupBack");
+	    	SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mTabbars);
+	    	String backstack = mPrefs.getString("prevFragment", "");
+	    	if(!backstack.isEmpty()){
+	    		HideOtherActivities();
+	    		getSupportFragmentManager()
+				.findFragmentByTag(backstack).getView().setVisibility(View.VISIBLE);
+	    	}
+	        //do your stuff and Return true to prevent this event from being propagated further
+	    	
+	        return true;
+	    }
+
+	    return false;
 	}
 
 }
