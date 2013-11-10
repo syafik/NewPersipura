@@ -42,10 +42,12 @@
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="fill_parent"
+            android:layout_margin="10dp"
+            
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="14dp"
+            
             android:src="@drawable/ic_launcher" />
 
         <TextView
@@ -53,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="15dp"
+            
             android:layout_toRightOf="@+id/imageView1"
             android:paddingTop="6dp"
             android:text="Title"

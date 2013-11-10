@@ -5,7 +5,19 @@
     android:id="@+id/list_parent"
     android:background="#2B292A"
     android:orientation="vertical" >
-
+<ScrollView 
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    android:layout_marginBottom="10dp"
+    >
+     <LinearLayout
+            android:id="@+id/location_linear_parentview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" >
 <ImageView
     android:id="@+id/imageView1"
     android:layout_width="fill_parent"
@@ -31,7 +43,6 @@
             android:layout_alignLeft="@+id/title"
             android:layout_below="@+id/time"
             android:ellipsize="end"
-            android:maxLines="2"
             android:paddingBottom="6dp"
             
             android:textSize="12dp" 
@@ -59,5 +70,7 @@
             
             android:textSize="14dp" />
     </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
 <include layout="@layout/footer"/>
 </RelativeLayout>

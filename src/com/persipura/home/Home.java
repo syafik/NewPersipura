@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -34,6 +35,7 @@ import com.persipura.squad.DetailSquad;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.DetailNews;
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.News;
 import com.webileapps.navdrawer.R;
 
@@ -46,6 +48,7 @@ public class Home extends SherlockFragment {
 	List<AdsBean> listAdsBean;
 	LinearLayout newsContainerLayout, squadContainerLayout,
 			nextMatchContainerLayout;
+	TextView homeNewsTitle, squadTitle;
 	FrameLayout footerLayout;
 	RelativeLayout adsLayout;
 	private LayoutInflater mInflater;
@@ -53,21 +56,47 @@ public class Home extends SherlockFragment {
 	ViewGroup newContainer;
 	String squadId;
 	String NewsId;
+	int failedRetrieveCount = 0;
 	String LinkId;
-
+	MainActivity attachingActivityLock;
+	
 	public static Home newInstance() {
 		return new Home();
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+	  super.onAttach(activity);
+	  attachingActivityLock = (MainActivity) activity;
+	  
+	}
+	
+	 @Override
+	  public void onDetach() {
+	    super.onDetach();
+	    attachingActivityLock = null;
+	  }
+	 
+	  @Override
+	    public void onActivityCreated(Bundle savedInstanceState) {
+	        super.onActivityCreated(savedInstanceState);
+	        setRetainInstance(true);
+	    }
+	  
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+//		setRetainInstance(true);
+		 showProgressDialog();
 
-		showProgressDialog();
 		mInflater = getLayoutInflater(savedInstanceState);
 
+		
 		View rootView = inflater.inflate(R.layout.home, container, false);
+		
+		
+
 		newsContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.relativeLayout3);
 		squadContainerLayout = (LinearLayout) rootView
@@ -78,17 +107,19 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.bottom_control_bar);
 		adsLayout = (RelativeLayout) rootView.findViewById(R.id.eksklusive_ads);
 		newContainer = container;
+		homeNewsTitle = (TextView) rootView.findViewById(R.id.homeNewsTitle);
+		squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
 		TextView squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
 		TextView homeNewsTitle = (TextView) rootView
 				.findViewById(R.id.homeNewsTitle);
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
-		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2", getActivity()
+				attachingActivityLock.getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2", attachingActivityLock
 				.getApplicationContext().getAssets());
 		AppConstants.fontrobotoTextView(homeNewsTitle, 15, "A6A5A2",
-				getActivity().getApplicationContext().getAssets());
+				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchHomeLatestFromServer().execute("");
 		new fetchHomeNewsFromServer().execute("");
 		new fetchNextMatchFromServer().execute("");
@@ -99,30 +130,9 @@ public class Home extends SherlockFragment {
 	}
 
 	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(getActivity());
+		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
-
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
 		progressDialog.show();
 	}
 
@@ -177,15 +187,15 @@ public class Home extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
 			}
 
 		}
 
 		private void createSquadHomeListView(List<HomeSquad> listThisWeekBean)
 				throws IOException {
+			squadTitle.setVisibility(View.VISIBLE);
+			squadContainerLayout.setVisibility(View.VISIBLE);
 			squadContainerLayout.removeAllViews();
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				HomeSquad squad = listSquadBean.get(i);
@@ -210,11 +220,11 @@ public class Home extends SherlockFragment {
 				detail.setText(squad.getposisi() + "\n" + squad.getage()
 						+ " tahun" + ", " + squad.getwarganegara());
 				AppConstants.fontrobotoTextViewBold(nama, 11, "ffffff",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(no_punggung, 15, "A6A5A2",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(detail, 11, "A6A5A2",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				BitmapFactory.Options bmOptions;
 				squadId = squad.getId();
 
@@ -222,7 +232,7 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				imgLoader.DisplayImage(squad.getfoto(), loader, imgNews);
@@ -232,7 +242,7 @@ public class Home extends SherlockFragment {
 						Bundle data = new Bundle();
 						data.putString("squadId", (String) squadId);
 
-						FragmentTransaction t = getActivity()
+						FragmentTransaction t = attachingActivityLock
 								.getSupportFragmentManager().beginTransaction();
 						DetailSquad mFrag = new DetailSquad();
 						mFrag.setArguments(data);
@@ -295,9 +305,7 @@ public class Home extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
 			}
 
 		}
@@ -322,9 +330,9 @@ public class Home extends SherlockFragment {
 				team2.setText(thisWeekBean.getTeam2());
 
 				AppConstants.fontrobotoTextViewBold(team1, 13, "ffffff",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextViewBold(team2, 13, "ffffff",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				nextMatchContainerLayout.addView(cellViewMainLayout);
 
 				BitmapFactory.Options bmOptions;
@@ -333,7 +341,7 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 				ImageView imgNews = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
@@ -394,15 +402,15 @@ public class Home extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
 			}
 
 		}
 
 		private void createNewsHomeListView(List<HomeNews> listThisWeekBean)
 				throws IOException {
+			newsContainerLayout.setVisibility(View.VISIBLE);
+			homeNewsTitle.setVisibility(View.VISIBLE);
 			newsContainerLayout.removeAllViews();
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				HomeNews thisWeekBean = listThisWeekBean.get(i);
@@ -422,16 +430,16 @@ public class Home extends SherlockFragment {
 				titleNews.setText(thisWeekBean.gettitle());
 				timeNews.setText(thisWeekBean.getcreated());
 				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(titleNews, 11, "ffffff",
-						getActivity().getApplicationContext().getAssets());
+						attachingActivityLock.getApplicationContext().getAssets());
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
@@ -449,7 +457,7 @@ public class Home extends SherlockFragment {
 						Bundle data = new Bundle();
 						data.putString("NewsId", (String) v.getTag());
 
-						FragmentTransaction t = getActivity()
+						FragmentTransaction t = attachingActivityLock
 								.getSupportFragmentManager().beginTransaction();
 						DetailNews mFrag = new DetailNews();
 						mFrag.setArguments(data);
@@ -505,13 +513,20 @@ public class Home extends SherlockFragment {
 				if (listFooterBean != null && listFooterBean.size() > 0) {
 					createFooterView(listFooterBean);
 				}
+				
+				if(progressDialog != null){
+					progressDialog.dismiss();
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
+				failedRetrieveCount++;
+			}
+			
+			if(failedRetrieveCount >0)
+				Toast.makeText(attachingActivityLock.getApplicationContext(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
-			}
 
 		}
 
@@ -529,7 +544,7 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				if (!thisWeekBean.getfooter_logo().isEmpty()) {
@@ -592,30 +607,33 @@ public class Home extends SherlockFragment {
 					JSONObject resObject = jsonArray.getJSONObject(i);
 					AdsBean thisWeekBean = new AdsBean();
 					thisWeekBean.setclickable(resObject.getString("clickable"));
-					thisWeekBean.setad_rank(resObject
-							.getString("ad_rank"));
+					thisWeekBean.setad_rank(resObject.getString("ad_rank"));
 					thisWeekBean.setlink(resObject.getString("ad_link"));
-					
-					int screenSize = getResources().getConfiguration().screenLayout &
-					        Configuration.SCREENLAYOUT_SIZE_MASK;
 
-					switch(screenSize) {
-					    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-					    	thisWeekBean.setimage(resObject.getString("ad_image_ldpi"));
-					        break;
-					    case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-					    	thisWeekBean.setimage(resObject.getString("ad_image_hdpi"));
-					        break;
-					    case Configuration.SCREENLAYOUT_SIZE_SMALL:
-					    	thisWeekBean.setimage(resObject.getString("ad_image_mdpi"));
-					        break;
-					    default:
-					    	thisWeekBean.setimage(resObject.getString("ad_image_xhdpi"));
+					int screenSize = attachingActivityLock.getApplicationContext().getResources().getConfiguration().screenLayout
+							& Configuration.SCREENLAYOUT_SIZE_MASK;
+
+					switch (screenSize) {
+					case Configuration.SCREENLAYOUT_SIZE_LARGE:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_ldpi"));
+						break;
+					case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_hdpi"));
+						break;
+					case Configuration.SCREENLAYOUT_SIZE_SMALL:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_mdpi"));
+						break;
+					default:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_xhdpi"));
 					}
-					
-					
-					thisWeekBean.setclickcounter(resObject.getString("clickcounter"));
-					
+
+					thisWeekBean.setclickcounter(resObject
+							.getString("clickcounter"));
+
 					//
 					listAdsBean.add(thisWeekBean);
 
@@ -626,9 +644,7 @@ public class Home extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
 			}
 
 		}
@@ -647,12 +663,12 @@ public class Home extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				if (!thisWeekBean.getimage().isEmpty()) {
-					imgLoader.DisplayImage(thisWeekBean.getimage(),
-							loader, imgNews);
+					imgLoader.DisplayImage(thisWeekBean.getimage(), loader,
+							imgNews);
 
 					LinkId = null;
 					LinkId = thisWeekBean.getlink();
@@ -678,5 +694,24 @@ public class Home extends SherlockFragment {
 			}
 		}
 
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d("onDestroy", "onDestroyCalled");
+		if(progressDialog != null){
+			progressDialog.dismiss();
+		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d("onPause", "onPauseCalled");
+		if (progressDialog != null){
+			progressDialog.dismiss();
+		
+		}
 	}
 }

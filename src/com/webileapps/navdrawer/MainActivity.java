@@ -353,6 +353,17 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggles
 		mDrawerToggle.onConfigurationChanged(newConfig);
+		if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+			
+		    Log.d("On Config Change","LANDSCAPE");
+		    return;
+		}else{
+
+		    Log.d("On Config Change","PORTRAIT");
+		}
+		
+		
+		
 	}
 
 	public void changeItemSearchToShare(Boolean show) {
@@ -361,12 +372,14 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	public void HideOtherActivities() {
+		
 		changeItemSearchToShare(false);
 		
 		News newsFragment = (News) getSupportFragmentManager()
 				.findFragmentByTag(News.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager()
 				.findFragmentByTag(Home.TAG);
+	
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
 				.findFragmentByTag(pageSliding.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
@@ -383,8 +396,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(detailPertandingan.TAG);
 		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager()
 				.findFragmentByTag(TwitterSocial.TAG);
-		videoTerbaru videoTerbaruFragment = (videoTerbaru) getSupportFragmentManager()
-				.findFragmentByTag(videoPlayer.TAG);
+		
 		ListGalery listgaleryFragment = (ListGalery) getSupportFragmentManager()
 				.findFragmentByTag(ListGalery.TAG);
 		HasilPertandingan hasilpertandinganFragment = (HasilPertandingan) getSupportFragmentManager()
@@ -405,7 +417,10 @@ public class MainActivity extends SherlockFragmentActivity {
 			newsFragment.getView().setVisibility(View.GONE);
 		}
 
+		
 		if (homeFragment != null) {
+			Log.d("homeFragment", "homeFragment : " + homeFragment);
+			
 			homeFragment.getView().setVisibility(View.GONE);
 		}
 
@@ -434,9 +449,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (hasilpertandinganFragment != null) {
 			hasilpertandinganFragment.getView().setVisibility(View.GONE);
 		}
-		if (videoTerbaruFragment != null) {
-			videoTerbaruFragment.getView().setVisibility(View.GONE);
-		}
+		
 
 	}
 
@@ -564,6 +577,8 @@ public class MainActivity extends SherlockFragmentActivity {
 					.add(R.id.content, searchFragment, Search.TAG).commit();
 			titleNav = "Search";
 			break;
+		default:
+			Log.d("default123", "goto default");
 
 		}
 

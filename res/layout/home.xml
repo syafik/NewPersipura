@@ -36,7 +36,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:text="BERITA TERBARU" />
+                    android:text="BERITA TERBARU" 
+                    android:visibility="gone"/>
             </FrameLayout>
 
             <View
@@ -53,7 +54,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:background="#2E2C2C"
-                android:orientation="vertical" >
+                android:orientation="vertical" 
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -223,7 +225,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:text="SQUAD TERBARU" />
+                    android:text="SQUAD TERBARU" 
+                    android:visibility="gone"/>
             </FrameLayout>
 
             <View
@@ -240,7 +243,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:background="#2E2C2C"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <RelativeLayout
                     android:layout_width="match_parent"

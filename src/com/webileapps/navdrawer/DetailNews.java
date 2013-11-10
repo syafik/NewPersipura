@@ -155,7 +155,7 @@ public class DetailNews extends SherlockFragment {
 					NewsBean thisWeekBean = new NewsBean();
 					thisWeekBean.setNid(resObject.getString("nid"));
 					thisWeekBean.settitle(resObject.getString("title"));
-					thisWeekBean.setteaser(resObject.getString("teaser"));
+					thisWeekBean.setteaser(resObject.getString("body"));
 					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
 					thisWeekBean.setcreated(resObject.getString("created"));
 					thisWeekBean.setshared_url(resObject.getString("share_url"));

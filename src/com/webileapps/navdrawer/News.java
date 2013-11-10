@@ -24,6 +24,7 @@ import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.utils.*;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -70,6 +71,9 @@ public class News extends SherlockFragment {
 	ScrollView mScrollView;
 	int hitung = 10;
 	int offset = 10;
+	int failedRetrieveCount = 0;
+
+	MainActivity attachingActivityLock;
 
 	public static final String TAG = News.class.getSimpleName();
 
@@ -77,14 +81,36 @@ public class News extends SherlockFragment {
 		return new News();
 	}
 
+	
+	@Override
+	public void onAttach(Activity activity) {
+	  super.onAttach(activity);
+	  attachingActivityLock = (MainActivity) activity;
+	  
+	}
+	
+	@Override
+	  public void onDetach() {
+	    super.onDetach();
+	    attachingActivityLock = null;
+	  }
+	
+	  @Override
+	    public void onActivityCreated(Bundle savedInstanceState) {
+	        super.onActivityCreated(savedInstanceState);
+	        setRetainInstance(true);
+	    }
+	  
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		setRetainInstance(true);
 		showProgressDialog();
 		// new fetchLocationFromServer().execute("");
+		  
 
 		new fetchFooterFromServer().execute("");
-
+		
 		View rootView = inflater.inflate(R.layout.news, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
@@ -119,36 +145,15 @@ public class News extends SherlockFragment {
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
+				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchAdsFromServer().execute("");
 		return rootView;
 	}
 
 	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(getActivity());
+		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
-
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 12000);
-			}
-		};
-
-		h.postDelayed(r1, 1200);
-
 		progressDialog.show();
 	}
 
@@ -199,9 +204,8 @@ public class News extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
+
 			}
 		}
 
@@ -237,7 +241,7 @@ public class News extends SherlockFragment {
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
@@ -310,9 +314,7 @@ public class News extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
+				failedRetrieveCount++;
 			}
 
 		}
@@ -331,7 +333,7 @@ public class News extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				if (!thisWeekBean.getfooter_logo().isEmpty()) {
@@ -397,7 +399,7 @@ public class News extends SherlockFragment {
 					thisWeekBean.setad_rank(resObject.getString("ad_rank"));
 					thisWeekBean.setlink(resObject.getString("ad_link"));
 
-					int screenSize = getResources().getConfiguration().screenLayout
+					int screenSize = attachingActivityLock.getApplicationContext().getResources().getConfiguration().screenLayout
 							& Configuration.SCREENLAYOUT_SIZE_MASK;
 
 					switch (screenSize) {
@@ -440,13 +442,18 @@ public class News extends SherlockFragment {
 				}
 
 				// Collections.sort(listAdsBean, new CustomComparator());
-
+				if(progressDialog != null){
+					progressDialog.dismiss();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
+				failedRetrieveCount++;
+			}
+			
+			if(failedRetrieveCount >0)
+				Toast.makeText(attachingActivityLock.getApplicationContext(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
-			}
 
 		}
 
@@ -474,7 +481,7 @@ public class News extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				if (!thisWeekBean.getimage().isEmpty()) {
@@ -518,6 +525,26 @@ public class News extends SherlockFragment {
 		@Override
 		public int compare(AdsBean o1, AdsBean o2) {
 			return o2.getad_rank().compareTo(o1.getad_rank());
+		}
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d("onDestroy", "onDestroyCalled");
+		if(progressDialog != null){
+			progressDialog.dismiss();
+		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d("onPause", "onPauseCalled");
+		if (progressDialog != null){
+			progressDialog.dismiss();
+		
 		}
 	}
 }
