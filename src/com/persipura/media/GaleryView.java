@@ -45,6 +45,7 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.imageBean;
 import com.persipura.utils.AppConstants;
+import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
@@ -224,13 +225,15 @@ public class GaleryView extends SherlockFragment {
 	        
 	        picture = (ImageView)v.getTag(R.id.picture);   
 	        
-//	        Imageloader imageLoader = new Imageloader(getSherlockActivity()
-//					.getApplicationContext());
-//			picture.setTag(urls);
-//			imageLoader.DisplayImage(imagURls,
-//					getActivity(), picture);
+	        Imageloader imageLoader = new Imageloader(getSherlockActivity()
+					.getApplicationContext());
+			picture.setTag(imagURls);
+			imageLoader.DisplayImage(imagURls,
+					getActivity(), picture);
 	     
-	        picture.setImageBitmap(bitmap);
+//	        picture.setImageBitmap(bitmap);
+	        
+	        
 	        
 	        picture.setOnClickListener(new OnClickListener()
 	        {

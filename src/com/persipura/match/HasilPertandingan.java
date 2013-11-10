@@ -70,15 +70,14 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		showProgressDialog();
-//		new fetchLocationFromServer().execute("");
+
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
-//		new fetchFooterFromServer().execute("");
+
 		
 		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
 		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
@@ -247,9 +246,10 @@ public class HasilPertandingan extends SherlockFragment {
 				
 				if(in1 > in2){
 					ScoreTeamA.setTextColor(getResources().getColor(R.color.red));
-				}else{
+				}else if(in1 < in2){
 					ScoreTeamB.setTextColor(getResources().getColor(R.color.red));
 				}
+					
 
 				Imageloader imageLoader = new Imageloader(getSherlockActivity()
 						.getApplicationContext());
@@ -263,17 +263,15 @@ public class HasilPertandingan extends SherlockFragment {
 				
 				cellViewMainLayout.setTag(id);
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {					
+					public void onClick(View v) {				
 						
 						detailPertandingan vp = new detailPertandingan();
-						
 						Bundle b = new Bundle();
 						b.putString("myString",(String) v.getTag());
 						vp.setArguments(b);	
 						getActivity().getSupportFragmentManager()
 						.beginTransaction()
-						.add(R.id.content, vp, detailPertandingan.TAG)
-						.addToBackStack("")
+						.add(R.id.parentpager, vp, detailPertandingan.TAG)
 						.commit();
 					}
 				});

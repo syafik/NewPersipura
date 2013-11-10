@@ -183,7 +183,9 @@ public class detailPertandingan extends SherlockFragment {
 					}
 
 					lifePageCellContainerLayout1.addView(cellViewMainLayout);
-				} else {
+				} 
+				
+				if(thisWeekBean.getTeam().equals("away")){
 					goalscorerB.setText("");
 					timescorerB.setText("");
 					goalscorerB.setText(thisWeekBean.getPlayer());

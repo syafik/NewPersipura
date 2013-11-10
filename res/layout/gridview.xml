@@ -25,14 +25,17 @@
         <GridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+         android:layout_height="0dp"
+        android:layout_weight="4"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"
         android:numColumns="4" 
         android:background="@color/abs__background_holo_dark"
         />
-        
+       
     </LinearLayout>
-<include layout="@layout/footer"/>
+
+ <include layout="@layout/footer" />
+
 </FrameLayout>

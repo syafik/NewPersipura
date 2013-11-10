@@ -45,7 +45,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            android:src="@drawable/ic_launcher" />
+             />
 
         <TextView
             android:id="@+id/findzoes_list_text_address"

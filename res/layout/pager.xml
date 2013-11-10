@@ -2,32 +2,43 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="10dp"
-    tools:context=".MainActivity" >
 
-    <!--
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/parentpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            tools:context=".MainActivity" >
+
+            <!--
     This title strip will display the currently visible page title, as well as the page
     titles for adjacent pages.
-    -->
+            -->
 
-    <android.support.v4.view.PagerTitleStrip
-        android:id="@+id/pager_title_strip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="#303030"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textColor="#fff" />
-    
-</android.support.v4.view.ViewPager>
+            <android.support.v4.view.PagerTitleStrip
+                android:id="@+id/pager_title_strip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:background="#303030"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:textColor="#fff" />
+        </android.support.v4.view.ViewPager>
 
-<include
-    android:id="@+id/outer"
-    layout="@layout/footer" />
+        <include
+            android:id="@+id/outer"
+            layout="@layout/footer" />
+    </RelativeLayout>
+
 </FrameLayout>
