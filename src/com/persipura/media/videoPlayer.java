@@ -48,6 +48,7 @@ public class videoPlayer extends SherlockFragment {
 	ProgressDialog progressDialog;
 	List<FooterBean> listFooterBean;
 	String LinkId;
+	private MediaController ctlr;
 	
 	public static final String TAG = videoPlayer.class.getSimpleName();
 
@@ -59,6 +60,7 @@ public class videoPlayer extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		Bundle b = getArguments();
 		nid = b.getString("myString");
 		showProgressDialog();
@@ -80,7 +82,7 @@ public class videoPlayer extends SherlockFragment {
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
 				getActivity().getApplicationContext().getAssets());
-		
+		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
 	
@@ -194,23 +196,15 @@ public class videoPlayer extends SherlockFragment {
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
 				description.setText(Html.fromHtml(thisWeekBean.getdescription()));
-
-				
-				
 				videoView
 						.setMediaController(new MediaController(getActivity()));
 				Uri uri = Uri
 						.parse(thisWeekBean.getvideo_uri());
-				
 				videoView.setVideoURI(uri);
-				videoView.start();
 				videoView.requestFocus();
-
+				videoView.start();
 			}
 		}
-		
-
-
 	}
 	
 	

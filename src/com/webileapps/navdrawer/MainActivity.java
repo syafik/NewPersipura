@@ -1,88 +1,53 @@
 package com.webileapps.navdrawer;
 
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Connection.Request;
 
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 import android.annotation.SuppressLint;
-
-import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
-import com.actionbarsherlock.view.Window;
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.service.textservice.SpellCheckerService.Session;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLayoutChangeListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.dg.android.facebook.BaseRequestListener;
 import com.dg.android.facebook.SessionEvents;
-import com.dg.android.facebook.SessionStore;
 import com.dg.android.facebook.SessionEvents.AuthListener;
 import com.dg.android.facebook.SessionEvents.LogoutListener;
+import com.dg.android.facebook.SessionStore;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -93,11 +58,10 @@ import com.persipura.match.HasilPertandingan;
 import com.persipura.match.PageSlidingTabStripFragment;
 import com.persipura.match.detailPertandingan;
 import com.persipura.media.ListGalery;
+import com.persipura.media.mediaTerbaru;
 import com.persipura.media.pageSliding;
 import com.persipura.media.videoPlayer;
-import com.persipura.media.videoTerbaru;
 import com.persipura.search.Search;
-
 import com.persipura.socialize.FacebookConnectDialog;
 import com.persipura.socialize.FacebookLikePage;
 import com.persipura.socialize.ShareDialog;
@@ -108,6 +72,7 @@ import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.ppierson.t4jtwitterlogin.T4JTwitterLoginActivity;
 
 @SuppressLint("NewApi")
 public class MainActivity extends SherlockFragmentActivity {
@@ -124,6 +89,29 @@ public class MainActivity extends SherlockFragmentActivity {
 	String squadId;
 	String titleNav = "Home";
 	boolean flag = false;
+	
+	
+	//twitter account 
+	 static String TWITTER_CONSUMER_KEY = "qzooqEGzPmfB5Da2qVdsw";
+	   static String TWITTER_CONSUMER_SECRET = "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo";
+	 
+	 
+	    private static Twitter twitter;
+	    private static RequestToken requestToken;
+	    private AccessToken accessToken;
+	    private static final int TWITTER_LOGIN_REQUEST_CODE = 1;
+//	    // Preference Constants
+//	    static String PREFERENCE_NAME = "twitter_oauth";
+//	    static final String PREF_KEY_OAUTH_TOKEN = "oauth_token";
+//	    static final String PREF_KEY_OAUTH_SECRET = "oauth_token_secret";
+//	    static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
+//	 
+//	    static final String TWITTER_CALLBACK_URL = "oauth://t4jsample";
+//	 
+//	    // Twitter oauth urls
+//	    static final String URL_TWITTER_AUTH = "auth_url";
+//	    static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
+//	    static final String URL_TWITTER_OAUTH_TOKEN = "oauth_token";
 
 	// Your Facebook APP ID
 	private static String APP_ID = "171262573080320"; // Replace your App ID
@@ -136,7 +124,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	private ShareActionProvider mShareActionProvider;
 
 	String FILENAME = "AndroidSSO_data";
-	
 
 	static MainActivity mTabbars;
 
@@ -155,7 +142,6 @@ public class MainActivity extends SherlockFragmentActivity {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
 
 		facebook = new Facebook(APP_ID);
 		mAsyncRunner = new AsyncFacebookRunner(facebook);
@@ -353,17 +339,15 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggles
 		mDrawerToggle.onConfigurationChanged(newConfig);
-		if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
-			
-		    Log.d("On Config Change","LANDSCAPE");
-		    return;
-		}else{
+		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-		    Log.d("On Config Change","PORTRAIT");
+			Log.d("On Config Change", "LANDSCAPE");
+			return;
+		} else {
+
+			Log.d("On Config Change", "PORTRAIT");
 		}
-		
-		
-		
+
 	}
 
 	public void changeItemSearchToShare(Boolean show) {
@@ -372,14 +356,15 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	public void HideOtherActivities() {
-		
+
 		changeItemSearchToShare(false);
+
 		
 		News newsFragment = (News) getSupportFragmentManager()
 				.findFragmentByTag(News.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager()
 				.findFragmentByTag(Home.TAG);
-	
+
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
 				.findFragmentByTag(pageSliding.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
@@ -396,15 +381,29 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(detailPertandingan.TAG);
 		TwitterSocial twitterFragment = (TwitterSocial) getSupportFragmentManager()
 				.findFragmentByTag(TwitterSocial.TAG);
-		
 		ListGalery listgaleryFragment = (ListGalery) getSupportFragmentManager()
 				.findFragmentByTag(ListGalery.TAG);
 		HasilPertandingan hasilpertandinganFragment = (HasilPertandingan) getSupportFragmentManager()
 				.findFragmentByTag(HasilPertandingan.TAG);
+		mediaTerbaru mediaterbaruFragment = (mediaTerbaru) getSupportFragmentManager()
+				.findFragmentByTag(mediaTerbaru.TAG);
+		videoPlayer videoplayerFragment = (videoPlayer) getSupportFragmentManager()
+				.findFragmentByTag(videoPlayer.TAG);
+		Log.d("homeFragment", "homeFragment : " + videoplayerFragment);
+		Log.d("homeFragment", "homeFragment : " + newsFragment);
+		Log.d("homeFragment", "homeFragment : " + pageSlidingFragment);
+		Log.d("homeFragment", "homeFragment : " + mediaterbaruFragment);
+		Log.d("homeFragment", "homeFragment : " + detailNewsFragment);
 
 		if (twitterFragment != null) {
 			twitterFragment.getView().setVisibility(View.GONE);
 		}
+
+		if (videoplayerFragment != null) {
+			Log.d("00000000000", "999999999999999991");
+			videoplayerFragment.getView().setVisibility(View.GONE);
+		}
+
 		if (detailPertandinganFragment != null) {
 			detailPertandinganFragment.getView().setVisibility(View.GONE);
 		}
@@ -416,16 +415,16 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (newsFragment != null) {
 			newsFragment.getView().setVisibility(View.GONE);
 		}
-
-		
 		if (homeFragment != null) {
 			Log.d("homeFragment", "homeFragment : " + homeFragment);
-			
 			homeFragment.getView().setVisibility(View.GONE);
 		}
-
 		if (pageSlidingFragment != null) {
+			Log.d("00000000000", "999999999999999992");
 			pageSlidingFragment.getView().setVisibility(View.GONE);
+////			if (mediaterbaruFragment != null) {
+//				mediaterbaruFragment.getView().setVisibility(View.GONE);
+////			}
 		}
 
 		if (pageSlidingTabStripFragment != null) {
@@ -449,7 +448,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (hasilpertandinganFragment != null) {
 			hasilpertandinganFragment.getView().setVisibility(View.GONE);
 		}
-		
+		if (mediaterbaruFragment != null) {
+			mediaterbaruFragment.getView().setVisibility(View.GONE);
+			Log.d("00000000000", "999999999999999993");
+		}
 
 	}
 
@@ -460,6 +462,8 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(Home.TAG);
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
 				.findFragmentByTag(pageSliding.TAG);
+		mediaTerbaru mediaterbaruFragment = (mediaTerbaru) getSupportFragmentManager()
+				.findFragmentByTag(mediaTerbaru.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
 				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager()
@@ -499,6 +503,11 @@ public class MainActivity extends SherlockFragmentActivity {
 			if (pageSlidingFragment != null) {
 				HideOtherActivities();
 				pageSlidingFragment.getView().setVisibility(View.VISIBLE);
+//				if (mediaterbaruFragment != null) {
+//					HideOtherActivities();
+//					mediaterbaruFragment.getView().setVisibility(View.VISIBLE);
+//				}
+				// mediaterbaruFragment.getView().setVisibility(View.VISIBLE);
 			} else {
 				HideOtherActivities();
 				getSupportFragmentManager()
@@ -522,7 +531,6 @@ public class MainActivity extends SherlockFragmentActivity {
 								PageSlidingTabStripFragment.newInstance(),
 								PageSlidingTabStripFragment.TAG).commit();
 			}
-
 			titleNav = "Match";
 			break;
 		case 4:
@@ -685,17 +693,39 @@ public class MainActivity extends SherlockFragmentActivity {
 			mDrawerList.setAdapter(mAdapter);
 
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
 	}
 
 	public void loginToFacebook() {
 		facebook.authorize(MainActivity.this,
 				AppConstants.FACEBOOK_PERMISSIONARR, new LoginDialogListener());
 	}
+	
+	public void loginToTwitter() {
+		  if (!T4JTwitterLoginActivity.isConnected(this)){
+			    Intent twitterLoginIntent = new Intent(this, T4JTwitterLoginActivity.class);
+			    twitterLoginIntent.putExtra(T4JTwitterLoginActivity.TWITTER_CONSUMER_KEY, "qzooqEGzPmfB5Da2qVdsw");
+			    twitterLoginIntent.putExtra(T4JTwitterLoginActivity.TWITTER_CONSUMER_SECRET, "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo");
+			    startActivityForResult(twitterLoginIntent, TWITTER_LOGIN_REQUEST_CODE);
+			  }
+    }
 
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		facebook.authorizeCallback(requestCode, resultCode, data);
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	    Log.d("TAG", "ON ACTIVITY RESULT!");
+	    if(requestCode == TWITTER_LOGIN_REQUEST_CODE){
+	        Log.d("TAG", "TWITTER LOGIN REQUEST CODE");
+	        if(resultCode == T4JTwitterLoginActivity.TWITTER_LOGIN_RESULT_CODE_SUCCESS){
+	            Log.d("TAG", "TWITTER LOGIN SUCCESS");
+	        }else if(resultCode == T4JTwitterLoginActivity.TWITTER_LOGIN_RESULT_CODE_FAILURE){
+	            Log.d("TAG", "TWITTER LOGIN FAIL");
+	        }else{
+	        //
+	        }
+	    }
 	}
 
 	public void likeFacebookPage() {
@@ -732,7 +762,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		String result = WebHTTPMethodClass.executeHttPost(
 				"https://graph.facebook.com/me/og.likes/" + page1, nameparams);
-		
+
 		try {
 			JSONArray jsonArray = new JSONArray(result);
 			JSONObject resObject = jsonArray.getJSONObject(0);
@@ -751,31 +781,30 @@ public class MainActivity extends SherlockFragmentActivity {
 		String result2 = WebHTTPMethodClass.executeHttPost(
 				"https://graph.facebook.com/me/og.likes/" + page2, nameparams);
 		Log.d("resultLike", "resultLike2 :" + result2);
-		
 
 	}
-	
-	public void setFacebookContentShare(String title, String shared_url){
-		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mTabbars);
+
+	public void setFacebookContentShare(String title, String shared_url) {
+		SharedPreferences mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(mTabbars);
 
 		Editor editor = mPrefs.edit();
 		editor.putString("title", title);
 		editor.putString("shared_url", shared_url);
 		editor.commit();
 	}
-	
-	
 
 	public void shareToFacebook() {
 
 		if (facebook.getAccessToken() != null) {
-			SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mTabbars);
+			SharedPreferences mPrefs = PreferenceManager
+					.getDefaultSharedPreferences(mTabbars);
 			Bundle params = new Bundle();
 			params.putString("access_token", facebook.getAccessToken());
 
-            params.putString("name", mPrefs.getString("title", ""));
-            params.putString("link", mPrefs.getString("shared_url", ""));
-	
+			params.putString("name", mPrefs.getString("title", ""));
+			params.putString("link", mPrefs.getString("shared_url", ""));
+
 			mAsyncRunner.request("me/feed", params, "POST",
 					new BaseRequestListener() {
 						@Override

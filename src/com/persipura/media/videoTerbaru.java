@@ -33,9 +33,6 @@ import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
 //import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.R.id;
-import com.webileapps.navdrawer.R.layout;
-
 
 
 public class videoTerbaru extends SherlockFragment {
@@ -89,7 +86,7 @@ public class videoTerbaru extends SherlockFragment {
 
 		mScrollView = mPullRefreshScrollView.getRefreshableView();
 		
-		MainActivity.getInstance().HideOtherActivities();
+		
 		
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
@@ -101,6 +98,7 @@ public class videoTerbaru extends SherlockFragment {
 			}
 
 		});
+		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
 
@@ -195,16 +193,24 @@ public class videoTerbaru extends SherlockFragment {
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {					
 						
-						videoPlayer vp = new videoPlayer();
+//						videoPlayer vp = new videoPlayer();
+//						
+//						Bundle b = new Bundle();
+//					
+//						b.putString("myString",(String) v.getTag());
+//						vp.setArguments(b);	
+//						getActivity().getSupportFragmentManager().beginTransaction()
+//						.add(R.id.parentpager, vp,videoPlayer.TAG)
+//						.addToBackStack("")
+//						.commit();
 						
-						Bundle b = new Bundle();
-					
-						b.putString("myString",(String) v.getTag());
-						vp.setArguments(b);	
-						getActivity().getSupportFragmentManager().beginTransaction()
-						.add(R.id.parentpager, vp,videoPlayer.TAG)
-						.addToBackStack("")
-						.commit();
+						Bundle data = new Bundle();
+						data.putString("myString", (String) v.getTag());
+						FragmentTransaction t = getFragmentManager()
+								.beginTransaction();
+						videoPlayer mFrag = new videoPlayer();
+						mFrag.setArguments(data);
+						t.add(R.id.parentpager, mFrag, videoPlayer.TAG).commit();
 						
 //						 Bundle data = new Bundle();
 //					        data.putString("NewsId", (String) v.getTag());

@@ -1,5 +1,6 @@
 package com.persipura.socialize;
 
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 
 import android.app.Activity;
@@ -43,7 +44,7 @@ public class TwitterConnectDialog extends Dialog implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_yes:
-			c.finish();
+			((MainActivity) this.c).loginToTwitter();
 			break;
 		case R.id.btn_no:
 			dismiss();

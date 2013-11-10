@@ -54,7 +54,6 @@ public class detailPertandingan extends SherlockFragment {
 		new fetchLocationFromServer().execute("");
 		new fetchMatchResult().execute("");
 		
-
 		View rootView = inflater.inflate(R.layout.detail_match, container,
 				false);
 		mInflater = getLayoutInflater(savedInstanceState);

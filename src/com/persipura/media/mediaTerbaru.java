@@ -11,9 +11,12 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,6 +31,7 @@ import com.persipura.bean.mediaBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.DetailNews;
 import com.webileapps.navdrawer.R;
 //import com.markupartist.android.widget.PullToRefreshListView;
 //import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
@@ -42,7 +46,9 @@ public class mediaTerbaru extends SherlockFragment {
 	int hitung = 10;
 	int offset = 10;
 	ProgressDialog progressDialog;
-
+	String nid;
+	String type;
+	
 	public static final String TAG = mediaTerbaru.class.getSimpleName();
 
 	public static mediaTerbaru newInstance() {
@@ -52,7 +58,7 @@ public class mediaTerbaru extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+//		setRetainInstance(true);
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
 		View rootView = inflater.inflate(R.layout.media_terbaru, container,
@@ -149,6 +155,7 @@ public class mediaTerbaru extends SherlockFragment {
 					thisWeekBean.setcreated(resObject.getString("created"));
 					thisWeekBean.setvideo_image(resObject
 							.getString("video_image"));
+					thisWeekBean.setType(resObject.getString("type"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -189,7 +196,10 @@ public class mediaTerbaru extends SherlockFragment {
 
 				title.setText("");
 				created.setText("");
-
+				nid = null;
+				nid = thisWeekBean.getId();
+				type = null;
+				type = thisWeekBean.getType();
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
 
@@ -199,6 +209,36 @@ public class mediaTerbaru extends SherlockFragment {
 				imageLoader.DisplayImage(thisWeekBean.getvideo_image(),
 						getActivity(), img);
 
+				cellViewMainLayout.setTag(nid);
+				cellViewMainLayout.setTag(R.string.section1, type);
+
+				cellViewMainLayout.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+
+						String type = (String) v.getTag(R.string.section1);
+						Log.d("-------------", type);
+						if (type.equals("picture")) {
+							
+							Bundle data = new Bundle();
+							data.putString("myString", (String) v.getTag());
+
+							FragmentTransaction t = getFragmentManager()
+									.beginTransaction();
+							GaleryView mFrag = new GaleryView();
+							mFrag.setArguments(data);
+							t.replace(R.id.parentpager, mFrag, GaleryView.TAG).commit();
+							
+						} else {
+							Bundle data = new Bundle();
+							data.putString("myString", (String) v.getTag());
+							FragmentTransaction t = getFragmentManager()
+									.beginTransaction();
+							videoPlayer mFrag = new videoPlayer();
+							mFrag.setArguments(data);
+							t.replace(R.id.parentpager, mFrag, videoPlayer.TAG).commit();
+						}
+					}
+				});
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 				mPullRefreshScrollView.onRefreshComplete();
 			}

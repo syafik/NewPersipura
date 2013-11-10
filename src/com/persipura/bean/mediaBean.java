@@ -9,6 +9,7 @@ public class mediaBean {
 	String video_uri = "";
 	String category = "";
 	String description = "";
+	String type = "";
 
 	public String getId() {
 		return id;
@@ -19,6 +20,17 @@ public class mediaBean {
 			id = "";
 		}
 		this.id = id;
+	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		if (type.equals("null")) {
+			type = "";
+		}
+		this.type = type;
 	}
 
 	public String getcreated() {
