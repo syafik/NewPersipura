@@ -3,87 +3,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-     <TableRow
+
+    <TableLayout
         android:id="@+id/tableRow1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_marginLeft="7dp"
-       android:padding="5dip"
-         >
+        android:padding="5dip"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical" >
 
-        <TextView
-            android:id="@+id/pos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+        <TableRow>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:text="Nama Team"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/pos"
+                android:minWidth="25px"
+                android:text="No"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/p"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="P"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/name"
+                android:minWidth="150px"
+                android:text="Nama Team"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/w"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="W"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/p"
+                android:minWidth="50px"
+                android:text="P"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/d"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="D"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/w"
+                android:minWidth="50px"
+                android:text="W"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/l"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="L"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/d"
+                android:minWidth="50px"
+                android:text="D"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/gd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GD"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/l"
+                android:minWidth="50px"
+                android:text="L"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/pts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pts"
-            android:paddingRight="15dp"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/gd"
+                android:minWidth="50px"
+                android:text="GD"
+                android:textSize="10dp" />
 
-    </TableRow>
-    
+            <TextView
+                android:id="@+id/pts"
+                android:minWidth="50px"
+                android:text="Pts"
+                android:textSize="10dp" />
+        </TableRow>
+    </TableLayout>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
         android:layout_below="@+id/list_hasil"
         android:layout_margin="3dp"
+        android:layout_weight="4"
         android:padding="2dp"
         android:scrollbars="none" >
 
@@ -96,13 +83,14 @@
             android:padding="3dp" >
         </LinearLayout>
     </ScrollView>
-    
-	<FrameLayout
+
+    <FrameLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
-         >
-	<include layout="@layout/footer"/>
-	</FrameLayout>
+        android:layout_weight="0.5" >
+
+        <include layout="@layout/footer" />
+    </FrameLayout>
+
 </LinearLayout>
