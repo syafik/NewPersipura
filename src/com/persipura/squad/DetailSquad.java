@@ -65,11 +65,9 @@ public class DetailSquad extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		nid = (String) container.getTag();
-		if (nid == null) {
-			nid = getArguments().getString("squadId");
+		
+		nid = getArguments().getString("squadId");
 
-		}
 		showProgressDialog();
 
 		new fetchLocationFromServer().execute("");
@@ -89,7 +87,20 @@ public class DetailSquad extends SherlockFragment {
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
 				.getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
-		getActivity().getSupportFragmentManager().findFragmentByTag(Home.TAG).getView().setVisibility(View.GONE);
+		try{
+			if(getActivity().getSupportFragmentManager().findFragmentByTag(Home.TAG) != null){
+				getActivity().getSupportFragmentManager().findFragmentByTag(Home.TAG).getView().setVisibility(View.GONE);	
+			}
+			
+			if(getActivity().getSupportFragmentManager().findFragmentByTag(Squad.TAG) != null){
+				getActivity().getSupportFragmentManager().findFragmentByTag(Squad.TAG).getView().setVisibility(View.GONE);	
+			}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		
+		}
+		
 
 		return rootView;
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:background="#46434A"
     android:orientation="vertical" >
 
@@ -36,81 +36,42 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp" >
           
-            <TextView
-                android:id="@+id/textPersipura"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/persipuraImg"
-                android:text="Persipura Jayapura" />
 
-            <RelativeLayout
-                android:id="@+id/persipuraImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:background="#2B292A" >
-
-                <ImageView
+                <WebView
+                    android:id="@+id/webPersipura"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/logo_persipura" />
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/btn_yes"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_below="@+id/textPersipura"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
-                android:background="#216BB5"
-                android:clickable="true"
-                android:text="Like"
-                android:textColor="#fff"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_marginLeft="5dp">
-
-            <TextView
-                android:id="@+id/textFreeport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/freeportImg"
-                android:text="Freeport Indonesia" />
-
-            <RelativeLayout
-                android:id="@+id/freeportImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:background="#2B292A" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btm_logo" />
-            </RelativeLayout>
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
             
-            <Button
-                android:id="@+id/btn_no"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_below="@+id/textFreeport"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
-                android:background="#2B292A"
-                android:clickable="true"
-                android:text="Cancel"
-                android:textColor="#fff"
-                android:textStyle="bold" />
+
         </RelativeLayout>
+
+         
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp" >
+
+        <WebView
+            android:id="@+id/webFreeport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
   
+
+         
+    </LinearLayout>
+   
 </LinearLayout>

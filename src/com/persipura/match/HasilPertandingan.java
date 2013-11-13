@@ -14,13 +14,16 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.sax.RootElement;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +40,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.HasilBean;
 
+import com.persipura.home.Home;
 import com.persipura.media.videoPlayer;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 import com.webileapps.navdrawer.R.id;
 import com.webileapps.navdrawer.R.layout;
@@ -70,7 +75,8 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		
+		
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);
 		mInflater = getLayoutInflater(savedInstanceState);

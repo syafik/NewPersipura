@@ -107,18 +107,15 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.bottom_control_bar);
 		adsLayout = (RelativeLayout) rootView.findViewById(R.id.eksklusive_ads);
 		newContainer = container;
-		homeNewsTitle = (TextView) rootView.findViewById(R.id.homeNewsTitle);
+		
 		squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
 		TextView squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
-		TextView homeNewsTitle = (TextView) rootView
-				.findViewById(R.id.homeNewsTitle);
+		
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
 				attachingActivityLock.getApplicationContext().getAssets());
 		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2",
-				attachingActivityLock.getApplicationContext().getAssets());
-		AppConstants.fontrobotoTextView(homeNewsTitle, 15, "A6A5A2",
 				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchHomeLatestFromServer().execute("");
 		new fetchHomeNewsFromServer().execute("");
@@ -133,6 +130,27 @@ public class Home extends SherlockFragment {
 		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
+
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.dismiss();
+			}
+		};
+
+		Runnable r1 = new Runnable() {
+
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 10000);
+			}
+		};
+
+		h.postDelayed(r1, 1000);
+
 		progressDialog.show();
 	}
 
@@ -244,6 +262,7 @@ public class Home extends SherlockFragment {
 
 						Bundle data = new Bundle();
 						data.putString("squadId", (String) squadId);
+						data.putString("FragmentTag", Home.TAG);
 						
 						FragmentTransaction t = attachingActivityLock
 								.getSupportFragmentManager().beginTransaction();
@@ -298,6 +317,10 @@ public class Home extends SherlockFragment {
 					thisWeekBean.setId(resObject.getString("id"));
 					thisWeekBean.setTeam1Logo(resObject.getString("a_logo"));
 					thisWeekBean.setTeam2Logo(resObject.getString("h_logo"));
+					thisWeekBean.setdate(resObject.getString("date"));
+					thisWeekBean.setleague(resObject.getString("league"));
+					thisWeekBean.settime(resObject.getString("time") + " " + resObject.getString("timezone"));
+					
 
 					listNextMatchBean.add(thisWeekBean);
 
@@ -318,6 +341,8 @@ public class Home extends SherlockFragment {
 			nextMatchContainerLayout.removeAllViews();
 			for (int i = 0; i < listNextMatchBean.size(); i++) {
 				HomeNextMatch thisWeekBean = listNextMatchBean.get(i);
+				
+				
 				View cellViewMainLayout = mInflater.inflate(
 						R.layout.home_next_match, null);
 
@@ -325,13 +350,35 @@ public class Home extends SherlockFragment {
 						.findViewById(R.id.team1);
 				TextView team2 = (TextView) cellViewMainLayout
 						.findViewById(R.id.team2);
+				
+				TextView date = (TextView) cellViewMainLayout
+						.findViewById(R.id.dateMatch);
+				TextView time = (TextView) cellViewMainLayout
+						.findViewById(R.id.timeMatch);
+				TextView league = (TextView) cellViewMainLayout
+						.findViewById(R.id.leagueMatch);
 
 				team1.setText("");
 				team2.setText("");
+				date.setText("");
+				time.setText("");
+				league.setText("");
 
 				team1.setText(thisWeekBean.getTeam1());
 				team2.setText(thisWeekBean.getTeam2());
+				date.setText(thisWeekBean.getdate());
+				time.setText(thisWeekBean.gettime());
+				league.setText(thisWeekBean.getleague());
 
+				AppConstants.fontrobotoTextViewBold(date, 14, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				AppConstants.fontrobotoTextViewBold(time, 14, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				AppConstants.fontrobotoTextViewBold(league, 14, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
 				AppConstants.fontrobotoTextViewBold(team1, 13, "ffffff",
 						attachingActivityLock.getApplicationContext()
 								.getAssets());
@@ -415,7 +462,7 @@ public class Home extends SherlockFragment {
 		private void createNewsHomeListView(List<HomeNews> listThisWeekBean)
 				throws IOException {
 			newsContainerLayout.setVisibility(View.VISIBLE);
-			homeNewsTitle.setVisibility(View.VISIBLE);
+
 			newsContainerLayout.removeAllViews();
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				HomeNews thisWeekBean = listThisWeekBean.get(i);
@@ -711,7 +758,6 @@ public class Home extends SherlockFragment {
 		}
 
 	}
-
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -730,4 +776,13 @@ public class Home extends SherlockFragment {
 
 		}
 	}
+//	
+//	@Override
+//	public void onResume(){
+//		super.onResume();
+//		Log.d("onResume", "onResumeCalled");
+//		if(progressDialog !=null){
+//			progressDialog.dismiss();
+//		}
+//	}
 }

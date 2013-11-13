@@ -73,15 +73,17 @@ public class AppConstants {
 
 	// TWITTER KEY
 
-	public static final String CONSUMER_KEY = "1uM05u2VNjHzRZNFvnuoQ";
-	public static final String CONSUMER_SECRET = "VyUGZ1NDz0wmdWu9H3IIk4duvCVK4RQoPgFiMtW3p8";
+	public static final String CONSUMER_KEY = "qzooqEGzPmfB5Da2qVdsw";
+	public static final String CONSUMER_SECRET = "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo";
 	public static final String TWITTER_MEDIA_API_KEY = "0dcf25567ddfcf5a1491dd1d5e0cf4e8";
 	public static final String REQUEST_URL = "http://api.twitter.com/oauth/request_token";
 	public static final String ACCESS_URL = "http://api.twitter.com/oauth/access_token";
 	public static final String AUTHORIZE_URL = "http://api.twitter.com/oauth/authorize";
 
-	public static final String OAUTH_CALLBACK_SCHEME = "x-oauthflow-twitter";
+	public static final String OAUTH_CALLBACK_SCHEME = "persipura-scheme";
 	public static final String OAUTH_CALLBACK_HOST = "callback";
+	public static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
+
 	public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME
 			+ "://" + OAUTH_CALLBACK_HOST;
 

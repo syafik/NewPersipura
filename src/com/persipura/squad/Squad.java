@@ -93,7 +93,11 @@ public class Squad extends SherlockFragment {
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
-
+//		@Override
+//		public float getPageWidth(int position) {
+//		    float nbPages = 5; // You could display partial pages using a float value
+//		    return (1 / nbPages) + 1;
+//		}
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
@@ -107,7 +111,9 @@ public class Squad extends SherlockFragment {
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
 				// + 1);
+				
 				fragment.setArguments(args);
+				
 				return fragment;
 			case 1:
 				fragment = new Formasi();
@@ -126,8 +132,8 @@ public class Squad extends SherlockFragment {
 			case 3:
 				fragment = new StaffAndManagement();
 				args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
-						position + 1);
+//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
+//						position + 1);
 				fragment.setArguments(args);
 				return fragment;
 			}

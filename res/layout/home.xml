@@ -26,26 +26,7 @@
                 android:orientation="vertical" >
             </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="5dp" >
 
-                <TextView
-                    android:id="@+id/homeNewsTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="BERITA TERBARU"
-                    android:visibility="gone" />
-            </FrameLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginTop="5dp"
-                android:background="#1E1D1F" />
 
             <LinearLayout
                 android:id="@+id/relativeLayout3"

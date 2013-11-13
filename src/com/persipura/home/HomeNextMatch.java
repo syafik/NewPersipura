@@ -6,6 +6,9 @@ public class HomeNextMatch {
 	String team2 = "";
 	String team1Logo = "";
 	String team2Logo = "";
+	String date = "";
+	String time = "";
+	String league = "";
 	
 	public String getId() {
 		return id;
@@ -29,6 +32,40 @@ public class HomeNextMatch {
 		this.team1 = team1;
 	}
 	
+	
+	public String getdate() {
+		return date;
+	}
+
+	public void setdate(String date) {
+		if (date.equals("null")) {
+			date = "";
+		}
+		this.date = date;
+	}
+	
+	public String gettime() {
+		return time;
+	}
+
+	public void settime(String time) {
+		if (time.equals("null")) {
+			time = "";
+		}
+		this.time = time;
+	}
+
+	public String getleague() {
+		return league;
+	}
+
+	public void setleague(String league) {
+		if (league.equals("null")) {
+			league = "";
+		}
+		this.league = league;
+	}
+
 	public String getTeam2() {
 		return team2;
 	}

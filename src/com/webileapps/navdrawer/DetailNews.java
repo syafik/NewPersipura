@@ -142,32 +142,53 @@ public class DetailNews extends SherlockFragment {
 
 				listThisWeekBean = new ArrayList<NewsBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject resObject = jsonArray.getJSONObject(i);
-					NewsBean thisWeekBean = new NewsBean();
-					thisWeekBean.setNid(resObject.getString("nid"));
-					thisWeekBean.settitle(resObject.getString("title"));
-					thisWeekBean.setteaser(resObject.getString("body"));
-					String img = resObject.getString("big_img");
-					
-					if(img != null && !img.isEmpty() && img != "null"){
-						img = resObject.getString("big_img");
-					}else{
-						img = resObject.getString("img_uri");
-					}
-					thisWeekBean.setimg_uri(img);
-					thisWeekBean.setcreated(resObject.getString("created"));
-					thisWeekBean.setshared_url(resObject.getString("share_url"));
+					try{
+						JSONObject resObject = jsonArray.getJSONObject(i);
+						NewsBean thisWeekBean = new NewsBean();
+						thisWeekBean.setNid(resObject.getString("nid"));
+						thisWeekBean.settitle(resObject.getString("title"));
+						thisWeekBean.setteaser(resObject.getString("body"));
+						String img = resObject.getString("big_img");
+						
+						if(img != null && !img.isEmpty() && img != "null"){
+							img = resObject.getString("big_img");
+						}else{
+							img = resObject.getString("img_uri");
+						}
+						thisWeekBean.setimg_uri(img);
+						thisWeekBean.setcreated(resObject.getString("created"));
+						thisWeekBean.setshared_url(resObject.getString("share_url"));
 
-					listThisWeekBean.add(thisWeekBean);
+						listThisWeekBean.add(thisWeekBean);
+					}catch (Exception e) {
+						e.printStackTrace();
+						failedRetrieveCount++;
+
+					}
+					
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
+				}
+				
+				if (progressDialog != null) {
+					progressDialog.dismiss();
 				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				failedRetrieveCount++;
 
+			}
+			
+			if (failedRetrieveCount > 0) {
+				if (progressDialog != null) {
+					progressDialog.dismiss();
+					Toast.makeText(
+							attachingActivityLock.getApplicationContext(),
+							"Failed to retrieve data from server",
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 
@@ -264,24 +285,14 @@ public class DetailNews extends SherlockFragment {
 					createFooterView(listFooterBean);
 				}
 				
-				if (progressDialog != null) {
-					progressDialog.dismiss();
-				}
+				
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				failedRetrieveCount++;
 			}
 			
-			if (failedRetrieveCount > 0) {
-				if (progressDialog != null) {
-					progressDialog.dismiss();
-					Toast.makeText(
-							attachingActivityLock.getApplicationContext(),
-							"Failed to retrieve data from server",
-							Toast.LENGTH_LONG).show();
-				}
-			}
+			
 
 		}
 

@@ -1,192 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        android:id="@+id/scrollBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:scrollbars="vertical" 
-        android:layout_marginBottom="10dp"
-         xmlns:android="http://schemas.android.com/apk/res/android">
-<RelativeLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollBar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#2E2C2C"
-    android:orientation="vertical"
-    android:id="@+id/lifePageCellContainerLayout" >
-
-    
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/logo"
-        android:layout_marginRight="10dp"  
-         >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:src="@drawable/splash"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/hello_world" 
-            android:visibility="gone"/>
-
-    </LinearLayout>
-    
-    <LinearLayout
-        android:id="@+id/detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/logo"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical"
-         >
-<TableLayout
-    android:id="@+id/tableLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:visibility="gone" >
- 
-    <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="1dip" >
- 
-        <TextView
-            android:id="@+id/textView1"
-            android:text="Nama "
-            android:layout_marginRight="30sp"
-            android:tag="textView1"/>
-        <TextView
-            android:text=":"
-            android:layout_marginRight="10sp"
-            android:tag="textView2"/>
-        <TextView
-            android:id="@+id/nama"
-            android:tag="textView3"
-            />
- 
-    </TableRow>
- 
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="1dip" >
- 
-        
-        <TextView
-            android:id="@+id/textView2"
-            android:text="Berdiri"
-            android:tag="textView4"/>
-        <TextView
-            android:text=":"
-            android:tag="textView5"
-            />
-        <TextView
-            android:id="@+id/berdiri"
-            android:tag="textView6"
-            />
-    </TableRow>
- 
-    <TableRow
-        android:id="@+id/tableRow3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="1dip" >
- 
-        
-        <TextView
-            android:id="@+id/textView3"
-            android:text="Alamat"
-            android:tag="textView7"/>
-        <TextView
-            android:text=":"
-            android:tag="textView8"
-            />
-        <TextView
-            android:id="@+id/alamat"
-            android:tag="textView9"
-            />
-    </TableRow>
-    
-    
-    <TableRow
-        android:id="@+id/tableRow4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="1dip" >
- 
-        
-        <TextView
-            android:id="@+id/textView4"
-            android:text="Telepon"
-            android:tag="textView10"/>
-        <TextView
-            android:text=":"
-            android:tag="textView11"
-            />
-        <TextView
-            android:id="@+id/telepon"
-            android:tag="textView12"
-            />
-    </TableRow>
-    
-    <TableRow
-        android:id="@+id/tableRow5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="1dip" >
- 
-        
-        <TextView
-            android:id="@+id/textView5"
-            android:text="Julukan"
-            android:tag="textView13"/>
-        <TextView
-            android:text=":"
-            android:tag="textView14"
-            />
-        <TextView
-            android:id="@+id/julukan"
-            android:tag="textView15"
-            />
-    </TableRow>
-    
-    
- 
-</TableLayout>
-        
-    </LinearLayout>
+    android:layout_height="0dp"
+    android:layout_marginBottom="10dp"
+    android:layout_weight="2"
+    android:scrollbars="vertical" >
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/detail"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dip"
-        android:padding="5dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/gradient_box"
-        android:visibility="gone"
-        android:id="@+id/relDetail"
-         >
+        android:id="@+id/lifePageCellContainerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#2E2C2C"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textViewList2"
+        <LinearLayout
+            android:id="@+id/logo"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="21dp"
-			android:visibility="gone"
-            android:text="@string/hello_world"
-            android:textSize="12sp"
-            />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="10dp" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/hello_world"
+                android:src="@drawable/splash"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_margin="10dip"
+            android:layout_below="@+id/logo"
+            android:orientation="vertical" >
+
+            <TableLayout
+                android:id="@+id/tableLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                >
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_marginRight="30sp"
+                        android:tag="textView1"
+                        android:text="Nama " />
+
+                    <TextView
+                        android:layout_marginRight="10sp"
+                        android:tag="textView2"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/nama"
+                        android:tag="textView3" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:tag="textView4"
+                        android:text="Berdiri" />
+
+                    <TextView
+                        android:tag="textView5"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/berdiri"
+                        android:tag="textView6" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:tag="textView7"
+                        android:text="Alamat" />
+
+                    <TextView
+                        android:tag="textView8"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/alamat"
+                        android:tag="textView9" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:tag="textView10"
+                        android:text="Telepon" />
+
+                    <TextView
+                        android:tag="textView11"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/telepon"
+                        android:tag="textView12" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:tag="textView13"
+                        android:text="Julukan" />
+
+                    <TextView
+                        android:tag="textView14"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/julukan"
+                        android:tag="textView15" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/relDetail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detail"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dip"
+            android:background="@drawable/gradient_box"
+            android:padding="5dp"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/textViewList2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="21dp"
+                android:text="@string/hello_world"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </RelativeLayout>
     </RelativeLayout>
 
-</RelativeLayout>
 </ScrollView>

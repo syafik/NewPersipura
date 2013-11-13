@@ -14,12 +14,15 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +41,7 @@ import com.persipura.home.HomeSquad;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
+import com.webileapps.navdrawer.News;
 import com.webileapps.navdrawer.R;
 
 public class Pemain extends SherlockFragment {
@@ -64,7 +68,7 @@ public class Pemain extends SherlockFragment {
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
 		squadContainerLayout = (LinearLayout) rootView
-				.findViewById(R.id.squad_home);
+				.findViewById(R.id.location_linear_parentview);
 
 		return rootView;
 	}
@@ -185,11 +189,10 @@ public class Pemain extends SherlockFragment {
 				detail.setText(squad.getposisi() + "\n" + squad.getage()
 						+ " tahun" + ", " + squad.getwarganegara());
 				BitmapFactory.Options bmOptions;
-
+				
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				squadId = squad.getId();
-
+				cellViewMainLayout.setTag(squad.getId());
 				// Bitmap bm = loadBitmap(thisWeekBean.getimg_uri(), bmOptions);
 				//
 				//
@@ -203,10 +206,21 @@ public class Pemain extends SherlockFragment {
 
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
-						Intent intent = new Intent(getActivity(),
-								MainActivity.class);
-						intent.putExtra("squadId", squadId);
-						startActivity(intent);
+						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+						Editor editor = mPrefs.edit();
+						
+						editor.putString("currentFragment", Squad.TAG);
+						editor.putString("prevFragment", Squad.TAG);
+						editor.commit();
+						
+						Bundle data = new Bundle();
+						data.putString("squadId", (String) v.getTag());
+						data.putString("FragmentTag", Squad.TAG);
+						FragmentTransaction t = getActivity()
+								.getSupportFragmentManager().beginTransaction();
+						DetailSquad mFrag = new DetailSquad();
+						mFrag.setArguments(data);
+						t.add(R.id.content, mFrag, DetailSquad.TAG).commit();
 					}
 				};
 				cellViewMainLayout.setOnClickListener(myhandler1);

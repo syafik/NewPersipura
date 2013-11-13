@@ -11,10 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
+import android.webkit.WebView;
 import android.widget.Button;
 
-public class FacebookLikePage extends Dialog implements
-		android.view.View.OnClickListener {
+public class FacebookLikePage extends Dialog  {
 
 	public Activity c;
 	public Dialog d;
@@ -35,25 +35,17 @@ public class FacebookLikePage extends Dialog implements
         params.width = LayoutParams.FILL_PARENT;
         getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         
-		yes = (Button) findViewById(R.id.btn_yes);
-		no = (Button) findViewById(R.id.btn_no);
-		yes.setOnClickListener(this);
-		no.setOnClickListener(this);
-
+//		yes = (Button) findViewById(R.id.btn_yes);
+		WebView webview;
+		webview = (WebView) findViewById(R.id.webPersipura);
+		webview.getSettings().setJavaScriptEnabled(true);
+		webview.loadUrl("http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2F572779142753263&width=10&height=62&colorscheme=light&show_faces=false&header=false&stream=false&show_border=false&appId=171262573080320");
+		
+		WebView webview2;
+		webview2 = (WebView) findViewById(R.id.webFreeport);
+		webview2.getSettings().setJavaScriptEnabled(true);
+		webview2.loadUrl("http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2F536852216398619&width=10&height=62&colorscheme=light&show_faces=false&header=false&stream=false&show_border=false&appId=171262573080320");
+		
 	}
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.btn_yes:
-			((MainActivity) this.c).likeFacebookPage();
-			break;
-		case R.id.btn_no:
-			dismiss();
-			break;
-		default:
-			break;
-		}
-		dismiss();
-	}
 }
