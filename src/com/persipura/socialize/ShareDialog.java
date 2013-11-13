@@ -23,11 +23,10 @@ public class ShareDialog extends Dialog implements
 	
 	public Facebook facebook;
 
-	public ShareDialog(Activity a, Facebook facebook) {
+	public ShareDialog(Activity a) {
 		super(a);
 		// TODO Auto-generated constructor stub
 		this.c = a;
-		this.facebook = facebook;
 	}
 
 	@Override

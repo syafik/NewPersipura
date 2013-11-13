@@ -76,11 +76,6 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
 import com.persipura.home.Home;
 import com.persipura.match.HasilPertandingan;
 import com.persipura.match.PageSlidingTabStripFragment;
@@ -93,6 +88,7 @@ import com.persipura.search.Search;
 import com.persipura.socialize.FacebookConnectDialog;
 import com.persipura.socialize.FacebookLikePage;
 import com.persipura.socialize.ShareDialog;
+import com.persipura.socialize.Stream;
 import com.persipura.socialize.TwitterConnectDialog;
 import com.persipura.socialize.TwitterFollowPage;
 import com.persipura.socialize.TwitterLogoutPage;
@@ -100,7 +96,6 @@ import com.persipura.socialize.TwitterSocial;
 import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 import com.persipura.utils.AppConstants;
-import com.persipura.utils.WebHTTPMethodClass;
 import com.sromku.simple.fb.Permissions;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebook.OnLoginListener;
@@ -117,7 +112,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private String[] mPlanetTitles;
 	private EditText search;
 	private Button scelta1;
-	private ProgressDialog progressDialog;
+	ProgressDialog progressDialog;
 	String squadId;
 	String titleNav = "Home";
 	boolean flag = false;
@@ -128,27 +123,20 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	};
 
-	private CommonsHttpOAuthConsumer httpOauthConsumer;
-	private OAuthProvider httpOauthprovider;
 	public final static String consumerKey = "qzooqEGzPmfB5Da2qVdsw";
 	public final static String consumerSecret = "bTcVQvfUWWhO8JvTLCfVirVUbEFa72QBxp5GfLpYdo";
-	private final String CALLBACKURL = "app://twitter";
 
 	// Your Facebook APP ID
 	private static String APP_ID = "171262573080320"; // Replace your App ID
-	private SessionListener mSessionListener = new SessionListener();
 	// here
 
 	// Instance of Facebook Class
-	public Facebook facebook;
-	private AsyncFacebookRunner mAsyncRunner;
-	private ShareActionProvider mShareActionProvider;
 
 	String FILENAME = "AndroidSSO_data";
 	SimpleFacebook mSimpleFacebook;
 	private static final String TAG = "MainActivity";
 	public static final int REQUEST_CODE = 100;
-	private SharedPreferences mSharedPreferences;
+	SharedPreferences mSharedPreferences;
 
 	private Twitter twitter;
 	private RequestToken requestToken;
@@ -190,12 +178,6 @@ public class MainActivity extends SherlockFragmentActivity {
 				.setPermissions(permissions).build();
 		SimpleFacebook.setConfiguration(configuration);
 		twitterSession = new TwitterSession(mTabbars);
-
-		facebook = new Facebook(APP_ID);
-		mAsyncRunner = new AsyncFacebookRunner(facebook);
-		SessionStore.restore(facebook, this);
-		SessionEvents.addAuthListener(mSessionListener);
-		SessionEvents.addLogoutListener(mSessionListener);
 
 		getSupportActionBar().setIcon(R.drawable.logo_open);
 
@@ -242,8 +224,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			Log.d("wewe", "wewgombel");
 		}
 
-		Log.d("session",
-				"session : " + twitterSession.isTwitterLoggedInAlready());
 		// Check if twitter keys are set
 		if (TextUtils.isEmpty(Constants.TWITTER_CONSUMER_KEY)
 				|| TextUtils.isEmpty(Constants.TWITTER_CONSUMER_SECRET)) {
@@ -263,29 +243,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			Log.i("Logged", "Logged in...");
 		} else if (state.isClosed()) {
 			Log.i("Logged", "Logged out...");
-		}
-	}
-
-	private class SessionListener implements AuthListener, LogoutListener {
-
-		public void onAuthSucceed() {
-			SessionStore.save(facebook, mTabbars);
-			if (progressDialog != null && progressDialog.isShowing())
-				progressDialog.cancel();
-		}
-
-		public void onAuthFail(String error) {
-			if (progressDialog != null && progressDialog.isShowing())
-				progressDialog.cancel();
-		}
-
-		public void onLogoutBegin() {
-		}
-
-		public void onLogoutFinish() {
-			SessionStore.clear(mTabbars);
-			if (progressDialog != null && progressDialog.isShowing())
-				progressDialog.cancel();
 		}
 	}
 
@@ -335,7 +292,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		case 1:
 			search = (EditText) item.getActionView().findViewById(
 					R.id.descrizione);
-			search.addTextChangedListener(filterTextWatcher);
 			search.requestFocus();
 
 			scelta1 = (Button) item.getActionView().findViewById(R.id.scelta1);
@@ -350,7 +306,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			});
 			break;
 		case 2:
-			ShareDialog sd = new ShareDialog(MainActivity.this, facebook);
+			ShareDialog sd = new ShareDialog(MainActivity.this);
 			sd.show();
 
 			break;
@@ -375,20 +331,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
-
-	private TextWatcher filterTextWatcher = new TextWatcher() {
-		public void afterTextChanged(Editable s) {
-		}
-
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-		}
-
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-		}
-
-	};
 
 	// The click listener for ListView in the navigation drawer
 	private class DrawerItemClickListener implements
@@ -482,17 +424,10 @@ public class MainActivity extends SherlockFragmentActivity {
 			newsFragment.getView().setVisibility(View.GONE);
 		}
 		if (homeFragment != null) {
-
-			Log.d("homeFragment", "homeFragment : " + homeFragment);
-
 			homeFragment.getView().setVisibility(View.GONE);
 		}
 		if (pageSlidingFragment != null) {
-			Log.d("00000000000", "999999999999999992");
 			pageSlidingFragment.getView().setVisibility(View.GONE);
-			// // if (mediaterbaruFragment != null) {
-			// mediaterbaruFragment.getView().setVisibility(View.GONE);
-			// // }
 		}
 
 		if (pageSlidingTabStripFragment != null) {
@@ -500,7 +435,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 
 		if (squadFragment != null) {
-			Log.d("squadFragment", "squadFragment : " + squadFragment);
 			squadFragment.getView().setVisibility(View.GONE);
 		}
 
@@ -519,7 +453,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		if (mediaterbaruFragment != null) {
 			mediaterbaruFragment.getView().setVisibility(View.GONE);
-			Log.d("00000000000", "999999999999999993");
 		}
 
 	}
@@ -679,41 +612,46 @@ public class MainActivity extends SherlockFragmentActivity {
 				// Update status
 				Relationship relationship;
 				Relationship relationship2;
-				boolean followBoth=false;
+				boolean followBoth = false;
 				try {
-					relationship = twitter.showFriendship(twitter.getScreenName(),"IDPersipura");
+					relationship = twitter.showFriendship(
+							twitter.getScreenName(), "IDPersipura");
 					followBoth = relationship.isSourceFollowingTarget();
-					Log.d(TAG, "User followingg IDPersipura is =>" + relationship.isSourceFollowingTarget());
+					Log.d(TAG, "User followingg IDPersipura is =>"
+							+ relationship.isSourceFollowingTarget());
 				} catch (TwitterException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				try {
-					relationship2 = twitter.showFriendship(twitter.getScreenName(),"IDFreeport");
+					relationship2 = twitter.showFriendship(
+							twitter.getScreenName(), "IDFreeport");
 					followBoth = relationship2.isSourceFollowingTarget();
-					Log.d(TAG, "User followingg IDFreeport is =>" + relationship2.isSourceFollowingTarget());
+					Log.d(TAG, "User followingg IDFreeport is =>"
+							+ relationship2.isSourceFollowingTarget());
 				} catch (TwitterException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
-				
-				if(followBoth){
+
+				if (followBoth) {
 					HideOtherActivities();
-//					getSupportFragmentManager().beginTransaction()
-//							.add(R.id.content, TwitterSocial.newInstance(), TwitterSocial.TAG)
-//							.commit();
-					TwitterLogoutPage tlp2 = new TwitterLogoutPage(MainActivity.this, twitterSession, twitter);
-					tlp2.show();	
-					
-				}else{
-					TwitterFollowPage tlp = new TwitterFollowPage(MainActivity.this);
-					tlp.show();	
+					 getSupportFragmentManager().beginTransaction()
+					 .add(R.id.content, TwitterSocial.newInstance(),
+					 TwitterSocial.TAG)
+					 .commit();
+//					TwitterLogoutPage tlp2 = new TwitterLogoutPage(
+//							MainActivity.this, twitterSession, twitter);
+//					tlp2.show();
+
+				} else {
+					TwitterFollowPage tlp = new TwitterFollowPage(
+							MainActivity.this);
+					tlp.show();
 				}
 				pd.dismiss();
-				
+
 			} else {
 				TwitterConnectDialog cdd = new TwitterConnectDialog(
 						MainActivity.this);
@@ -723,31 +661,9 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Twitter";
 			break;
 		case 8:
-			final ProgressDialog pd = new ProgressDialog(mTabbars);
-			pd.setMessage("Sorry, We are underconstruction");
-			pd.setCancelable(false);
-
-			final Handler h = new Handler();
-			final Runnable r2 = new Runnable() {
-
-				@Override
-				public void run() {
-					pd.dismiss();
-				}
-			};
-
-			Runnable r1 = new Runnable() {
-
-				@Override
-				public void run() {
-					pd.show();
-					h.postDelayed(r2, 5000);
-				}
-			};
-
-			h.postDelayed(r1, 500);
-
-			pd.show();
+			getSupportFragmentManager().beginTransaction()
+			.add(R.id.content, Stream.newInstance(), Stream.TAG)
+			.commit();
 			break;
 		case 9:
 
@@ -769,35 +685,35 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawer.closeDrawer(mDrawerList);
 	}
 
-	public void logoutTwitter(){
+	public void logoutTwitter() {
 		twitterSession.logout();
-	}
-	
-	private final class LoginDialogListener implements DialogListener {
+		progressDialog = new ProgressDialog(mTabbars);
+		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
 
-		public void onComplete(Bundle values) {
-			Log.i("inside>>", "LoginDialogListener calles......");
-			SessionEvents.onLoginSuccess();
-			FacebookLikePage cdd = new FacebookLikePage(MainActivity.this);
-			cdd.show();
+		final Handler h = new Handler();
+		final Runnable r2 = new Runnable() {
 
-		}
+			@Override
+			public void run() {
+				progressDialog.show();
 
-		public void onFacebookError(FacebookError error) {
-			Log.i("inside>>",
-					"onFacebookError calles......" + error.getMessage());
-			SessionEvents.onLoginError(error.getMessage());
-		}
+			}
+		};
 
-		public void onError(DialogError error) {
-			Log.i("inside>>", "onError calles......");
-			SessionEvents.onLoginError(error.getMessage());
-		}
+		Runnable r1 = new Runnable() {
 
-		public void onCancel() {
-			Log.i("inside>>", "onCancel calles......");
-			SessionEvents.onLoginError("Action Canceled");
-		}
+			@Override
+			public void run() {
+				progressDialog.show();
+				h.postDelayed(r2, 5000);
+			}
+		};
+
+		h.postDelayed(r1, 500);
+
+		progressDialog.show();
+
 	}
 
 	private class CustomActionBarDrawerToggle extends ActionBarDrawerToggle {
@@ -966,8 +882,8 @@ public class MainActivity extends SherlockFragmentActivity {
 				start();
 		}
 
-			mSimpleFacebook = SimpleFacebook.getInstance(this);
-		
+		mSimpleFacebook = SimpleFacebook.getInstance(this);
+
 	}
 
 	@Override
@@ -1406,7 +1322,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		User response2;
 		try {
 			response2 = twitter.createFriendship("IDPersipura", true);
@@ -1415,11 +1331,9 @@ public class MainActivity extends SherlockFragmentActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		pd.dismiss();
-		
-		
+
 		// List<NameValuePair> nameparams2 = new ArrayList<NameValuePair>();
 		// nameparams2.add(new BasicNameValuePair("access_token", facebook
 		// .getAccessToken()));

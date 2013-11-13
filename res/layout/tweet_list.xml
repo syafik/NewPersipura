@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/list_parent"
+    android:background="#2B292A"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        
+        android:background="@drawable/gradient_box"
+        android:padding="10px" >
+
+        <TextView
+            android:id="@+id/tweetTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:singleLine="true"
+            android:textSize="10dp" 
+            android:text="time"/>
+
+        <TextView
+            android:id="@+id/tweetDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tweetUsername"
+            android:layout_below="@+id/tweetUsername"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingBottom="6dp"
+            android:text="time"
+            android:textSize="10dp" />
+        <TextView
+            android:id="@+id/tweetDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tweetUsername"
+            android:layout_below="@+id/tweetUsername"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingBottom="6dp"
+            android:text="desc"
+            android:textSize="10dp" />
+        <TextView
+            android:id="@+id/tweetLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tweetUsername"
+            android:layout_below="@+id/tweetDesc"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingBottom="6dp"
+            android:text="link"
+            android:textSize="10dp" />
+        
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tweetUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            
+            android:layout_toRightOf="@+id/imageView1"
+            android:paddingTop="6dp"
+            android:text="name"
+            android:textSize="13dp" />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/tweetUsername"
+            android:paddingTop="6dp"
+            android:layout_marginLeft="5dp"
+            android:text="user"
+            android:textSize="13dp" />
+    </RelativeLayout>
+     <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#696666" />
+
+</RelativeLayout>

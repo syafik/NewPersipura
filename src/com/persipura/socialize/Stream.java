@@ -1,4 +1,4 @@
-package com.webileapps.navdrawer;
+package com.persipura.socialize;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,8 +22,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
+import com.persipura.bean.TweetBean;
 import com.persipura.home.Home;
 import com.persipura.utils.*;
+import com.webileapps.navdrawer.MainActivity;
+import com.webileapps.navdrawer.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -59,11 +62,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class News extends SherlockFragment {
+public class Stream extends SherlockFragment {
 	// private static String url =
 	// "http://prspura.tk/restapi/get/news?limit=20&offset=1";
 	private LayoutInflater mInflater;
-	List<NewsBean> listThisWeekBean;
+	List<TweetBean> listThisWeekBean;
 	List<FooterBean> listFooterBean;
 	List<AdsBean> listAdsBean;
 	LinearLayout lifePageCellContainerLayout;
@@ -80,10 +83,10 @@ public class News extends SherlockFragment {
 
 	MainActivity attachingActivityLock;
 
-	public static final String TAG = News.class.getSimpleName();
+	public static final String TAG = Stream.class.getSimpleName();
 
-	public static News newInstance() {
-		return new News();
+	public static Stream newInstance() {
+		return new Stream();
 	}
 
 	
@@ -110,13 +113,13 @@ public class News extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		setRetainInstance(true);
-		showProgressDialog();
+//		showProgressDialog();
 		// new fetchLocationFromServer().execute("");
 		  
 
 		new fetchFooterFromServer().execute("");
 		
-		View rootView = inflater.inflate(R.layout.news, container, false);
+		View rootView = inflater.inflate(R.layout.stream, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
 
@@ -151,7 +154,7 @@ public class News extends SherlockFragment {
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
 				attachingActivityLock.getApplicationContext().getAssets());
-		new fetchAdsFromServer().execute("");
+		
 		return rootView;
 	}
 
@@ -189,7 +192,7 @@ public class News extends SherlockFragment {
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
-				listThisWeekBean = new ArrayList<NewsBean>();
+				listThisWeekBean = new ArrayList<TweetBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
 					NewsBean thisWeekBean = new NewsBean();
@@ -200,7 +203,7 @@ public class News extends SherlockFragment {
 					thisWeekBean.setcreated(resObject.getString("created"));
 					
 
-					listThisWeekBean.add(thisWeekBean);
+//					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
@@ -218,10 +221,10 @@ public class News extends SherlockFragment {
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<NewsBean> listThisWeekBean) throws IOException {
+				List<TweetBean> listThisWeekBean) throws IOException {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
-				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(R.layout.news_list,
+				TweetBean thisWeekBean = listThisWeekBean.get(i);
+				View cellViewMainLayout = mInflater.inflate(R.layout.tweet_list,
 						null);
 				TextView titleNews = (TextView) cellViewMainLayout
 						.findViewById(R.id.findzoes_list_text_name);
@@ -235,14 +238,10 @@ public class News extends SherlockFragment {
 				titleNews.setText("");
 				descNews.setText("");
 				cellnumTextView.setText("");
-				nid = null;
-				nid = thisWeekBean.getNid();
 
 				cellViewMainLayout.setTag(nid);
 				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 
-				titleNews.setText(thisWeekBean.gettitle());
-				descNews.setText(Html.fromHtml(thisWeekBean.getcreated()));
 				
 				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
 						attachingActivityLock.getApplicationContext()
@@ -256,31 +255,10 @@ public class News extends SherlockFragment {
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
-				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
-						imgNews);
+//				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
+//						imgNews);
 				
-				
-				View.OnClickListener myhandler1 = new View.OnClickListener() {
-					public void onClick(View v) {
-						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
-						Editor editor = mPrefs.edit();
-						
-						editor.putString("currentFragment", Home.TAG);
-						editor.putString("prevFragment", News.TAG);
-						editor.commit();
-						
-						Bundle data = new Bundle();
-						data.putString("NewsId", (String) v.getTag());
-						FragmentTransaction t = getFragmentManager()
-								.beginTransaction();
-						DetailNews mFrag = new DetailNews();
-						mFrag.setArguments(data);
-						t.add(R.id.content, mFrag, DetailNews.TAG).commit();
-
-					}
-				};
 				mPullRefreshScrollView.onRefreshComplete();
-				cellViewMainLayout.setOnClickListener(myhandler1);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 

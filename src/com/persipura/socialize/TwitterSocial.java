@@ -123,7 +123,6 @@ public class TwitterSocial extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		setRetainInstance(true);
-		showProgressDialog();
 		
 		View rootView = inflater.inflate(R.layout.twitter_main, container, false);
 
@@ -160,6 +159,7 @@ public class TwitterSocial extends SherlockFragment {
 
 			imgLoader.DisplayImage(url, loader,
 					imgPic);
+			
 
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
@@ -175,29 +175,5 @@ public class TwitterSocial extends SherlockFragment {
 		return rootView;
 	}
 
-	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(attachingActivityLock);
-		progressDialog.setMessage("Loading...");
-		progressDialog.setCancelable(false);
-		progressDialog.show();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.d("onDestroy", "onDestroyCalled");
-		if(progressDialog != null){
-			progressDialog.dismiss();
-		}
-	}
 	
-	@Override
-	public void onPause() {
-		super.onPause();
-		Log.d("onPause", "onPauseCalled");
-		if (progressDialog != null){
-			progressDialog.dismiss();
-		
-		}
-	}
 }
