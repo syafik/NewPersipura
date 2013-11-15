@@ -80,6 +80,7 @@ import com.persipura.home.Home;
 import com.persipura.match.HasilPertandingan;
 import com.persipura.match.PageSlidingTabStripFragment;
 import com.persipura.match.detailPertandingan;
+import com.persipura.media.GaleryView2;
 import com.persipura.media.ListGalery;
 import com.persipura.media.mediaTerbaru;
 import com.persipura.media.pageSliding;
@@ -376,11 +377,10 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		changeItemSearchToShare(false);
 
-		News newsFragment = (News) getSupportFragmentManager()
-				.findFragmentByTag(News.TAG);
+		PageSlidingNews newsFragment = (PageSlidingNews) getSupportFragmentManager()
+				.findFragmentByTag(PageSlidingNews.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager()
 				.findFragmentByTag(Home.TAG);
-
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
 				.findFragmentByTag(pageSliding.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
@@ -405,9 +405,16 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(mediaTerbaru.TAG);
 		videoPlayer videoplayerFragment = (videoPlayer) getSupportFragmentManager()
 				.findFragmentByTag(videoPlayer.TAG);
+		GaleryView2 galeryViewFragment = (GaleryView2) getSupportFragmentManager()
+				.findFragmentByTag(GaleryView2.TAG);
 		Stream stream = (Stream) getSupportFragmentManager()
 				.findFragmentByTag(Stream.TAG);
 		
+		
+		
+		if (galeryViewFragment != null) {
+			galeryViewFragment.getView().setVisibility(View.GONE);
+		}
 		if (stream != null) {
 			stream.getView().setVisibility(View.GONE);
 		}
@@ -466,20 +473,16 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private void selectItem(int position) {
-		News newsFragment = (News) getSupportFragmentManager()
-				.findFragmentByTag(News.TAG);
+		PageSlidingNews newsFragment = (PageSlidingNews) getSupportFragmentManager()
+				.findFragmentByTag(PageSlidingNews.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager()
 				.findFragmentByTag(Home.TAG);
 		pageSliding pageSlidingFragment = (pageSliding) getSupportFragmentManager()
 				.findFragmentByTag(pageSliding.TAG);
-		mediaTerbaru mediaterbaruFragment = (mediaTerbaru) getSupportFragmentManager()
-				.findFragmentByTag(mediaTerbaru.TAG);
 		PageSlidingTabStripFragment pageSlidingTabStripFragment = (PageSlidingTabStripFragment) getSupportFragmentManager()
 				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager()
 				.findFragmentByTag(Squad.TAG);
-		Stream streamFragment = (Stream) getSupportFragmentManager()
-				.findFragmentByTag(Stream.TAG);
 		
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(mTabbars);
@@ -507,7 +510,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			break;
 		case 1:
-			editor.putString("currentFragment", News.TAG);
+			editor.putString("currentFragment", PageSlidingNews.TAG);
 			editor.putString("prevFragment", prevFragment);
 			editor.commit();
 			if (newsFragment != null) {
@@ -516,7 +519,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			} else {
 				HideOtherActivities();
 				getSupportFragmentManager().beginTransaction()
-						.add(R.id.content, News.newInstance(), News.TAG)
+						.add(R.id.content, PageSlidingNews.newInstance(), PageSlidingNews.TAG)
 						.commit();
 			}
 
@@ -1096,6 +1099,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			SharedPreferences mPrefs = PreferenceManager
 					.getDefaultSharedPreferences(mTabbars);
 			String backstack = mPrefs.getString("prevFragment", "");
+			Log.d("backstack", "backstack : " + backstack);
 			if (!backstack.isEmpty()) {
 				HideOtherActivities();
 				if(getSupportFragmentManager().findFragmentByTag(backstack) != null){

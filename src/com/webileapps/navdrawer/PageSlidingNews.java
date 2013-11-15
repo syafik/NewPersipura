@@ -1,4 +1,4 @@
-package com.persipura.media;
+package com.webileapps.navdrawer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,15 +8,11 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -33,42 +29,33 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
-import com.persipura.home.Home;
-import com.persipura.match.JadwalPertandingan;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 
-public class pageSliding extends SherlockFragment {
+public class PageSlidingNews extends SherlockFragment {
 	MyPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
 	List<FooterBean> listFooterBean;
 	LinearLayout footerLayout;
 	String LinkId;
-	MainActivity attachingActivityLock;
 
+	public static final String TAG = PageSlidingNews.class
+			.getSimpleName();
 
-	public static final String TAG = pageSliding.class.getSimpleName();
-
-	public static pageSliding newInstance() {
-		return new pageSliding();
+	public static PageSlidingNews newInstance() {
+		return new PageSlidingNews();
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		attachingActivityLock = (MainActivity) activity;
+	// @Override
+	// public void onCreate(Bundle savedInstanceState) {
+	// super.onCreate(savedInstanceState);
+	// setContentView(R.layout.news);
+	// mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+	// mViewPager = (ViewPager) findViewById(R.id.pager);
+	// mViewPager.setAdapter(mSectionsPagerAdapter);
+	// }
 
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		attachingActivityLock = null;
-	}
-	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,7 +65,7 @@ public class pageSliding extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.pager_media, container, false);
+		return inflater.inflate(R.layout.pager, container, false);
 	}
 
 	@Override
@@ -94,15 +81,7 @@ public class pageSliding extends SherlockFragment {
 		TextView footerTitle = (TextView) footerLayout
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				attachingActivityLock.getApplicationContext().getAssets());
-		
-		SharedPreferences mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
-		String prevFragment = mPrefs.getString("currentFragment", Home.TAG);
-		Editor editor = mPrefs.edit();
-		editor.putString("currentFragment", pageSliding.TAG);
-		editor.putString("prevFragment", prevFragment);
-		editor.commit();
+				getActivity().getApplicationContext().getAssets());
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -120,21 +99,14 @@ public class pageSliding extends SherlockFragment {
 			Bundle args = null;
 			switch (position) {
 			case 0:
-				fragment = new mediaTerbaru();
+				fragment = new News();
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
 				// + 1);
 				fragment.setArguments(args);
 				return fragment;
 			case 1:
-				fragment = new videoTerbaru();
-				args = new Bundle();
-				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
-				// + 1);
-				fragment.setArguments(args);
-				return fragment;
-			case 2:
-				fragment = new ListGalery();
+				fragment = new BeritaTransfer();
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
 				// + 1);
@@ -147,7 +119,7 @@ public class pageSliding extends SherlockFragment {
 		@Override
 		public int getCount() {
 			// Show 4 total pages.
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -155,11 +127,9 @@ public class pageSliding extends SherlockFragment {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.media1).toUpperCase(l);
+				return "Berita Terbaru".toUpperCase(l);
 			case 1:
-				return getString(R.string.media2).toUpperCase(l);
-			case 2:
-				return getString(R.string.media3).toUpperCase(l);
+				return "Berita Transfer".toUpperCase(l);
 			}
 			return null;
 		}
@@ -232,7 +202,7 @@ public class pageSliding extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(attachingActivityLock.getApplicationContext(),
+				Toast.makeText(getActivity().getApplicationContext(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
 			}
@@ -253,7 +223,7 @@ public class pageSliding extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
+				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
 
 				if (!thisWeekBean.getfooter_logo().isEmpty()) {
@@ -285,6 +255,4 @@ public class pageSliding extends SherlockFragment {
 		}
 
 	}
-	
-	
 }

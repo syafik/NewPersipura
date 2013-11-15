@@ -23,6 +23,8 @@ import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.home.Home;
+import com.persipura.squad.DetailSquad;
+import com.persipura.squad.Squad;
 import com.persipura.utils.*;
 
 import android.annotation.SuppressLint;
@@ -103,18 +105,17 @@ public class News extends SherlockFragment {
 	  @Override
 	    public void onActivityCreated(Bundle savedInstanceState) {
 	        super.onActivityCreated(savedInstanceState);
-	        setRetainInstance(true);
 	    }
 	  
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		setRetainInstance(true);
+
 		showProgressDialog();
 		// new fetchLocationFromServer().execute("");
 		  
 
-		new fetchFooterFromServer().execute("");
+//		new fetchFooterFromServer().execute("");
 		
 		View rootView = inflater.inflate(R.layout.news, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
@@ -144,13 +145,13 @@ public class News extends SherlockFragment {
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-		footerLayout = (FrameLayout) rootView
-				.findViewById(R.id.bottom_control_bar);
-
-		TextView footerTitle = (TextView) rootView
-				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
-				attachingActivityLock.getApplicationContext().getAssets());
+//		footerLayout = (FrameLayout) rootView
+//				.findViewById(R.id.bottom_control_bar);
+//
+//		TextView footerTitle = (TextView) rootView
+//				.findViewById(R.id.footerText);
+//		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+//				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchAdsFromServer().execute("");
 		return rootView;
 	}
@@ -265,14 +266,15 @@ public class News extends SherlockFragment {
 						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
 						Editor editor = mPrefs.edit();
 						
-						editor.putString("currentFragment", Home.TAG);
-						editor.putString("prevFragment", News.TAG);
+						editor.putString("currentFragment", DetailNews.TAG);
+						editor.putString("prevFragment", PageSlidingNews.TAG);
 						editor.commit();
-						
+//						
 						Bundle data = new Bundle();
 						data.putString("NewsId", (String) v.getTag());
-						FragmentTransaction t = getFragmentManager()
-								.beginTransaction();
+						data.putString("FragmentTag", PageSlidingNews.TAG);
+						FragmentTransaction t = getActivity()
+								.getSupportFragmentManager().beginTransaction();
 						DetailNews mFrag = new DetailNews();
 						mFrag.setArguments(data);
 						t.add(R.id.content, mFrag, DetailNews.TAG).commit();

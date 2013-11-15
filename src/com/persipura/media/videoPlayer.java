@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -149,27 +150,6 @@ public class videoPlayer extends SherlockFragment {
 		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
-
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
 		progressDialog.show();
 	}
 	
@@ -298,6 +278,20 @@ public class videoPlayer extends SherlockFragment {
 				mWebView.getSettings().setJavaScriptEnabled(true);
 				mWebView.getSettings().setPluginState(PluginState.ON);
 				String videoID = thisWeekBean.getvideo_uri().split("v=")[1];
+				mWebView.setWebViewClient(new WebViewClient() {
+				    @Override  
+				    public void onPageFinished(WebView view, String url) {
+				        super.onPageFinished(view, url);
+				        if(progressDialog != null){
+				        	progressDialog.dismiss();
+				        }
+				    }  
+
+				    @Override
+				    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+				        Toast.makeText(attachingActivityLock, "Failed to load Video", Toast.LENGTH_LONG).show();
+				    }
+				});
 				mWebView.loadUrl("http://www.youtube.com/embed/" + videoID + "?autoplay=1&vq=small");
 			}
 		}

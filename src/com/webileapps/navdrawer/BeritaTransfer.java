@@ -1,83 +1,92 @@
-package com.persipura.media;
+package com.webileapps.navdrawer;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import android.R.integer;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.AdsBean;
-import com.persipura.bean.mediaBean;
+import com.persipura.bean.FooterBean;
+import com.persipura.bean.NewsBean;
 import com.persipura.home.Home;
-import com.persipura.match.detailPertandingan;
-import com.persipura.socialize.TwitterSocial;
-import com.persipura.utils.AppConstants;
-import com.persipura.utils.Imageloader;
-import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.DetailNews;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.News;
-import com.webileapps.navdrawer.R;
-//import com.markupartist.android.widget.PullToRefreshListView;
-//import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+import com.persipura.utils.*;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class mediaTerbaru extends SherlockFragment {
-
+@SuppressLint("NewApi")
+public class BeritaTransfer extends SherlockFragment {
+	// private static String url =
+	// "http://prspura.tk/restapi/get/news?limit=20&offset=1";
 	private LayoutInflater mInflater;
-	List<mediaBean> listThisWeekBean;
+	List<NewsBean> listThisWeekBean;
+	List<FooterBean> listFooterBean;
+	List<AdsBean> listAdsBean;
 	LinearLayout lifePageCellContainerLayout;
+	FrameLayout footerLayout;
+	ViewGroup newContainer;
+	String nid;
+	String LinkId;
+	private ProgressDialog progressDialog;
 	PullToRefreshScrollView mPullRefreshScrollView;
 	ScrollView mScrollView;
-	int hitung = 10;
-	int offset = 10;
-	ProgressDialog progressDialog;
-	String nid;
-	String type;
-	String LinkId;
-	List<AdsBean> listAdsBean;
-	MainActivity attachingActivityLock;
+	int hitung = 15;
+	int offset = 15;
 	int failedRetrieveCount = 0;
-	
-	public static final String TAG = mediaTerbaru.class.getSimpleName();
 
-	public static mediaTerbaru newInstance() {
-		return new mediaTerbaru();
+	MainActivity attachingActivityLock;
+
+	public static final String TAG = BeritaTransfer.class.getSimpleName();
+
+	public static BeritaTransfer newInstance() {
+		return new BeritaTransfer();
 	}
 
+	
 	@Override
 	public void onAttach(Activity activity) {
 	  super.onAttach(activity);
@@ -94,20 +103,24 @@ public class mediaTerbaru extends SherlockFragment {
 	  @Override
 	    public void onActivityCreated(Bundle savedInstanceState) {
 	        super.onActivityCreated(savedInstanceState);
-//	        setRetainInstance(true);
 	    }
-	  
 	  
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		setRetainInstance(true);
+		showProgressDialog();
+		// new fetchLocationFromServer().execute("");
+		  
+
+//		new fetchFooterFromServer().execute("");
+		
+		View rootView = inflater.inflate(R.layout.news, container, false);
+		mInflater = getLayoutInflater(savedInstanceState);
+		newContainer = container;
+
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
-		View rootView = inflater.inflate(R.layout.media_terbaru, container,
-				false);
-		mInflater = getLayoutInflater(savedInstanceState);
-		showProgressDialog();
+
 		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
 				.findViewById(R.id.pull_refresh_scrollview);
 		mPullRefreshScrollView
@@ -120,7 +133,7 @@ public class mediaTerbaru extends SherlockFragment {
 
 						Integer[] param = new Integer[] { hitung, offset };
 						new fetchLocationFromServer().execute(param);
-						offset = offset + 10;
+						offset = offset + 15;
 
 					}
 				});
@@ -129,35 +142,21 @@ public class mediaTerbaru extends SherlockFragment {
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
+//		footerLayout = (FrameLayout) rootView
+//				.findViewById(R.id.bottom_control_bar);
+//
+//		TextView footerTitle = (TextView) rootView
+//				.findViewById(R.id.footerText);
+//		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+//				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchAdsFromServer().execute("");
 		return rootView;
 	}
 
 	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(getActivity());
+		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
-
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
 		progressDialog.show();
 	}
 
@@ -171,10 +170,10 @@ public class mediaTerbaru extends SherlockFragment {
 
 		@Override
 		protected String doInBackground(Integer... param) {
-
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/media", "limit=" + param[0] + "&offset="
+					"/restapi/get/news", "category=berita-transfer" + "&limit=" + param[0] + "&offset="
 							+ param[1]);
+
 			return result;
 		}
 
@@ -185,123 +184,205 @@ public class mediaTerbaru extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(String result) {
-
 			try {
 				JSONArray jsonArray = new JSONArray(result);
 
-				listThisWeekBean = new ArrayList<mediaBean>();
+				listThisWeekBean = new ArrayList<NewsBean>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject resObject = jsonArray.getJSONObject(i);
-					mediaBean thisWeekBean = new mediaBean();
-					thisWeekBean.setId(resObject.getString("id"));
+					NewsBean thisWeekBean = new NewsBean();
+					thisWeekBean.setNid(resObject.getString("nid"));
 					thisWeekBean.settitle(resObject.getString("title"));
+					thisWeekBean.setteaser(resObject.getString("teaser"));
+					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
 					thisWeekBean.setcreated(resObject.getString("created"));
-					String img = null;
-					if(resObject.getString("type").equals("video")){
-						img = resObject.getString("video_image");
-					}else{
-						img = resObject
-								.getString("picture_thumb");
-					}
-					thisWeekBean.setvideo_image(img);
-					thisWeekBean.setType(resObject.getString("type"));
+					
+
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
 				} else {
-					offset = offset - 10;
+					offset = offset - 15;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
-			}
+				failedRetrieveCount++;
 
+			}
 		}
 
 		@SuppressWarnings("deprecation")
 		private void createSelectLocationListView(
-				List<mediaBean> listThisWeekBean) {
+				List<NewsBean> listThisWeekBean) throws IOException {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
-				mediaBean thisWeekBean = listThisWeekBean.get(i);
-
-				View cellViewMainLayout = mInflater.inflate(
-						R.layout.media_terbaru_list, null);
-				TextView title = (TextView) cellViewMainLayout
+				NewsBean thisWeekBean = listThisWeekBean.get(i);
+				View cellViewMainLayout = mInflater.inflate(R.layout.news_list,
+						null);
+				TextView titleNews = (TextView) cellViewMainLayout
 						.findViewById(R.id.findzoes_list_text_name);
-				TextView created = (TextView) cellViewMainLayout
+				TextView descNews = (TextView) cellViewMainLayout
 						.findViewById(R.id.findzoes_list_text_address);
-				ImageView img = (ImageView) cellViewMainLayout
+				TextView cellnumTextView = (TextView) cellViewMainLayout
+						.findViewById(R.id.findzoes_list_text_cellnum);
+				ImageView imgNews = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
 
-				AppConstants.fontrobotoTextView(created, 11, "A6A5A2",
-						getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff",
-						getActivity().getApplicationContext().getAssets());
-
-				title.setText("");
-				created.setText("");
+				titleNews.setText("");
+				descNews.setText("");
+				cellnumTextView.setText("");
 				nid = null;
-				nid = thisWeekBean.getId();
-				type = null;
-				type = thisWeekBean.getType();
-				title.setText(thisWeekBean.gettitle());
-				created.setText(thisWeekBean.getcreated());
-
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
-						.getApplicationContext());
-				img.setTag(thisWeekBean.getvideo_image());
-				imageLoader.DisplayImage(thisWeekBean.getvideo_image(),
-						getActivity(), img);
+				nid = thisWeekBean.getNid();
 
 				cellViewMainLayout.setTag(nid);
-				cellViewMainLayout.setTag(R.string.section1, type);
+				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
 
-				cellViewMainLayout.setOnClickListener(new OnClickListener() {
+				titleNews.setText(thisWeekBean.gettitle());
+				descNews.setText(Html.fromHtml(thisWeekBean.getcreated()));
+				
+				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
+						.getApplicationContext());
+
+				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
+						imgNews);
+				
+				
+				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
 						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
 						Editor editor = mPrefs.edit();
-						editor.putString("prevFragment", pageSliding.TAG);
 						
-						String type = (String) v.getTag(R.string.section1);
-						Log.d("-------------", type);
-						if (type.equals("picture")) {
-							editor.putString("currentFragment", GaleryView2.TAG);
-								
-							GaleryView2 mFrag = new GaleryView2();
-							Bundle b = new Bundle();
-							b.putString("myString",(String) v.getTag());
-							mFrag.setArguments(b);	
-							getActivity().getSupportFragmentManager()
-							.beginTransaction()
-							.add(R.id.content, mFrag, GaleryView2.TAG)
-							.commit();
-						} else {
-							editor.putString("currentFragment", videoPlayer.TAG);
-							
-							videoPlayer vp = new videoPlayer();
-							Bundle b = new Bundle();
-							b.putString("myString",(String) v.getTag());
-							vp.setArguments(b);	
-							getActivity().getSupportFragmentManager()
-							.beginTransaction()
-							.add(R.id.content, vp, videoPlayer.TAG)
-							.commit();
-						}
+						editor.putString("currentFragment", DetailNews.TAG);
+						editor.putString("prevFragment", PageSlidingNews.TAG);
 						editor.commit();
+//						
+						Bundle data = new Bundle();
+						data.putString("NewsId", (String) v.getTag());
+						data.putString("FragmentTag", PageSlidingNews.TAG);
+						FragmentTransaction t = getActivity()
+								.getSupportFragmentManager().beginTransaction();
+						DetailNews mFrag = new DetailNews();
+						mFrag.setArguments(data);
+						t.add(R.id.content, mFrag, DetailNews.TAG).commit();
+
 					}
-				});
-				lifePageCellContainerLayout.addView(cellViewMainLayout);
+				};
 				mPullRefreshScrollView.onRefreshComplete();
+				cellViewMainLayout.setOnClickListener(myhandler1);
+
+				lifePageCellContainerLayout.addView(cellViewMainLayout);
+
 			}
 		}
 
 	}
-	
+
+	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/footer", "id=68");
+
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "test1 : " + jsonArray);
+				listFooterBean = new ArrayList<FooterBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					FooterBean thisWeekBean = new FooterBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setfooter_logo(resObject
+							.getString("footer_logo"));
+					thisWeekBean.setlink(resObject.getString("link"));
+					//
+					listFooterBean.add(thisWeekBean);
+
+				}
+				if (listFooterBean != null && listFooterBean.size() > 0) {
+					createFooterView(listFooterBean);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				failedRetrieveCount++;
+			}
+
+		}
+
+		private void createFooterView(List<FooterBean> listFooterBean)
+				throws IOException {
+			for (int i = 0; i < listFooterBean.size(); i++) {
+				FooterBean thisWeekBean = listFooterBean.get(i);
+
+				ImageView imgNews = (ImageView) footerLayout
+						.findViewById(R.id.footerImg);
+
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.loader;
+
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
+						.getApplicationContext());
+
+				if (!thisWeekBean.getfooter_logo().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
+							loader, imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					Log.d("clickable",
+							"clickable : " + thisWeekBean.getclickable());
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+
+			}
+		}
+
+	}
+
 	private class fetchAdsFromServer extends AsyncTask<String, Void, String> {
 
 		@Override
@@ -460,7 +541,7 @@ public class mediaTerbaru extends SherlockFragment {
 		}
 
 	}
-	
+
 	public class CustomComparator implements Comparator<AdsBean> {
 		@Override
 		public int compare(AdsBean o1, AdsBean o2) {
@@ -487,5 +568,4 @@ public class mediaTerbaru extends SherlockFragment {
 		
 		}
 	}
-
 }
