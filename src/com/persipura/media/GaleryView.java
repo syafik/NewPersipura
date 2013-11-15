@@ -384,9 +384,14 @@ public class GaleryView extends SherlockFragment {
 				created.setText(thisWeekBean.getcreated());
 				
 				String[] parts = thisWeekBean.getpictureUrl().split("\\|");
-				String[] picturetitle = thisWeekBean.getPictureTitle().split("\\|");
 				
-				for (int x = 0; x < parts.length; x++) {
+				int part_length = 8;
+				if(part_length >= parts.length){
+					part_length = parts.length;
+				}
+				String[] picturetitle = thisWeekBean.getPictureTitle().split("\\|");
+				Log.d("parts", "parts : " + parts);
+				for (int x = 0; x < part_length; x++) {
 					stringArrayList.add(parts[x]);
 //					stringTitleList.add(picturetitle);
 				}

@@ -75,7 +75,7 @@ public class HasilPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+		showProgressDialog();
 		
 		View rootView = inflater.inflate(R.layout.hasil_pertandingan,
 				container, false);
@@ -124,7 +124,7 @@ public class HasilPertandingan extends SherlockFragment {
 			@Override
 			public void run() {
 				progressDialog.show();
-				h.postDelayed(r2, 5000);
+				h.postDelayed(r2, 10000);
 			}
 		};
 

@@ -138,6 +138,7 @@ public class StaffAndManagement extends SherlockFragment {
 					homeSquad.setId(resObject.getString("id"));
 					homeSquad.setNamaLengkap(resObject
 							.getString("nama_lengkap"));
+					homeSquad.setposisi(resObject.getString("posisi"));
 					homeSquad.setage(resObject.getString("age"));
 					homeSquad.setwarganegara(resObject
 							.getString("kewarganegaraan"));
@@ -185,8 +186,25 @@ public class StaffAndManagement extends SherlockFragment {
 				no_punggung.setText("");
 
 				nama.setText(squad.getNamaLengkap());
-				detail.setText(squad.getposisi() + "\n" + squad.getage()
-						+ " tahun" + ", " + squad.getwarganegara());
+				String posisiText = squad.getposisi() + "\n";
+				String ageText = squad.getage() + " tahun";
+				String warganegara = squad.getwarganegara();
+				
+				
+				
+				if(warganegara != null || warganegara != ""){
+					ageText = ageText + ", ";
+				}
+				String detailText = posisiText;
+				Log.d("squad.getage()", "squad.getage() : " + squad.getage());
+				if(squad != null && !squad.getage().equals("0")){
+					detailText = detailText + ageText;	
+				}
+				detailText = detailText + warganegara; 
+						
+				
+				detail.setText(detailText);
+				
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -194,7 +212,7 @@ public class StaffAndManagement extends SherlockFragment {
 				staffId = squad.getId();
 
 				cellViewMainLayout.setTag(staffId);
-				int loader = R.drawable.loader;
+				int loader = R.drawable.image_thumb_4;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());

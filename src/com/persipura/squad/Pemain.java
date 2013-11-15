@@ -186,8 +186,25 @@ public class Pemain extends SherlockFragment {
 
 				no_punggung.setText(squad.getno_punggung());
 				nama.setText(squad.getNamaLengkap());
-				detail.setText(squad.getposisi() + "\n" + squad.getage()
-						+ " tahun" + ", " + squad.getwarganegara());
+				
+				String posisiText = squad.getposisi() + "\n";
+				String ageText = squad.getage() + " tahun";
+				String warganegara = squad.getwarganegara();
+				
+				
+				
+				if(warganegara != null || warganegara != ""){
+					ageText = ageText + ", ";
+				}
+				String detailText = posisiText;
+				Log.d("squad.getage()", "squad.getage() : " + squad.getage());
+				if(squad != null && !squad.getage().equals("0")){
+					detailText = detailText + ageText;	
+				}
+				detailText = detailText + warganegara; 
+						
+				
+				detail.setText(detailText);
 				BitmapFactory.Options bmOptions;
 				
 				bmOptions = new BitmapFactory.Options();
@@ -197,13 +214,15 @@ public class Pemain extends SherlockFragment {
 				//
 				//
 				// imgNews.setImageBitmap(bm);
-				int loader = R.drawable.loader;
+				
+					int loader = R.drawable.image_thumb_4;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
-						.getApplicationContext());
+					ImageLoader imgLoader = new ImageLoader(getActivity()
+							.getApplicationContext());
 
-				imgLoader.DisplayImage(squad.getfoto(), loader, imgNews);
-
+					imgLoader.DisplayImage(squad.getfoto(), loader, imgNews);
+	
+				
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
 						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());

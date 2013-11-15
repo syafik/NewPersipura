@@ -128,10 +128,10 @@ public class TwitterSocial extends SherlockFragment {
 
 		TextView username = (TextView) rootView.findViewById(R.id.username);
 		ImageView imgPic = (ImageView) rootView.findViewById(R.id.imageView1);
-		ProgressDialog pd = new ProgressDialog(attachingActivityLock);
-		pd.setMessage("Loading...");
-		pd.setCancelable(false);
-		pd.show();
+//		ProgressDialog pd = new ProgressDialog(attachingActivityLock);
+//		pd.setMessage("Loading...");
+//		pd.setCancelable(false);
+//		pd.show();
 		ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.setOAuthConsumerKey(Constants.TWITTER_CONSUMER_KEY);
 		builder.setOAuthConsumerSecret(Constants.TWITTER_CONSUMER_SECRET);
@@ -144,11 +144,20 @@ public class TwitterSocial extends SherlockFragment {
 				access_token_secret);
 		Twitter twitter = new TwitterFactory(builder.build())
 				.getInstance(accessToken);
+		Button btn_yes = (Button) rootView.findViewById(R.id.btn_yes);
+		btn_yes.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				attachingActivityLock.logoutTwitter();
+				
+			}
+		});
 		
 		try {
 			username.setText(twitter.getScreenName());
 			User user = twitter.showUser(twitter.getId());
-			String url = user.getProfileImageURL();
+			String url = user.getOriginalProfileImageURL();
 			BitmapFactory.Options bmOptions;
 
 			bmOptions = new BitmapFactory.Options();

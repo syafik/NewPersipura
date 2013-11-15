@@ -131,25 +131,25 @@ public class Home extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 10000);
-			}
-		};
-
-		h.postDelayed(r1, 1000);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 10000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 1000);
 
 		progressDialog.show();
 	}

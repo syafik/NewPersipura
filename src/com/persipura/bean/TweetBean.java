@@ -1,67 +1,71 @@
 package com.persipura.bean;
 
 public class TweetBean {
-	String clickable = "";
-	String image = "";
-	String link = "";
-	String ad_rank = "";
-	String clickcounter = "";
+	String tweet = "";
+	String time = "";
+	String img = "";
+	String name = "";
+	String username = "";
 	
-
-	public String getad_rank() {
-		return ad_rank;
+	public String getUsername() {
+		return username;
+		
 	}
 
-	public void setad_rank(String ad_rank) {
-		if (ad_rank.equals("null")) {
-			ad_rank = "";
+	public void setUsername(String username) {
+		if (username.equals("null")) {
+			username = "";
 		}
-		this.ad_rank = ad_rank;
+		this.username = username;
 	}
 
-	public String getclickcounter() {
-		return clickcounter;
+	public String getName() {
+		return name;
+		
 	}
 
-	public void setclickcounter(String clickcounter) {
-		if (clickcounter.equals("null")) {
-			clickcounter = "";
+	public void setName(String name) {
+		if (name.equals("null")) {
+			name = "";
 		}
-		this.clickcounter = clickcounter;
+		this.name = name;
 	}
 
 	
-	public String getclickable() {
-		return clickable;
+	public String getUserImg() {
+		return img;
+		
 	}
 
-	public void setclickable(String clickable) {
-		if (clickable.equals("null")) {
-			clickable = "";
+	public void setUserImg(String img) {
+		if (img.equals("null")) {
+			img = "";
 		}
-		this.clickable = clickable;
+		this.img = img;
+	}
+	
+	public String getTime() {
+		return time;
+		
 	}
 
-	public String getimage() {
-		return image;
-	}
-
-	public void setimage(String image) {
-		if (image.equals("null")) {
-			image = "";
+	public void setTime(String time) {
+		if (time.equals("null")) {
+			time = "";
 		}
-		this.image = image;
+		this.time = time;
+	}
+	
+	public String getTweet() {
+		return tweet;
+		
 	}
 
-	public String getlink() {
-		return link;
-	}
-
-	public void setlink(String link) {
-		if (link.equals("null")) {
-			link = "";
+	public void setTweet(String tweet) {
+		if (tweet.equals("null")) {
+			tweet = "";
 		}
-		this.link = link;
+		this.tweet = tweet;
 	}
 
 }

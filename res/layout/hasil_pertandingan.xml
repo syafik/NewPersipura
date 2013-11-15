@@ -41,7 +41,7 @@
             android:padding="3dp" >
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
-    
+    <!-- 
    <FrameLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="fill_parent"
@@ -51,5 +51,5 @@
 	<include layout="@layout/footer"/>
     
     </FrameLayout> 
-
+ -->
 </LinearLayout>

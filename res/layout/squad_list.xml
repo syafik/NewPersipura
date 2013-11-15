@@ -19,7 +19,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/venus" />
+            android:src="@drawable/image_thumb_4" />
 
         <TextView
             android:id="@+id/textViewList2"
@@ -31,7 +31,6 @@
             android:layout_toRightOf="@+id/imageViewList2"
             android:ellipsize="none"
             android:singleLine="false"
-            android:text="Boaz salossa"
             android:textSize="11dp" />
 
         <TextView
@@ -40,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textViewList2"
             android:layout_below="@+id/textViewList2"
-            android:text="Striker \n 27 tahun, Indonesia"
             android:textSize="10dp" />
 
         <TextView

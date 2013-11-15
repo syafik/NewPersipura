@@ -232,7 +232,7 @@ public class Sejarah extends SherlockFragment {
 				 
   				 ImageLoader imgLoader = new ImageLoader(getActivity().getApplicationContext());
 				 imgLoader.DisplayImage(logo.attr("src"), loader, imageView1);
-				 detail.setText(Html.fromHtml(doc.outerHtml()));
+				 detail.setText(Html.fromHtml(doc.select("span").toString()));
 
 			}
 		}

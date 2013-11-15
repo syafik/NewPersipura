@@ -149,11 +149,15 @@ public class DetailNews extends SherlockFragment {
 						thisWeekBean.settitle(resObject.getString("title"));
 						thisWeekBean.setteaser(resObject.getString("body"));
 						String img = resObject.getString("big_img");
+						Log.d("bigImg", "equal null : " + (img == null));
+						Log.d("bigImg", "equal empty : " + (img.isEmpty()));
+						Log.d("bigImg", "equal str null : " + (img == "null"));
 						
-						if(img != null && !img.isEmpty() && img != "null"){
-							img = resObject.getString("big_img");
+						if(img == null || img.isEmpty() || img == "null"){
+							img = resObject.getString("img_uri");							
 						}else{
-							img = resObject.getString("img_uri");
+							img = resObject.getString("big_img");
+
 						}
 						thisWeekBean.setimg_uri(img);
 						thisWeekBean.setcreated(resObject.getString("created"));

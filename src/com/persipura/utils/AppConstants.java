@@ -63,7 +63,7 @@ public class AppConstants {
 
 	// FACEBOOK PARAMS
 
-	public static final String FACEBOOK_APPID = "457180554390902"; // ROTI
+	public static final String FACEBOOK_APPID = "457180554390902";
 	public static final String[] FACEBOOK_PERMISSIONARR = new String[] {
 			"read_stream", "email", "user_photos", "publish_checkins",
 			"publish_stream", "offline_access", "photo_upload" , "offline_access", "publish_actions"};

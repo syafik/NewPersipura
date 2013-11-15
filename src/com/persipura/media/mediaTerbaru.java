@@ -13,12 +13,15 @@ import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,12 +41,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.AdsBean;
 import com.persipura.bean.mediaBean;
+import com.persipura.home.Home;
 import com.persipura.match.detailPertandingan;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.DetailNews;
 import com.webileapps.navdrawer.MainActivity;
+import com.webileapps.navdrawer.News;
 import com.webileapps.navdrawer.R;
 //import com.markupartist.android.widget.PullToRefreshListView;
 //import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
@@ -190,8 +195,14 @@ public class mediaTerbaru extends SherlockFragment {
 					thisWeekBean.setId(resObject.getString("id"));
 					thisWeekBean.settitle(resObject.getString("title"));
 					thisWeekBean.setcreated(resObject.getString("created"));
-					thisWeekBean.setvideo_image(resObject
-							.getString("video_image"));
+					String img = null;
+					if(resObject.getString("type").equals("video")){
+						img = resObject.getString("video_image");
+					}else{
+						img = resObject
+								.getString("picture_thumb");
+					}
+					thisWeekBean.setvideo_image(img);
 					thisWeekBean.setType(resObject.getString("type"));
 					listThisWeekBean.add(thisWeekBean);
 				}
@@ -251,18 +262,25 @@ public class mediaTerbaru extends SherlockFragment {
 
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-
+						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
+						Editor editor = mPrefs.edit();
+						
+						editor.putString("currentFragment", mediaTerbaru.TAG);
+						editor.putString("prevFragment", mediaTerbaru.TAG);
+						editor.commit();
+						
 						String type = (String) v.getTag(R.string.section1);
 						Log.d("-------------", type);
 						if (type.equals("picture")) {
 							
-							Bundle data = new Bundle();
-							data.putString("myString", (String) v.getTag());
-							FragmentTransaction t = getFragmentManager()
-									.beginTransaction();
 							GaleryView mFrag = new GaleryView();
-							mFrag.setArguments(data);
-							t.replace(R.id.parentpager, mFrag, GaleryView.TAG).commit();
+							Bundle b = new Bundle();
+							b.putString("myString",(String) v.getTag());
+							mFrag.setArguments(b);	
+							getActivity().getSupportFragmentManager()
+							.beginTransaction()
+							.add(R.id.content, mFrag, GaleryView.TAG)
+							.commit();
 						} else {
 //							Bundle data = new Bundle();
 //							data.putString("myString", (String) v.getTag());
@@ -278,7 +296,7 @@ public class mediaTerbaru extends SherlockFragment {
 							vp.setArguments(b);	
 							getActivity().getSupportFragmentManager()
 							.beginTransaction()
-							.add(R.id.parentpager, vp, detailPertandingan.TAG)
+							.add(R.id.content, vp, videoPlayer.TAG)
 							.commit();
 						}
 					}

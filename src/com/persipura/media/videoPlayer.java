@@ -1,25 +1,44 @@
 package com.persipura.media;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.params.CoreProtocolPNames;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings.PluginState;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +51,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.mediaBean;
+import com.persipura.socialize.TwitterSocial;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
@@ -49,13 +69,52 @@ public class videoPlayer extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	String LinkId;
 	private MediaController ctlr;
-	
+	MainActivity attachingActivityLock;
+	VideoView videoView;
+
 	public static final String TAG = videoPlayer.class.getSimpleName();
 
 	public static videoPlayer newInstance() {
 		return new videoPlayer();
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		try{
+			videoPlayer video_Player = (videoPlayer) attachingActivityLock.getSupportFragmentManager().findFragmentByTag(videoPlayer.TAG);
+			FragmentTransaction trans = attachingActivityLock.getSupportFragmentManager().beginTransaction();
+	        trans.remove(video_Player);
+	        trans.commit();	
+		}catch(Exception e){
+			Log.d(TAG, e.getMessage());
+		}
+		attachingActivityLock = null;
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d("onDestroy", "onDestroyCalled");
+		try{
+			videoPlayer video_Player = (videoPlayer) attachingActivityLock.getSupportFragmentManager().findFragmentByTag(videoPlayer.TAG);
+			FragmentTransaction trans = attachingActivityLock.getSupportFragmentManager().beginTransaction();
+	        trans.remove(video_Player);
+	        trans.commit();	
+		}catch(Exception e){
+			Log.d(TAG, e.getMessage());
+		}
+		
+	}
+	
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,13 +140,13 @@ public class videoPlayer extends SherlockFragment {
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
+				attachingActivityLock.getApplicationContext().getAssets());
 //		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
 	
 	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(getActivity());
+		progressDialog = new ProgressDialog(attachingActivityLock);
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 
@@ -152,7 +211,7 @@ public class videoPlayer extends SherlockFragment {
 					thisWeekBean.setvideo_image(resObject
 							.getString("video_image"));
 					thisWeekBean.setvideo_uri(resObject
-							.getString("video_uri"));
+							.getString("embed_url"));
 					thisWeekBean.setdescription(resObject
 							.getString("description"));
 					listThisWeekBean.add(thisWeekBean);
@@ -181,12 +240,14 @@ public class videoPlayer extends SherlockFragment {
 						R.id.textTime);
 				TextView description = (TextView) getView().findViewById(
 						R.id.textDesc);
-				VideoView videoView = (VideoView) getView().findViewById(
-						R.id.videoView1);
+//				videoView = (VideoView) getView().findViewById(
+//						R.id.videoView1);
+				WebView mWebView = (WebView) getView().findViewById(
+						R.id.webView1);
 				
-				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextView(description, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", attachingActivityLock.getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", attachingActivityLock.getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextView(description, 11, "A6A5A2", attachingActivityLock.getApplicationContext().getAssets());
 				
 
 				title.setText("");
@@ -196,13 +257,48 @@ public class videoPlayer extends SherlockFragment {
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
 				description.setText(Html.fromHtml(thisWeekBean.getdescription()));
-				videoView
-						.setMediaController(new MediaController(getActivity()));
-				Uri uri = Uri
-						.parse(thisWeekBean.getvideo_uri());
-				videoView.setVideoURI(uri);
-				videoView.requestFocus();
-				videoView.start();
+				
+				String page;
+				String videoUrl = ""; 
+				try {
+					String videoID = thisWeekBean.getvideo_uri().split("v=")[1];
+					page = new Communicator().httpGetService("http://gdata.youtube.com/feeds/mobile/videos/"+videoID, "");
+					Document doc = Jsoup.parse(page);
+					Element ab = doc.getElementsByTag("media:content").get(1);
+					videoUrl = ab.attr("url");
+					
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+
+//				videoView
+//						.setMediaController(new MediaController(attachingActivityLock));
+//				Log.d("entry", "entry : " + videoUrl);
+//				Uri uri = Uri
+//						.parse(videoUrl);
+//				videoView.setVideoURI(uri);
+//				videoView.requestFocus();
+//				
+//				videoView.start();
+//				
+//				String videoSource = "http://173.193.24.66/~kanz/video/mp4/9.mp4";
+
+//				videoView.setMediaController(new MediaController(attachingActivityLock));
+//				videoView.setVideoPath(videoUrl);
+//				videoView.requestFocus();
+//				videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//				  public void onPrepared(MediaPlayer mp) {
+//					  videoView.start();
+//				  }
+//				});
+				
+				mWebView.getSettings().setJavaScriptEnabled(true);
+				mWebView.getSettings().setPluginState(PluginState.ON);
+				String videoID = thisWeekBean.getvideo_uri().split("v=")[1];
+				mWebView.loadUrl("http://www.youtube.com/embed/" + videoID + "?autoplay=1&vq=small");
 			}
 		}
 	}
@@ -251,7 +347,7 @@ public class videoPlayer extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
+				Toast.makeText(attachingActivityLock.getApplicationContext(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
 			}
@@ -272,7 +368,7 @@ public class videoPlayer extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				if (!thisWeekBean.getfooter_logo().isEmpty()) {
@@ -303,6 +399,47 @@ public class videoPlayer extends SherlockFragment {
 			}
 		}
 
+		
 	}
+	
+	public class Communicator {
+		public String httpGetService(String serviceName, String param) {
+			String result = "";
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpGet getMethod = new HttpGet(serviceName
+						+ "?" + param);
+				Log.e(serviceName + " GetURL = ", serviceName + "?" + param);
+				BufferedReader in = null;
+				BasicHttpResponse httpResponse = (BasicHttpResponse) httpclient
+						.execute(getMethod);
+				if (httpResponse.getStatusLine().getStatusCode() == 401) {
+					Log.i("Response Json Failure: 401",
+							"" + httpResponse.toString());
+					AppConstants.ERROR401 = httpResponse.getStatusLine()
+							.getStatusCode() + "";
+				} else
+					Log.i("Response Json 401 not fount", ""
+							+ "httpResponse.toString()");
+
+				in = new BufferedReader(new InputStreamReader(httpResponse
+						.getEntity().getContent()));
+
+				StringBuffer sb = new StringBuffer("");
+				String line = "";
+				while ((line = in.readLine()) != null) {
+					sb.append(line);
+				}
+				in.close();
+				result = sb.toString();
+				System.out.println(serviceName + " result = " + result);
+				// result = checkFor401Error(httpResponse, result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+		}
+	
 
 }

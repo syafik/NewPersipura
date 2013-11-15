@@ -241,6 +241,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			Exception exception) {
 		if (state.isOpened()) {
 			Log.i("Logged", "Logged in...");
+			
 		} else if (state.isClosed()) {
 			Log.i("Logged", "Logged out...");
 		}
@@ -404,6 +405,13 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(mediaTerbaru.TAG);
 		videoPlayer videoplayerFragment = (videoPlayer) getSupportFragmentManager()
 				.findFragmentByTag(videoPlayer.TAG);
+		Stream stream = (Stream) getSupportFragmentManager()
+				.findFragmentByTag(Stream.TAG);
+		
+		if (stream != null) {
+			stream.getView().setVisibility(View.GONE);
+		}
+		
 		if (twitterFragment != null) {
 			twitterFragment.getView().setVisibility(View.GONE);
 		}
@@ -470,6 +478,9 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager()
 				.findFragmentByTag(Squad.TAG);
+		Stream streamFragment = (Stream) getSupportFragmentManager()
+				.findFragmentByTag(Stream.TAG);
+		
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(mTabbars);
 		String prevFragment = mPrefs.getString("currentFragment", Home.TAG);
@@ -592,7 +603,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			titleNav = "Facebook";
 			break;
 		case 7:
-
+			HideOtherActivities();
 			if (twitterSession.isTwitterLoggedInAlready()) {
 				ProgressDialog pd = new ProgressDialog(mTabbars);
 				pd.setMessage("Loading...");
@@ -687,32 +698,12 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	public void logoutTwitter() {
 		twitterSession.logout();
-		progressDialog = new ProgressDialog(mTabbars);
-		progressDialog.setMessage("Loading...");
-		progressDialog.setCancelable(false);
+		TwitterSocial twitter_social = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
+		FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        trans.remove(twitter_social);
+        trans.commit();
+        selectItem(0);
 
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
-		progressDialog.show();
 
 	}
 
@@ -792,43 +783,46 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	public void loginToFacebook() {
-		OnLoginListener onLoginListener = new SimpleFacebook.OnLoginListener() {
-
-			private String TAG;
-
-			@Override
-			public void onFail(String reason) {
-				Log.w(TAG, reason);
-			}
-
-			@Override
-			public void onException(Throwable throwable) {
-				Log.e(TAG, "Bad thing happened", throwable);
-			}
-
-			@Override
-			public void onThinking() {
-				// show progress bar or something to the user while login is
-				// happening
-				Log.i(TAG, "In progress");
-			}
-
-			@Override
-			public void onLogin() {
-				// change the state of the button or do whatever you want
-				Log.i(TAG, "Logged in");
-				Toast.makeText(getApplicationContext(), "Login SuccessFully",
-						Toast.LENGTH_LONG).show();
-			}
-
-			@Override
-			public void onNotAcceptingPermissions() {
-				Log.w(TAG, "User didn't accept read permissions");
-			}
-
-		};
-
-		mSimpleFacebook.login(onLoginListener);
+//		OnLoginListener onLoginListener = new SimpleFacebook.OnLoginListener() {
+//
+//			private String TAG;
+//
+//			@Override
+//			public void onFail(String reason) {
+//				Log.w(TAG, reason);
+//			}
+//
+//			@Override
+//			public void onException(Throwable throwable) {
+//				Log.e(TAG, "Bad thing happened", throwable);
+//			}
+//
+//			@Override
+//			public void onThinking() {
+//				// show progress bar or something to the user while login is
+//				// happening
+//				Log.i(TAG, "In progress");
+//			}
+//
+//			@Override
+//			public void onLogin() {
+//				// change the state of the button or do whatever you want
+//				Log.i(TAG, "Logged in");
+//				selectItem(6);
+//				Toast.makeText(getApplicationContext(), "Login SuccessFully",
+//						Toast.LENGTH_LONG).show();
+//			}
+//
+//			@Override
+//			public void onNotAcceptingPermissions() {
+//				Log.w(TAG, "User didn't accept read permissions");
+//			}
+//
+//		};
+//
+//		mSimpleFacebook.login(onLoginListener);
+		Intent intent = new Intent(MainActivity.this, com.persipura.socialize.MainFacebook.class);
+		startActivity(intent);
 
 	}
 
@@ -1104,8 +1098,14 @@ public class MainActivity extends SherlockFragmentActivity {
 			String backstack = mPrefs.getString("prevFragment", "");
 			if (!backstack.isEmpty()) {
 				HideOtherActivities();
-				getSupportFragmentManager().findFragmentByTag(backstack)
-						.getView().setVisibility(View.VISIBLE);
+				if(getSupportFragmentManager().findFragmentByTag(backstack) != null){
+					getSupportFragmentManager().findFragmentByTag(backstack)
+					.getView().setVisibility(View.VISIBLE);	
+				}else{
+					getSupportFragmentManager().findFragmentByTag(Home.TAG)
+					.getView().setVisibility(View.VISIBLE);
+				}
+				
 			}
 			// do your stuff and Return true to prevent this event from being
 			// propagated further
@@ -1214,7 +1214,8 @@ public class MainActivity extends SherlockFragmentActivity {
 			pDialog.cancel();
 
 			if (result) {
-				start();
+				selectItem(0);
+//				start();
 			} else {
 				Toast.makeText(MainActivity.this, "Please Retry Again",
 						Toast.LENGTH_SHORT).show();
@@ -1233,7 +1234,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private void start() {
-		Log.d("masukin", "ini start loh mas");
+		Log.d("masukin", "onStartCalled()");
 
 	}
 

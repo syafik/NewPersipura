@@ -3,15 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <LinearLayout
-        android:id="@+id/relativeLayout4"
+<LinearLayout
+        android:id="@+id/closeTweet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="#2E2C2C"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+         >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dip" >
+
+           <Button 
+                android:id="@+id/btnCloseTweet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tweet"
+                android:textColor="#ccc"
+                android:background="@drawable/tweet_button_background"
+                />
+        </RelativeLayout>
+       
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/openTweet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#2E2C2C"
+        android:orientation="vertical" 
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/tweetOpen"
@@ -19,10 +45,12 @@
             android:layout_height="match_parent"
             android:layout_margin="10dip" >
 
-            <TextView 
+            <EditText 
+                android:id="@+id/tweetText"
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:padding="10dp"
+                android:textColor="#cccccc"
                 android:background="@drawable/tweet_text_background"/>
         </RelativeLayout>
         <RelativeLayout 
@@ -43,7 +71,6 @@
                 android:text="Cancel"
                 android:textColor="#ccc"
                 android:background="@drawable/tweet_button_background"
-                android:padding="10dp"
                 />
 
             <ImageButton
@@ -52,9 +79,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/cancelTweet"
                 android:layout_marginLeft="15dp"
+                android:padding="10dp"
                 android:layout_toRightOf="@+id/cancelTweet"
                 android:background="@drawable/tweet_button_background"
-                android:padding="9dp"
                 android:src="@drawable/camera"
                 android:textColor="#ccc" />
             </LinearLayout>
@@ -73,12 +100,12 @@
                     />
 
             <Button
-                android:id="@+id/tweetPic"
+                android:id="@+id/sendTweet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:background="@drawable/tweet_button_background"
-                android:padding="9dp"
+                
                 android:text="Tweet"
                 android:textColor="#ccc" />
             </LinearLayout>

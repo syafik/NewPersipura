@@ -70,14 +70,14 @@ public class JadwalPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		showProgressDialog();
+		showProgressDialog();
 //		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.jadwal_pertandingan,
 				container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
-		new fetchFooterFromServer().execute("");
+//		new fetchFooterFromServer().execute("");
 		
 		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
 		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
@@ -96,13 +96,13 @@ public class JadwalPertandingan extends SherlockFragment {
 		mScrollView = mPullRefreshScrollView.getRefreshableView();
 		footerLayout = (FrameLayout) rootView
 				.findViewById(R.id.bottom_control_bar);
-		
+//		
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-		TextView footerTitle = (TextView) rootView
-				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
+//		TextView footerTitle = (TextView) rootView
+//				.findViewById(R.id.footerText);
+//		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+//				getActivity().getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
@@ -126,7 +126,7 @@ public class JadwalPertandingan extends SherlockFragment {
 			@Override
 			public void run() {
 				progressDialog.show();
-				h.postDelayed(r2, 5000);
+				h.postDelayed(r2, 10000);
 			}
 		};
 

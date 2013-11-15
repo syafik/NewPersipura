@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import com.persipura.bean.FooterBean;
 import com.persipura.match.JadwalPertandingan;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 
 public class pageSliding extends SherlockFragment {
@@ -40,6 +42,8 @@ public class pageSliding extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	LinearLayout footerLayout;
 	String LinkId;
+	MainActivity attachingActivityLock;
+
 
 	public static final String TAG = pageSliding.class.getSimpleName();
 
@@ -47,6 +51,20 @@ public class pageSliding extends SherlockFragment {
 		return new pageSliding();
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,7 +90,7 @@ public class pageSliding extends SherlockFragment {
 		TextView footerTitle = (TextView) footerLayout
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
+				attachingActivityLock.getApplicationContext().getAssets());
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -202,7 +220,7 @@ public class pageSliding extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
+				Toast.makeText(attachingActivityLock.getApplicationContext(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
 			}
@@ -223,7 +241,7 @@ public class pageSliding extends SherlockFragment {
 				bmOptions.inSampleSize = 1;
 				int loader = R.drawable.loader;
 
-				ImageLoader imgLoader = new ImageLoader(getActivity()
+				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
 				if (!thisWeekBean.getfooter_logo().isEmpty()) {
@@ -255,4 +273,6 @@ public class pageSliding extends SherlockFragment {
 		}
 
 	}
+	
+	
 }

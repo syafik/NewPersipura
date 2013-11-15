@@ -14,8 +14,23 @@ import java.util.Comparator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import twitter4j.Paging;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
+import twitter4j.auth.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.util.TimeSpanConverter;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
+import com.application.app.utility.Constants;
+import com.application.app.utility.TwitterSession;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -37,6 +52,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +61,9 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
+import android.text.TextPaint;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +72,7 @@ import android.view.ViewGroup;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,6 +89,7 @@ public class Stream extends SherlockFragment {
 	List<TweetBean> listThisWeekBean;
 	List<FooterBean> listFooterBean;
 	List<AdsBean> listAdsBean;
+	List<twitter4j.Status> statuses;
 	LinearLayout lifePageCellContainerLayout;
 	FrameLayout footerLayout;
 	ViewGroup newContainer;
@@ -80,6 +101,9 @@ public class Stream extends SherlockFragment {
 	int hitung = 15;
 	int offset = 15;
 	int failedRetrieveCount = 0;
+	EditText tweetText;
+	LinearLayout closeParentTweet;
+	LinearLayout openParentTweet;
 
 	MainActivity attachingActivityLock;
 
@@ -113,7 +137,7 @@ public class Stream extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		setRetainInstance(true);
-//		showProgressDialog();
+		showProgressDialog();
 		// new fetchLocationFromServer().execute("");
 		  
 
@@ -123,33 +147,95 @@ public class Stream extends SherlockFragment {
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
 
-		Integer[] param = new Integer[] { hitung, 0 };
+		Integer[] param = new Integer[] { hitung, 1 };
 		new fetchLocationFromServer().execute(param);
 
-		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
-				.findViewById(R.id.pull_refresh_scrollview);
-		mPullRefreshScrollView
-				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
-
-					@Override
-					public void onRefresh(
-							PullToRefreshBase<ScrollView> refreshView) {
-						// new GetDataTask().execute();
-
-						Integer[] param = new Integer[] { hitung, offset };
-						new fetchLocationFromServer().execute(param);
-						offset = offset + 15;
-
-					}
-				});
-
-		mScrollView = mPullRefreshScrollView.getRefreshableView();
+//		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
+//				.findViewById(R.id.pull_refresh_scrollview);
+//		mPullRefreshScrollView
+//				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+//
+//					@Override
+//					public void onRefresh(
+//							PullToRefreshBase<ScrollView> refreshView) {
+//						// new GetDataTask().execute();
+//
+//						Integer[] param = new Integer[] { hitung, offset };
+//						new fetchLocationFromServer().execute(param);
+//						offset = offset + 15;
+//
+//					}
+//				});
+//
+//		mScrollView = mPullRefreshScrollView.getRefreshableView();
 
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 		footerLayout = (FrameLayout) rootView
 				.findViewById(R.id.bottom_control_bar);
-
+		Button send = (Button) rootView.findViewById(R.id.sendTweet);
+		Button cancel = (Button) rootView.findViewById(R.id.cancelTweet);
+		tweetText = (EditText) rootView.findViewById(R.id.tweetText);
+		openParentTweet = (LinearLayout) rootView.findViewById(R.id.openTweet);
+		closeParentTweet = (LinearLayout) rootView.findViewById(R.id.closeTweet);
+		Button closeTweet = (Button) rootView.findViewById(R.id.btnCloseTweet);
+		
+		closeTweet.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				tweetText.setText("");
+				openParentTweet.setVisibility(View.VISIBLE);
+				closeParentTweet.setVisibility(View.GONE);
+				
+			}
+		});
+		
+		cancel.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						openParentTweet.setVisibility(View.GONE);
+						closeParentTweet.setVisibility(View.VISIBLE);
+						tweetText.setText("");
+						
+					}
+				});	
+		send.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String tweet = tweetText.getText().toString();
+				Log.d("tweet", "tweet this : " + tweet);
+				
+				ConfigurationBuilder builder = new ConfigurationBuilder();
+				builder.setOAuthConsumerKey(Constants.TWITTER_CONSUMER_KEY);
+				builder.setOAuthConsumerSecret(Constants.TWITTER_CONSUMER_SECRET);
+				builder.setDebugEnabled(true);
+				// Access Token
+				TwitterSession twitterSession = attachingActivityLock.twitterSession;
+				String access_token = twitterSession.getDefaultAccessToaken();
+				// Access Token Secret
+				String access_token_secret = twitterSession.getDefaultSecret();
+				AccessToken accessToken = new AccessToken(access_token,
+						access_token_secret);
+				Twitter twitter = new TwitterFactory(builder.build())
+						.getInstance(accessToken);
+				
+				// Update status
+				twitter4j.Status response;
+				try {
+					response = twitter.updateStatus(tweet);
+					tweetText.setText("");
+					Log.d(TAG, "Response Text=>" + response.getText());
+				} catch (TwitterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
@@ -175,9 +261,45 @@ public class Stream extends SherlockFragment {
 
 		@Override
 		protected String doInBackground(Integer... param) {
-			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/news", "limit=" + param[0] + "&offset="
-							+ param[1]);
+//			String result = WebHTTPMethodClass.httpGetService(
+//					"/restapi/get/news", "limit=" + param[0] + "&offset="
+//							+ param[1]);
+			String result = null;
+			
+			ConfigurationBuilder builder = new ConfigurationBuilder();
+			builder.setOAuthConsumerKey(Constants.TWITTER_CONSUMER_KEY);
+			builder.setOAuthConsumerSecret(Constants.TWITTER_CONSUMER_SECRET);
+			builder.setDebugEnabled(true);
+			// Access Token
+			TwitterSession twitterSession = attachingActivityLock.twitterSession;
+			String access_token = twitterSession.getDefaultAccessToaken();
+			// Access Token Secret
+			String access_token_secret = twitterSession.getDefaultSecret();
+			AccessToken accessToken = new AccessToken(access_token,
+					access_token_secret);
+			Twitter twitter = new TwitterFactory(builder.build())
+					.getInstance(accessToken);
+			
+			try {
+			    Query query = new Query("persipura");
+			    QueryResult results = twitter.search(query);
+			    if(param[1] == 1){
+			    	statuses = results.getTweets();
+			    	result = statuses.toString();	
+			    }else{
+			    	result = results.nextQuery().toString();
+			    }
+//				statuses = twitter.getUserTimeline("IDPersipura", new Paging(param[1], param[0]));
+				
+			    				
+
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TwitterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			return result;
 		}
@@ -189,33 +311,40 @@ public class Stream extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(String result) {
+			Log.d("resulTweet", "resultTweet : " + result);
+			
+			listThisWeekBean = new ArrayList<TweetBean>();
 			try {
-				JSONArray jsonArray = new JSONArray(result);
-
-				listThisWeekBean = new ArrayList<TweetBean>();
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject resObject = jsonArray.getJSONObject(i);
-					NewsBean thisWeekBean = new NewsBean();
-					thisWeekBean.setNid(resObject.getString("nid"));
-					thisWeekBean.settitle(resObject.getString("title"));
-					thisWeekBean.setteaser(resObject.getString("teaser"));
-					thisWeekBean.setimg_uri(resObject.getString("img_uri"));
-					thisWeekBean.setcreated(resObject.getString("created"));
+				for (twitter4j.Status status3 : statuses) 
+                {
+					TimeSpanConverter converter = new TimeSpanConverter(); 
+					String createdAt = converter.toTimeSpanString(status3.getCreatedAt()); 
 					
-
-//					listThisWeekBean.add(thisWeekBean);
-				}
+                    TweetBean thisWeekBean = new TweetBean();
+   					thisWeekBean.setTweet(status3.getText());
+   					thisWeekBean.setTime(createdAt);
+   					thisWeekBean.setUserImg(status3.getUser().getOriginalProfileImageURL().toString());	
+   					thisWeekBean.setName(status3.getUser().getName());
+   					thisWeekBean.setUsername(status3.getUser().getScreenName());
+   					listThisWeekBean.add(thisWeekBean);
+   
+                       
+                }
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
 				} else {
 					offset = offset - 15;
-					mPullRefreshScrollView.onRefreshComplete();
+//					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				failedRetrieveCount++;
 
+			}
+			
+			if(progressDialog != null){
+				progressDialog.dismiss();
 			}
 		}
 
@@ -226,27 +355,30 @@ public class Stream extends SherlockFragment {
 				TweetBean thisWeekBean = listThisWeekBean.get(i);
 				View cellViewMainLayout = mInflater.inflate(R.layout.tweet_list,
 						null);
-				TextView titleNews = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_name);
-				TextView descNews = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_address);
-				TextView cellnumTextView = (TextView) cellViewMainLayout
-						.findViewById(R.id.findzoes_list_text_cellnum);
-				ImageView imgNews = (ImageView) cellViewMainLayout
-						.findViewById(R.id.imageView1);
-
-				titleNews.setText("");
-				descNews.setText("");
-				cellnumTextView.setText("");
-
-				cellViewMainLayout.setTag(nid);
-				Log.d("NewsId", "NewsId : " + cellViewMainLayout.getTag());
-
+				TextView tweetDesc = (TextView) cellViewMainLayout.findViewById(R.id.tweetDesc);
+				TextView tweetTime = (TextView) cellViewMainLayout.findViewById(R.id.tweetTime);
+				TextView tweetUsername = (TextView) cellViewMainLayout.findViewById(R.id.tweetUsername);
+				TextView username = (TextView) cellViewMainLayout.findViewById(R.id.username);
 				
-				AppConstants.fontrobotoTextViewBold(titleNews, 13, "ffffff",
+				tweetDesc.setText(thisWeekBean.getTweet());
+				tweetUsername.setText(thisWeekBean.getName());
+				username.setText("@" + thisWeekBean.getUsername());
+				
+				AppConstants.fontrobotoTextViewBold(tweetUsername, 11, "ffffff",
 						attachingActivityLock.getApplicationContext()
 								.getAssets());
-				
+				AppConstants.fontrobotoTextView(username, 11, "cccccc",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				AppConstants.fontrobotoTextView(tweetDesc, 10, "ffffff",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				tweetDesc.setLinkTextColor(Color.RED); //for example
+				Linkify.addLinks(tweetDesc, Linkify.ALL);
+				AppConstants.fontrobotoTextView(tweetTime, 10, "cccccc",
+						attachingActivityLock.getApplicationContext()
+								.getAssets());
+				ImageView img = (ImageView) cellViewMainLayout.findViewById(R.id.imageView1); 
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -255,10 +387,10 @@ public class Stream extends SherlockFragment {
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
-//				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
-//						imgNews);
+				imgLoader.DisplayImage(thisWeekBean.getUserImg(), loader,
+						img);
 				
-				mPullRefreshScrollView.onRefreshComplete();
+//				mPullRefreshScrollView.onRefreshComplete();
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
@@ -546,5 +678,15 @@ public class Stream extends SherlockFragment {
 			progressDialog.dismiss();
 		
 		}
+	}
+	
+	public class URLSpanNoUnderline extends URLSpan {
+	    public URLSpanNoUnderline(String url) {
+	        super(url);
+	    }
+	    @Override public void updateDrawState(TextPaint ds) {
+	        super.updateDrawState(ds);
+	        ds.setUnderlineText(false);
+	        }
 	}
 }

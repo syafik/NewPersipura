@@ -56,64 +56,13 @@ public class FacebookSocial extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		showProgressDialog();
 		View rootView = inflater.inflate(R.layout.sejarah, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		
-		lifePageCellContainerLayout = (RelativeLayout) rootView.findViewById(R.id.lifePageCellContainerLayout);
-		WebView webView = (WebView) lifePageCellContainerLayout.findViewById(R.id.webview);
-
-	       webView.getSettings().setJavaScriptEnabled(true);     
-	       webView.getSettings().setLoadWithOverviewMode(true);
-	       webView.getSettings().setUseWideViewPort(true);        
-	        webView.setWebViewClient(new WebViewClient(){
-
-	            @Override
-	            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	            	progressDialog.show();
-	                view.loadUrl(url);
-
-	                return true;                
-	            }
-	            @Override
-	            public void onPageFinished(WebView view, final String url) {
-	            	progressDialog.dismiss();
-	            }
-	        });
-
-	        webView.loadUrl("https://www.FacebookSocial.com/persipura");
-
-
-//		 webview.loadUrl("https://www.FacebookSocial.com/persipura");
-
+		
 		return rootView;
 	}
 
-	private void showProgressDialog() {
-		progressDialog = new ProgressDialog(getActivity());
-		progressDialog.setMessage("Loading...");
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
-		progressDialog.show();
-	}
 
 	
 }

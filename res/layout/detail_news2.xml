@@ -24,6 +24,7 @@
                 android:id="@+id/imageView1"
                 android:layout_width="fill_parent"
                 android:layout_height="125dp"
+                android:scaleType="fitXY"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="-40dp"
                 android:src="@drawable/loader" />

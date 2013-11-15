@@ -57,6 +57,7 @@ public class CalendarView extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		new fetchEventFromServer().execute("");
+//		showProgressDialog();
 		View rootView = inflater.inflate(R.layout.calendar, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 
