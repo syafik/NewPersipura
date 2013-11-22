@@ -100,6 +100,7 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 			switch (position) {
 			case 0:
 				fragment = new JadwalPertandingan();
+//				fragment = new CalendarView();
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position
 				// + 1);
@@ -121,6 +122,7 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 				return fragment;
 			case 3:
 				fragment = new CalendarView();
+//				fragment = new JadwalPertandingan();
 				args = new Bundle();
 				// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
 				// position + 1);
@@ -187,7 +189,7 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -239,7 +241,7 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
@@ -266,6 +268,11 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 						});
 
 					}
+					TextView footerTitle = (TextView) footerLayout
+							.findViewById(R.id.footerText);
+					footerTitle.setText("Proudly Sponsored by");
+					AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+							getActivity().getApplicationContext().getAssets());
 
 				}
 

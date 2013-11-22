@@ -41,8 +41,9 @@
         
         <ImageView 
             android:layout_width="fill_parent"
-            android:layout_height="170dp"
-            android:src="@drawable/image_thumb_4"
+            android:layout_height="wrap_content"
+            android:src="@drawable/staff_placeholder2x"
+            android:scaleType="center"
             android:id="@+id/detailGaleryImg"
             android:visibility="gone"
             />
@@ -57,14 +58,6 @@
             android:visibility="gone"
              />
         
-       <Button 
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="10dp"
-           android:background="@drawable/tweet_button_background"
-           android:text="Back"
-           android:id="@+id/back"
-           android:visibility="gone"/>
     </LinearLayout>
 
  <include layout="@layout/footer" />

@@ -10,14 +10,17 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +81,6 @@ public class PageSlidingNews extends SherlockFragment {
 		footerLayout = (LinearLayout) view.findViewById(R.id.outer);
 		new fetchFooterFromServer().execute("");
 
-		TextView footerTitle = (TextView) footerLayout
-				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -92,9 +91,6 @@ public class PageSlidingNews extends SherlockFragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
 			Fragment fragment = null;
 			Bundle args = null;
 			switch (position) {
@@ -169,7 +165,7 @@ public class PageSlidingNews extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -221,7 +217,7 @@ public class PageSlidingNews extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
@@ -232,8 +228,6 @@ public class PageSlidingNews extends SherlockFragment {
 
 					LinkId = null;
 					LinkId = thisWeekBean.getlink();
-					Log.d("clickable",
-							"clickable : " + thisWeekBean.getclickable());
 					if (thisWeekBean.getclickable().equals("1")) {
 
 						imgNews.setOnClickListener(new View.OnClickListener() {
@@ -252,6 +246,13 @@ public class PageSlidingNews extends SherlockFragment {
 				}
 
 			}
+			
+
+			TextView footerTitle = (TextView) footerLayout
+					.findViewById(R.id.footerText);
+			footerTitle.setText("Proudly Sponsored by");
+			AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+					getActivity().getApplicationContext().getAssets());	
 		}
 
 	}

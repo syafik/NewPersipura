@@ -27,9 +27,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
@@ -71,7 +73,6 @@ public class GaleryView2 extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	String LinkId;
 	ImageView bigImg;
-	Button backBtn;
 	GridView gridView;
 	TextView galleryDesc;
 
@@ -82,6 +83,7 @@ public class GaleryView2 extends SherlockFragment {
 		return new GaleryView2();
 	}
 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -100,22 +102,12 @@ public class GaleryView2 extends SherlockFragment {
 		mInflater = getLayoutInflater(savedInstanceState);
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		backBtn = (Button) rootView.findViewById(R.id.back);
 		galleryDesc = (TextView) rootView.findViewById(R.id.galleryDesc);
 		
-		backBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				v.setVisibility(View.GONE);
-				bigImg.setVisibility(View.GONE);
-				galleryDesc.setVisibility(View.GONE);
-				gridView.setVisibility(View.VISIBLE);
-				
-			}
-		});
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
 				getActivity().getApplicationContext().getAssets());
+		
+
 		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
@@ -146,6 +138,7 @@ public class GaleryView2 extends SherlockFragment {
 		progressDialog.show();
 	}
 
+	@SuppressLint("NewApi")
 	private class fetchImage extends AsyncTask<String, Void, String> {
 
 		
@@ -272,6 +265,56 @@ public class GaleryView2 extends SherlockFragment {
 		    public long getItemId(int position) {
 		        return 0;
 		    }
+		    
+		    private Bitmap DownloadImage(String URL) {
+				String URL1 = URL;
+				Bitmap bitmap = null;
+
+				InputStream in = null;
+				Message msg = Message.obtain();
+				msg.what = 1;
+				try {
+					in = OpenHttpConnection(URL1);
+					bitmap = BitmapFactory.decodeStream(in);
+					Bundle b = new Bundle();
+					b.putParcelable("bitmap", bitmap);
+					msg.setData(b);
+					in.close();
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
+				return bitmap;
+			}
+
+			private InputStream OpenHttpConnection(String urlString)
+					throws IOException {
+
+				InputStream in = null;
+				int response = -1;
+				URL url = new URL(urlString);
+				URLConnection conn = url.openConnection();
+				if (!(conn instanceof HttpURLConnection))
+					throw new IOException("Not an HTTP connection");
+				try {
+
+					HttpURLConnection httpConn = (HttpURLConnection) conn;
+					httpConn.setAllowUserInteraction(false);
+					httpConn.setInstanceFollowRedirects(true);
+
+					httpConn.connect();
+					response = httpConn.getResponseCode();
+
+					if (response == HttpURLConnection.HTTP_OK) {
+
+						in = httpConn.getInputStream();
+					}
+				} catch (Exception ex) {
+					throw new IOException("Error connecting");
+				}
+				return in;
+			}
 
 		    // create a new ImageView for each item referenced by the Adapter
 		    public View getView(int position, View convertView, ViewGroup parent) {
@@ -288,7 +331,7 @@ public class GaleryView2 extends SherlockFragment {
 		            imageView = (ImageView) convertView;
 		        }
 
-				final int loader = R.drawable.image_thumb_4;
+				final int loader = R.drawable.staff_placeholder2x;
 				imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
 				
@@ -296,13 +339,62 @@ public class GaleryView2 extends SherlockFragment {
 					
 					@Override
 					public void onClick(View v) {
-						imgLoader.DisplayImage(v.getTag().toString(), loader,
-								bigImg);
-						backBtn.setVisibility(View.VISIBLE);
+						showProgressDialog();
+						final Bitmap bitmap = DownloadImage(v.getTag().toString());
+//						imgLoader.DisplayImage(v.getTag().toString(), loader,
+//								bigImg);
+						Display display = getActivity().getWindowManager().getDefaultDisplay();
+                		Point size = new Point();
+                		display.getSize(size);
+                		int screenWidth = size.x;
+                		int screenHeight = size.y;
+
+                		// Get target image size
+//                		Bitmap bitmap = BitmapFactory.decodeFile(drawable.presence_offline);
+                		int bitmapHeight = bitmap.getHeight();
+                		int bitmapWidth = bitmap.getWidth();
+
+                		// Scale the image down to fit perfectly into the screen
+                		// The value (250 in this case) must be adjusted for phone/tables displays
+//                		while(bitmapHeight > (screenHeight - 250) || bitmapWidth > (screenWidth - 250)) {
+//                		    bitmapHeight = bitmapHeight / 2;
+//                		    bitmapWidth = bitmapWidth / 2;
+//                		}
+                		
+                		if(bitmapHeight > screenHeight){
+                			bitmapHeight = screenHeight - 30;
+                		}
+                		
+                		if(bitmapWidth > screenWidth){
+                			bitmapWidth = screenWidth;
+                		}
+
+                		// Create resized bitmap image
+                		BitmapDrawable resizedBitmap = new BitmapDrawable(getActivity().getResources(), Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false));
+
+                		// Create dialog
+						bigImg.setImageBitmap(resizedBitmap.getBitmap());
 						bigImg.setVisibility(View.VISIBLE);
 						galleryDesc.setText(v.getContentDescription().toString());
 						galleryDesc.setVisibility(View.VISIBLE);
 						gridView.setVisibility(View.GONE);
+						
+//						Dialog dialog = new Dialog(getActivity());
+//                		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                		dialog.setContentView(R.layout.thumbnail);
+//
+//                		ImageView image = (ImageView) dialog.findViewById(R.id.imageview);
+//
+//                		// !!! Do here setBackground() instead of setImageDrawable() !!! //
+////                		image.setBackground(resizedBitmap);
+//                		image.setImageBitmap(bitmap);
+//
+//                		// Without this line there is a very small border around the image (1px)
+//                		// In my opinion it looks much better without it, so the choice is up to you.
+//                		dialog.getWindow().setBackgroundDrawable(null);
+//
+//                		// Show the dialog
+//                		dialog.show();
 						
 					}
 				});
@@ -326,7 +418,7 @@ public class GaleryView2 extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -378,7 +470,7 @@ public class GaleryView2 extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
@@ -405,7 +497,11 @@ public class GaleryView2 extends SherlockFragment {
 						});
 
 					}
-
+					TextView footerTitle = (TextView) footerLayout
+							.findViewById(R.id.footerText);
+					footerTitle.setText("Proudly Sponsored by");
+					AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+							getActivity().getApplicationContext().getAssets());
 				}
 
 			}

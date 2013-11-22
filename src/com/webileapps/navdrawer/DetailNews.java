@@ -1,6 +1,10 @@
 package com.webileapps.navdrawer;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -9,18 +13,24 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +48,7 @@ public class DetailNews extends SherlockFragment {
 	private LayoutInflater mInflater;
 	List<NewsBean> listThisWeekBean;
 	List<FooterBean> listFooterBean;
-	FrameLayout footerLayout;
+	LinearLayout footerLayout;
 	String LinkId;
 	RelativeLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
@@ -91,15 +101,14 @@ public class DetailNews extends SherlockFragment {
 		newContainer = container;
 		lifePageCellContainerLayout = (RelativeLayout) rootView
 				.findViewById(R.id.list_parent);
-		footerLayout = (FrameLayout) rootView
-				.findViewById(R.id.bottom_control_bar);
+		footerLayout = (LinearLayout) rootView
+				.findViewById(R.id.outer);
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
 				getActivity().getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
 		MainActivity.getInstance().changeItemSearchToShare(true);
-		
 		
 		return rootView;
 	}
@@ -200,21 +209,20 @@ public class DetailNews extends SherlockFragment {
 				List<NewsBean> listThisWeekBean) {
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				NewsBean thisWeekBean = listThisWeekBean.get(i);
-				View cellViewMainLayout = mInflater.inflate(
-						R.layout.detail_news2, null);
-				TextView titleNews = (TextView) cellViewMainLayout
+				
+				TextView titleNews = (TextView) lifePageCellContainerLayout
 						.findViewById(R.id.title);
-				TextView descNews = (TextView) cellViewMainLayout
+				TextView descNews = (TextView) lifePageCellContainerLayout
 						.findViewById(R.id.desc);
-				TextView time = (TextView) cellViewMainLayout
+				TextView time = (TextView) lifePageCellContainerLayout
 						.findViewById(R.id.time);
-				ImageView imgNews = (ImageView) cellViewMainLayout
+				ImageView imgNews = (ImageView) lifePageCellContainerLayout
 						.findViewById(R.id.imageView1);
 
 				titleNews.setText("");
 				descNews.setText("");
 				time.setText("");
-				cellViewMainLayout.setTag(thisWeekBean.getNid());
+				lifePageCellContainerLayout.setTag(thisWeekBean.getNid());
 
 				titleNews.setText(thisWeekBean.gettitle());
 				descNews.setText(Html.fromHtml(thisWeekBean.getteaser()));
@@ -227,23 +235,55 @@ public class DetailNews extends SherlockFragment {
 				AppConstants.fontrobotoTextView(time, 11, "cccccc",
 						getActivity().getApplicationContext().getAssets());
 				
-				BitmapFactory.Options bmOptions;
+//				BitmapFactory.Options bmOptions;
+//
+//				bmOptions = new BitmapFactory.Options();
+//				bmOptions.inSampleSize = 1;
+//				int loader = R.drawable.loader;
+//				ImageLoader imgLoader = new ImageLoader(getActivity()
+//						.getApplicationContext());
+//
+//				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
+//						imgNews);
+				Bitmap bitmap = DownloadImage(thisWeekBean.getimg_uri());
+//				imgLoader.DisplayImage(v.getTag().toString(), loader,
+//						bigImg);
+				Display display = getActivity().getWindowManager().getDefaultDisplay();
+        		Point size = new Point();
+        		display.getSize(size);
+        		int screenWidth = size.x;
+        		int screenHeight = size.y;
 
-				bmOptions = new BitmapFactory.Options();
-				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
-				ImageLoader imgLoader = new ImageLoader(getActivity()
-						.getApplicationContext());
+        		// Get target image size
+//        		Bitmap bitmap = BitmapFactory.decodeFile(drawable.presence_offline);
+        		int bitmapHeight = bitmap.getHeight();
+        		int bitmapWidth = bitmap.getWidth();
 
-				imgLoader.DisplayImage(thisWeekBean.getimg_uri(), loader,
-						imgNews);
+        		// Scale the image down to fit perfectly into the screen
+        		// The value (250 in this case) must be adjusted for phone/tables displays
+//        		while(bitmapHeight > (screenHeight - 250) || bitmapWidth > (screenWidth - 250)) {
+//        		    bitmapHeight = bitmapHeight / 2;
+//        		    bitmapWidth = bitmapWidth / 2;
+//        		}
+        		if(bitmapHeight > screenHeight){
+        			bitmapHeight = screenHeight - 30;
+        		}
+        		
+        		if(bitmapWidth > screenWidth){
+        			bitmapWidth = screenWidth;
+        		}
+
+        		// Create resized bitmap image
+        		BitmapDrawable resizedBitmap = new BitmapDrawable(getActivity().getResources(), Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false));
+                imgNews.setImageBitmap(resizedBitmap.getBitmap());
 				MainActivity.getInstance().setFacebookContentShare(thisWeekBean.gettitle(), thisWeekBean.getshared_url());
-				lifePageCellContainerLayout.addView(cellViewMainLayout);
-
+				
 			}
 		}
 
 	}
+	
+	
 
 	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
 
@@ -255,7 +295,7 @@ public class DetailNews extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -311,7 +351,7 @@ public class DetailNews extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
@@ -322,8 +362,12 @@ public class DetailNews extends SherlockFragment {
 
 					LinkId = null;
 					LinkId = thisWeekBean.getlink();
-					Log.d("clickable",
-							"clickable : " + thisWeekBean.getclickable());
+					TextView footerTitle = (TextView) footerLayout
+							.findViewById(R.id.footerText);
+					footerTitle.setText("Proudly Sponsored by");
+					AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+							attachingActivityLock.getApplicationContext().getAssets());
+					
 					if (thisWeekBean.getclickable().equals("1")) {
 
 						imgNews.setOnClickListener(new View.OnClickListener() {
@@ -342,9 +386,63 @@ public class DetailNews extends SherlockFragment {
 				}
 
 			}
+			
+
+			
 		}
 
 	}
+	
+	 private Bitmap DownloadImage(String URL) {
+			String URL1 = URL;
+			Bitmap bitmap = null;
+
+			InputStream in = null;
+			Message msg = Message.obtain();
+			msg.what = 1;
+			try {
+				in = OpenHttpConnection(URL1);
+				bitmap = BitmapFactory.decodeStream(in);
+				Bundle b = new Bundle();
+				b.putParcelable("bitmap", bitmap);
+				msg.setData(b);
+				in.close();
+			} catch (IOException e1) {
+
+				e1.printStackTrace();
+			}
+
+			return bitmap;
+		}
+
+		private InputStream OpenHttpConnection(String urlString)
+				throws IOException {
+
+			InputStream in = null;
+			int response = -1;
+			URL url = new URL(urlString);
+			URLConnection conn = url.openConnection();
+			if (!(conn instanceof HttpURLConnection))
+				throw new IOException("Not an HTTP connection");
+			try {
+
+				HttpURLConnection httpConn = (HttpURLConnection) conn;
+				httpConn.setAllowUserInteraction(false);
+				httpConn.setInstanceFollowRedirects(true);
+
+				httpConn.connect();
+				response = httpConn.getResponseCode();
+
+				if (response == HttpURLConnection.HTTP_OK) {
+
+					in = httpConn.getInputStream();
+				}
+			} catch (Exception ex) {
+				throw new IOException("Error connecting");
+			}
+			return in;
+		}
+
 	
 	@Override
 	public void onDestroy() {

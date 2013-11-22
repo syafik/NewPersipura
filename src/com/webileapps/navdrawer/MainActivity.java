@@ -24,6 +24,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -64,11 +65,6 @@ import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.application.app.utility.Constants;
 import com.application.app.utility.TwitterSession;
-import com.dg.android.facebook.BaseRequestListener;
-import com.dg.android.facebook.SessionEvents;
-import com.dg.android.facebook.SessionEvents.AuthListener;
-import com.dg.android.facebook.SessionEvents.LogoutListener;
-import com.dg.android.facebook.SessionStore;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -76,6 +72,7 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.persipura.aboutus.Store;
 import com.persipura.home.Home;
 import com.persipura.match.HasilPertandingan;
 import com.persipura.match.PageSlidingTabStripFragment;
@@ -133,7 +130,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// Instance of Facebook Class
 
-	String FILENAME = "AndroidSSO_data";
 	SimpleFacebook mSimpleFacebook;
 	private static final String TAG = "MainActivity";
 	public static final int REQUEST_CODE = 100;
@@ -202,21 +198,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		Log.d("masukin", "ini ngeload lagi loh mas");
 		if (savedInstanceState == null) {
-
-			Bundle extras = getIntent().getExtras();
-			if (extras == null) {
-
-				selectItem(0);
-			} else {
-				squadId = extras.getString("squadId");
-				if (squadId != null) {
-					selectItem(5);
-				} else {
-					selectItem(0);
-
-				}
-
-			}
+			selectItem(0);
 
 		}
 		Session session = Session.getActiveSession();
@@ -242,7 +224,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			Exception exception) {
 		if (state.isOpened()) {
 			Log.i("Logged", "Logged in...");
-			
+
 		} else if (state.isClosed()) {
 			Log.i("Logged", "Logged out...");
 		}
@@ -301,7 +283,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				public void onClick(View v) {
 					if (search.length() > 0) {
-						selectItem(9);
+						selectItem(11);
 					}
 
 				}
@@ -340,7 +322,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			Log.d("logging", "logging item menu : " + view.getId());
+			Log.d("logging", "hit item menu : " + position);
 			selectItem(position);
 		}
 	}
@@ -407,10 +389,15 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(videoPlayer.TAG);
 		GaleryView2 galeryViewFragment = (GaleryView2) getSupportFragmentManager()
 				.findFragmentByTag(GaleryView2.TAG);
-		Stream stream = (Stream) getSupportFragmentManager()
-				.findFragmentByTag(Stream.TAG);
+		Stream stream = (Stream) getSupportFragmentManager().findFragmentByTag(
+				Stream.TAG);
 		
+		Store storeFragment = (Store) getSupportFragmentManager()
+				.findFragmentByTag(Store.TAG);
 		
+		if (storeFragment != null) {
+			storeFragment.getView().setVisibility(View.GONE);
+		}
 		
 		if (galeryViewFragment != null) {
 			galeryViewFragment.getView().setVisibility(View.GONE);
@@ -418,7 +405,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (stream != null) {
 			stream.getView().setVisibility(View.GONE);
 		}
-		
+
 		if (twitterFragment != null) {
 			twitterFragment.getView().setVisibility(View.GONE);
 		}
@@ -472,7 +459,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	}
 
-	private void selectItem(int position) {
+	public void selectItem(int position) {
 		PageSlidingNews newsFragment = (PageSlidingNews) getSupportFragmentManager()
 				.findFragmentByTag(PageSlidingNews.TAG);
 		Home homeFragment = (Home) getSupportFragmentManager()
@@ -483,12 +470,15 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(PageSlidingTabStripFragment.TAG);
 		Squad squadFragment = (Squad) getSupportFragmentManager()
 				.findFragmentByTag(Squad.TAG);
+		Store storeFragment = (Store) getSupportFragmentManager()
+				.findFragmentByTag(Store.TAG);
 		
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(mTabbars);
 		String prevFragment = mPrefs.getString("currentFragment", Home.TAG);
 		Editor editor = mPrefs.edit();
 
+		Log.d("position", "current position : " + position);
 		Bundle args = new Bundle();
 		switch (position) {
 		case 0:
@@ -518,9 +508,10 @@ public class MainActivity extends SherlockFragmentActivity {
 				newsFragment.getView().setVisibility(View.VISIBLE);
 			} else {
 				HideOtherActivities();
-				getSupportFragmentManager().beginTransaction()
-						.add(R.id.content, PageSlidingNews.newInstance(), PageSlidingNews.TAG)
-						.commit();
+				getSupportFragmentManager()
+						.beginTransaction()
+						.add(R.id.content, PageSlidingNews.newInstance(),
+								PageSlidingNews.TAG).commit();
 			}
 
 			titleNav = "News";
@@ -582,15 +573,27 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			titleNav = "Squad";
 			break;
+
 		case 5:
-			args.putString("squadId", squadId);
-			DetailSquad fragment = new DetailSquad();
-			fragment.setArguments(args);
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.content, fragment).commit();
-			titleNav = "Squad";
+			editor.putString("currentFragment", Store.TAG);
+			editor.putString("prevFragment", prevFragment);
+			editor.commit();
+			if (storeFragment != null) {
+				HideOtherActivities();
+				storeFragment.getView().setVisibility(View.VISIBLE);
+			} else {
+				HideOtherActivities();
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.content, Store.newInstance(), Store.TAG)
+						.commit();
+
+			}
 			break;
 		case 6:
+			break;
+		case 7:
+			break;
+		case 8:
 			Session session = Session.getActiveSession();
 			if (session == null || session.getState().isClosed()) {
 				FacebookConnectDialog cdd = new FacebookConnectDialog(
@@ -605,7 +608,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			titleNav = "Facebook";
 			break;
-		case 7:
+		case 9:
 			HideOtherActivities();
 			if (twitterSession.isTwitterLoggedInAlready()) {
 				ProgressDialog pd = new ProgressDialog(mTabbars);
@@ -651,13 +654,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				if (followBoth) {
 					HideOtherActivities();
-					 getSupportFragmentManager().beginTransaction()
-					 .add(R.id.content, TwitterSocial.newInstance(),
-					 TwitterSocial.TAG)
-					 .commit();
-//					TwitterLogoutPage tlp2 = new TwitterLogoutPage(
-//							MainActivity.this, twitterSession, twitter);
-//					tlp2.show();
+					getSupportFragmentManager()
+							.beginTransaction()
+							.add(R.id.content, TwitterSocial.newInstance(),
+									TwitterSocial.TAG).commit();
+					// TwitterLogoutPage tlp2 = new TwitterLogoutPage(
+					// MainActivity.this, twitterSession, twitter);
+					// tlp2.show();
 
 				} else {
 					TwitterFollowPage tlp = new TwitterFollowPage(
@@ -674,12 +677,71 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			titleNav = "Twitter";
 			break;
-		case 8:
-			getSupportFragmentManager().beginTransaction()
-			.add(R.id.content, Stream.newInstance(), Stream.TAG)
-			.commit();
+		case 10:
+			if (twitterSession.isTwitterLoggedInAlready()) {
+				ProgressDialog pd = new ProgressDialog(mTabbars);
+				pd.setMessage("Loading...");
+				pd.setCancelable(false);
+				pd.show();
+				ConfigurationBuilder builder = new ConfigurationBuilder();
+				builder.setOAuthConsumerKey(Constants.TWITTER_CONSUMER_KEY);
+				builder.setOAuthConsumerSecret(Constants.TWITTER_CONSUMER_SECRET);
+				// Access Token
+				String access_token = twitterSession.getDefaultAccessToaken();
+				// Access Token Secret
+				String access_token_secret = twitterSession.getDefaultSecret();
+				AccessToken accessToken = new AccessToken(access_token,
+						access_token_secret);
+				Twitter twitter = new TwitterFactory(builder.build())
+						.getInstance(accessToken);
+				// Update status
+				Relationship relationship;
+				Relationship relationship2;
+				boolean followBoth = false;
+				try {
+					relationship = twitter.showFriendship(
+							twitter.getScreenName(), "IDPersipura");
+					followBoth = relationship.isSourceFollowingTarget();
+					Log.d(TAG, "User followingg IDPersipura is =>"
+							+ relationship.isSourceFollowingTarget());
+				} catch (TwitterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				try {
+					relationship2 = twitter.showFriendship(
+							twitter.getScreenName(), "IDFreeport");
+					followBoth = relationship2.isSourceFollowingTarget();
+					Log.d(TAG, "User followingg IDFreeport is =>"
+							+ relationship2.isSourceFollowingTarget());
+				} catch (TwitterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				if (followBoth) {
+					HideOtherActivities();
+					getSupportFragmentManager()
+							.beginTransaction()
+							.add(R.id.content, Stream.newInstance(), Stream.TAG)
+							.commit();
+
+				} else {
+					TwitterFollowPage tlp = new TwitterFollowPage(
+							MainActivity.this);
+					tlp.show();
+				}
+				pd.dismiss();
+
+			} else {
+				TwitterConnectDialog cdd = new TwitterConnectDialog(
+						MainActivity.this);
+				cdd.show();
+			}
+
 			break;
-		case 9:
+		case 11:
 
 			HideOtherActivities();
 
@@ -701,12 +763,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	public void logoutTwitter() {
 		twitterSession.logout();
-		TwitterSocial twitter_social = (TwitterSocial) getSupportFragmentManager().findFragmentByTag(TwitterSocial.TAG);
-		FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-        trans.remove(twitter_social);
-        trans.commit();
-        selectItem(0);
-
+		TwitterSocial twitter_social = (TwitterSocial) getSupportFragmentManager()
+				.findFragmentByTag(TwitterSocial.TAG);
+		FragmentTransaction trans = getSupportFragmentManager()
+				.beginTransaction();
+		trans.remove(twitter_social);
+		trans.commit();
+		selectItem(0);
 
 	}
 
@@ -784,90 +847,92 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 	}
+	
+	public void likePersipuraPage(){
+		String yourFBpageId = "536852216398619";
+		String uriMobile = "http://m.facebook.com/536852216398619";
+		try {
+		      //try to open page in facebook native app.
+			  
+		      String uri = "fb://page/" + yourFBpageId;    //Cutsom URL
+		      Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+		      startActivity(intent);   
+		}catch (ActivityNotFoundException ex){
+		      //facebook native app isn't available, use browser.
+		      String uri = "http://touch.facebook.com/pages/x/" + yourFBpageId;  //Normal URL  
+		      Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uriMobile));    
+		      startActivity(i); 
+		}
+	}
+	
+	public void likeFreeportPage(){
+//		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://facebook.com/536852216398619")));
+		String yourFBpageId = "572779142753263";
+		String uriMobile = "http://m.facebook.com/572779142753263";
+		try {
+		      //try to open page in facebook native app.
+			  
+		      String uri = "fb://page/" + yourFBpageId;    //Cutsom URL
+		      Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+		      startActivity(intent);   
+		}catch (ActivityNotFoundException ex){
+		      //facebook native app isn't available, use browser.
+		      String uri = "http://touch.facebook.com/pages/x/" + yourFBpageId;  //Normal URL  
+		      Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uriMobile));    
+		      startActivity(i); 
+		}
+	}
 
 	public void loginToFacebook() {
-//		OnLoginListener onLoginListener = new SimpleFacebook.OnLoginListener() {
-//
-//			private String TAG;
-//
-//			@Override
-//			public void onFail(String reason) {
-//				Log.w(TAG, reason);
-//			}
-//
-//			@Override
-//			public void onException(Throwable throwable) {
-//				Log.e(TAG, "Bad thing happened", throwable);
-//			}
-//
-//			@Override
-//			public void onThinking() {
-//				// show progress bar or something to the user while login is
-//				// happening
-//				Log.i(TAG, "In progress");
-//			}
-//
-//			@Override
-//			public void onLogin() {
-//				// change the state of the button or do whatever you want
-//				Log.i(TAG, "Logged in");
-//				selectItem(6);
-//				Toast.makeText(getApplicationContext(), "Login SuccessFully",
-//						Toast.LENGTH_LONG).show();
-//			}
-//
-//			@Override
-//			public void onNotAcceptingPermissions() {
-//				Log.w(TAG, "User didn't accept read permissions");
-//			}
-//
-//		};
-//
-//		mSimpleFacebook.login(onLoginListener);
-		Intent intent = new Intent(MainActivity.this, com.persipura.socialize.MainFacebook.class);
+		// OnLoginListener onLoginListener = new
+		// SimpleFacebook.OnLoginListener() {
+		//
+		// private String TAG;
+		//
+		// @Override
+		// public void onFail(String reason) {
+		// Log.w(TAG, reason);
+		// }
+		//
+		// @Override
+		// public void onException(Throwable throwable) {
+		// Log.e(TAG, "Bad thing happened", throwable);
+		// }
+		//
+		// @Override
+		// public void onThinking() {
+		// // show progress bar or something to the user while login is
+		// // happening
+		// Log.i(TAG, "In progress");
+		// }
+		//
+		// @Override
+		// public void onLogin() {
+		// // change the state of the button or do whatever you want
+		// Log.i(TAG, "Logged in");
+		// selectItem(8);
+		// Toast.makeText(getApplicationContext(), "Login SuccessFully",
+		// Toast.LENGTH_LONG).show();
+		// }
+		//
+		// @Override
+		// public void onNotAcceptingPermissions() {
+		// Log.w(TAG, "User didn't accept read permissions");
+		// }
+		//
+		// };
+		//
+		// mSimpleFacebook.login(onLoginListener);
+		Intent intent = new Intent(MainActivity.this,
+				com.persipura.socialize.MainFacebook.class);
 		startActivity(intent);
 
 	}
 
 	public void loginToTwitter() {
-		// final ProgressDialog pd = new ProgressDialog(mTabbars);
-		// pd.setMessage("Sorry, We are underconstruction");
-		// pd.setCancelable(false);
-		//
-		// final Handler h = new Handler();
-		// final Runnable r2 = new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// pd.dismiss();
-		// }
-		// };
-		//
-		// Runnable r1 = new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// pd.show();
-		// h.postDelayed(r2, 5000);
-		// }
-		// };
-		//
-		// h.postDelayed(r1, 500);
-		//
-		// pd.show();
-
 		onAuth();
 
 	}
-
-	// @Override
-	// public void onActivityResult(int requestCode, int resultCode, Intent
-	// data) {
-	// facebook.authorizeCallback(requestCode, resultCode, data);
-	//
-	// super.onActivityResult(requestCode, resultCode, data);
-	//
-	// }
 
 	@Override
 	protected void onResume() {
@@ -894,116 +959,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (session == null || session.getState().isClosed()) {
 			loginToFacebook();
 		} else {
-			// String page1 = "572779142753263";
-			// String page2 = "536852216398619";
-			// Uri uri1 = Uri.parse("https://facebook.com" + page1);
-			// Bundle params = new Bundle();
-			// params.putString("object", uri1.toString());
-			//
-			// Request request = new Request(
-			// Session.getActiveSession(),
-			// "me/og.likes",
-			// params,
-			// HttpMethod.POST
-			// );
-			// Response response = request.executeAndWait();
-			// Log.d("response", "response :" + response);
-			// Uri uri1 = Uri.parse("https://facebook.com" + page1);
-			// Uri uri2 = Uri.parse("https://facebook.com" + page2);
-			//
-			// List<NameValuePair> nameparams = new ArrayList<NameValuePair>();
-			// nameparams.add(new BasicNameValuePair("access_token",
-			// Session.getActiveSession().getAccessToken()));
-			// nameparams.add(new BasicNameValuePair("object",
-			// uri1.toString()));
-			//
-			// String result = WebHTTPMethodClass.executeHttPost(
-			// "https://graph.facebook.com/me/og.likes/" + page1, nameparams);
-			//
-			// try {
-			// JSONArray jsonArray = new JSONArray(result);
-			// JSONObject resObject = jsonArray.getJSONObject(0);
-			// Log.d("errorCode", "errorCode : " + resObject);
-			// } catch (JSONException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			// Log.d("resultLike", "resultLike1 :" + result);
-			//
-			// List<NameValuePair> nameparams2 = new ArrayList<NameValuePair>();
-			// nameparams2.add(new BasicNameValuePair("access_token",
-			// Session.getActiveSession().getAccessToken()));
-			// nameparams2.add(new BasicNameValuePair("object",
-			// uri2.toString()));
-			//
-			// String result2 = WebHTTPMethodClass.executeHttPost(
-			// "https://graph.facebook.com/me/og.likes/" + page2, nameparams);
-			// Log.d("resultLike", "resultLike2 :" + result2);
 
 		}
-		// if (facebook.getAccessToken() != null) {
-		// Bundle params = new Bundle();
-		// params.putString("access_token", facebook.getAccessToken());
-		// Uri uri = Uri.parse("https://facebook.com" + og_object_url);
-		// params.putString("og_object_url", uri.toString());
-		//
-		// mAsyncRunner.request("me/og.likes", params, "POST",
-		// new BaseRequestListener() {
-		// @Override
-		// public void onComplete(final String response,
-		// final Object state) {
-		// // handle success
-		// if(response.contains("Error validating access token")){
-		// loginToFacebook();
-		// }
-		//
-		// }
-		// }, null);
-		// }
-
-		// Dictionary<string, object> parms = new Dictionary<string, object>();
-		// parms.Add( "method", "pages.isFan" );
-		// parms.Add( "page_id", YourAppId );
-		// parms.Add( "uid", UsersFbId );
-		//
-		// var isFan = fb.Api( parms );
-		// if( (bool)isFan )
-		// {
-		// //this user is a fan
-		// }
-
-		// String page1 = "572779142753263";
-		// String page2 = "536852216398619";
-		//
-		// Uri uri1 = Uri.parse("https://facebook.com" + page1);
-		// Uri uri2 = Uri.parse("https://facebook.com" + page2);
-		//
-		// List<NameValuePair> nameparams = new ArrayList<NameValuePair>();
-		// nameparams.add(new BasicNameValuePair("access_token", facebook
-		// .getAccessToken()));
-		// nameparams.add(new BasicNameValuePair("object", uri1.toString()));
-		//
-		// String result = WebHTTPMethodClass.executeHttPost(
-		// "https://graph.facebook.com/me/og.likes/" + page1, nameparams);
-		//
-		// try {
-		// JSONArray jsonArray = new JSONArray(result);
-		// JSONObject resObject = jsonArray.getJSONObject(0);
-		// Log.d("errorCode", "errorCode : " + resObject);
-		// } catch (JSONException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// Log.d("resultLike", "resultLike1 :" + result);
-		//
-		// List<NameValuePair> nameparams2 = new ArrayList<NameValuePair>();
-		// nameparams2.add(new BasicNameValuePair("access_token", facebook
-		// .getAccessToken()));
-		// nameparams2.add(new BasicNameValuePair("object", uri2.toString()));
-		//
-		// String result2 = WebHTTPMethodClass.executeHttPost(
-		// "https://graph.facebook.com/me/og.likes/" + page2, nameparams);
-		// Log.d("resultLike", "resultLike2 :" + result2);
 
 	}
 
@@ -1060,10 +1017,11 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			Request.Callback callback = new Request.Callback() {
 				public void onCompleted(Response response) {
-					JSONObject graphResponse = response.getGraphObject()
-							.getInnerJSONObject();
+					
 					String postId = null;
 					try {
+						JSONObject graphResponse = response.getGraphObject()
+								.getInnerJSONObject();
 						postId = graphResponse.getString("id");
 					} catch (JSONException e) {
 						Log.d("facebookError", "JSON error " + e.getMessage());
@@ -1077,7 +1035,7 @@ public class MainActivity extends SherlockFragmentActivity {
 					} else {
 						Toast.makeText(
 								getApplicationContext().getApplicationContext(),
-								postId, Toast.LENGTH_LONG).show();
+								"Successfully share to facebook", Toast.LENGTH_LONG).show();
 					}
 				}
 			};
@@ -1099,17 +1057,55 @@ public class MainActivity extends SherlockFragmentActivity {
 			SharedPreferences mPrefs = PreferenceManager
 					.getDefaultSharedPreferences(mTabbars);
 			String backstack = mPrefs.getString("prevFragment", "");
-			Log.d("backstack", "backstack : " + backstack);
+			Log.d("videoPlayer", "backstackTag : " + backstack);
 			if (!backstack.isEmpty()) {
 				HideOtherActivities();
-				if(getSupportFragmentManager().findFragmentByTag(backstack) != null){
-					getSupportFragmentManager().findFragmentByTag(backstack)
-					.getView().setVisibility(View.VISIBLE);	
-				}else{
+				if (getSupportFragmentManager().findFragmentByTag(backstack) != null) {
+					View view = getSupportFragmentManager().findFragmentByTag(
+							backstack).getView();
+					GaleryView2 fragment = (GaleryView2) getSupportFragmentManager()
+							.findFragmentByTag(GaleryView2.TAG);
+					if(backstack == pageSliding.TAG){
+						videoPlayer videoFragment = (videoPlayer) getSupportFragmentManager().findFragmentByTag(videoPlayer.TAG);
+						if(videoFragment != null){
+							getSupportFragmentManager()
+							.beginTransaction()
+							.remove(videoFragment)
+							.commit();	
+						}
+						
+						
+					}
+					
+					if (fragment != null
+							&& fragment.getView() != null
+							&& fragment.getView().findViewById(
+									R.id.detailGaleryImg) != null) {
+						if (fragment.getView()
+								.findViewById(R.id.detailGaleryImg)
+								.getVisibility() == View.VISIBLE) {
+							View fragmentView = fragment.getView();
+							fragmentView.setVisibility(View.VISIBLE);
+							fragmentView.findViewById(R.id.detailGaleryImg)
+									.setVisibility(View.GONE);
+							fragmentView.findViewById(R.id.gridview)
+									.setVisibility(View.VISIBLE);
+							fragmentView.findViewById(R.id.galleryDesc)
+									.setVisibility(View.VISIBLE);
+
+						} else {
+							view.setVisibility(View.VISIBLE);
+						}
+
+					} else {
+						view.setVisibility(View.VISIBLE);
+					}
+
+				} else {
 					getSupportFragmentManager().findFragmentByTag(Home.TAG)
-					.getView().setVisibility(View.VISIBLE);
+							.getView().setVisibility(View.VISIBLE);
 				}
-				
+
 			}
 			// do your stuff and Return true to prevent this event from being
 			// propagated further
@@ -1219,7 +1215,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			if (result) {
 				selectItem(0);
-//				start();
+				// start();
 			} else {
 				Toast.makeText(MainActivity.this, "Please Retry Again",
 						Toast.LENGTH_SHORT).show();
@@ -1295,7 +1291,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			Log.d("masukin", "ini cancel loh mas");
 			mAuthTask = null;
 			dialog.cancel();
 		}

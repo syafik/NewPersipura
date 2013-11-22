@@ -7,6 +7,8 @@
         <item>ns_menu_snippet3</item>
         <item>ns_menu_snippet4</item>
         <item>ns_menu_snippet5</item>
+        <item>ns_menu_snippet6</item>
+        <item>ns_menu_snippet7</item>
     </string-array>
     
     <string-array name="ns_menu_items_connect">
@@ -21,15 +23,8 @@
         <item>slidebar_media_icon</item>
         <item>slidebar_match_icon</item>
         <item>slidebar_squad_icon</item>
-<!-- =======
-        <item>homepage</item>
-        <item>news</item>
-        <item>media</item>
-        <item>match</item>
-        <item>squad</item>
-        <item>ic_action_settings</item>
-        <item>ic_launcher_</item>
->>>>>>> Stashed changes -->
+        <item>slidebar_store_icon</item>
+        <item>slidebar_term_icon</item>
     </array>
     
     <array name="ns_menu_items_icon_connect">

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import twitter4j.Paging;
@@ -104,6 +105,10 @@ public class Stream extends SherlockFragment {
 	EditText tweetText;
 	LinearLayout closeParentTweet;
 	LinearLayout openParentTweet;
+	ArrayList<String> stringKeywordList = new ArrayList<String>();
+	ArrayList<String> stringKeywordsPost = new ArrayList<String>();
+	
+
 
 	MainActivity attachingActivityLock;
 
@@ -225,10 +230,26 @@ public class Stream extends SherlockFragment {
 				// Update status
 				twitter4j.Status response;
 				try {
-					response = twitter.updateStatus(tweet);
+					String keywords_result = WebHTTPMethodClass
+							.httpGetServiceWithoutparam("/restapi/get/post_keys");
+					JSONArray keywordsjsonArray = new JSONArray(keywords_result);
+					for (int i = 0; i < keywordsjsonArray.length(); i++) {
+						JSONObject resObject = keywordsjsonArray
+								.getJSONObject(i);
+						stringKeywordsPost.add(resObject.getString("key"));
+
+					}
+					String keywords = "";
+					for (String string : stringKeywordsPost) {
+						keywords = keywords + " " + string;
+					}
+					response = twitter.updateStatus(tweet + " " + keywords);
 					tweetText.setText("");
 					Log.d(TAG, "Response Text=>" + response.getText());
 				} catch (TwitterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -281,14 +302,37 @@ public class Stream extends SherlockFragment {
 					.getInstance(accessToken);
 			
 			try {
-			    Query query = new Query("persipura");
-			    QueryResult results = twitter.search(query);
-			    if(param[1] == 1){
-			    	statuses = results.getTweets();
-			    	result = statuses.toString();	
-			    }else{
-			    	result = results.nextQuery().toString();
-			    }
+				String keywords_result = WebHTTPMethodClass.httpGetServiceWithoutparam("/restapi/get/filter_keys");
+				try {
+					JSONArray keywordsjsonArray = new JSONArray(keywords_result);
+					for (int i = 0; i < keywordsjsonArray.length(); i++) {
+						JSONObject resObject = keywordsjsonArray.getJSONObject(i);
+						stringKeywordList.add(resObject.getString("key"));
+
+					}
+					String keywords = "";
+				    for( String string : stringKeywordList )
+				    {
+				    	keywords = keywords + "," + string;            
+				    }
+				    
+
+
+				    
+					Query query = new Query(keywords);
+				    QueryResult results = twitter.search(query);
+				    if(param[1] == 1){
+				    	statuses = results.getTweets();
+				    	result = statuses.toString();	
+				    }else{
+				    	result = results.nextQuery().toString();
+				    }
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			    
 //				statuses = twitter.getUserTimeline("IDPersipura", new Paging(param[1], param[0]));
 				
 			    				
@@ -409,7 +453,7 @@ public class Stream extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}

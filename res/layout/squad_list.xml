@@ -19,14 +19,13 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/image_thumb_4" />
+            android:src="@drawable/staff_placeholder2x" />
 
         <TextView
             android:id="@+id/textViewList2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/imageViewList2"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="21dp"
             android:layout_toRightOf="@+id/imageViewList2"
             android:ellipsize="none"

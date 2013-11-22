@@ -27,7 +27,7 @@
                 android:layout_height="80dp"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/hello_world"
-                android:src="@drawable/splash"
+                android:visibility="gone"
                 />
         </LinearLayout>
 
@@ -39,7 +39,8 @@
             android:layout_marginTop="5dp"
             android:layout_margin="10dip"
             android:layout_below="@+id/logo"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <TableLayout
                 android:id="@+id/tableLayout1"

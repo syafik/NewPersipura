@@ -148,7 +148,7 @@ public class JadwalPertandingan extends SherlockFragment {
 		@Override
 		protected String doInBackground(Integer... param) {
 			String result = WebHTTPMethodClass
-					.httpGetService("/restapi/get/match_results", "limit=" + param[0] + "&offset=" + param[1]);
+					.httpGetService("/restapi/get/match_schedules", "limit=" + param[0] + "&offset=" + param[1]);
 			return result;
 		}
 
@@ -282,7 +282,7 @@ public class JadwalPertandingan extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -334,7 +334,7 @@ public class JadwalPertandingan extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());

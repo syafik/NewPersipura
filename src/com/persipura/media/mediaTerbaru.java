@@ -419,7 +419,7 @@ public class mediaTerbaru extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.ads2x;
 
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());

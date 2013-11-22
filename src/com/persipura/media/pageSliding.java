@@ -91,11 +91,6 @@ public class pageSliding extends SherlockFragment {
 		footerLayout = (LinearLayout) view.findViewById(R.id.outer);
 		new fetchFooterFromServer().execute("");
 
-		TextView footerTitle = (TextView) footerLayout
-				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				attachingActivityLock.getApplicationContext().getAssets());
-		
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		String prevFragment = mPrefs.getString("currentFragment", Home.TAG);
@@ -113,9 +108,6 @@ public class pageSliding extends SherlockFragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
 			Fragment fragment = null;
 			Bundle args = null;
 			switch (position) {
@@ -199,7 +191,7 @@ public class pageSliding extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -280,6 +272,11 @@ public class pageSliding extends SherlockFragment {
 					}
 
 				}
+				TextView footerTitle = (TextView) footerLayout
+						.findViewById(R.id.footerText);
+				footerTitle.setText("Proudly Sponsored by");
+				AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+						getActivity().getApplicationContext().getAssets());
 
 			}
 		}

@@ -197,7 +197,7 @@ public class Squad extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -276,7 +276,11 @@ public class Squad extends SherlockFragment {
 						});
 
 					}
-
+					TextView footerTitle = (TextView) footerLayout
+							.findViewById(R.id.footerText);
+					footerTitle.setText("Proudly Sponsored by");
+					AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+							getActivity().getApplicationContext().getAssets());
 				}
 
 			}

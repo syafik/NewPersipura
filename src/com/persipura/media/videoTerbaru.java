@@ -7,8 +7,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -203,14 +206,18 @@ public class videoTerbaru extends SherlockFragment {
 //						.add(R.id.parentpager, vp,videoPlayer.TAG)
 //						.addToBackStack("")
 //						.commit();
-						
+						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+						Editor editor = mPrefs.edit();
+						editor.putString("prevFragment", pageSliding.TAG);
+						editor.putString("currentFragment", videoPlayer.TAG);
+						editor.commit();
 						Bundle data = new Bundle();
 						data.putString("myString", (String) v.getTag());
 						FragmentTransaction t = getFragmentManager()
 								.beginTransaction();
 						videoPlayer mFrag = new videoPlayer();
 						mFrag.setArguments(data);
-						t.add(R.id.parentpager, mFrag, videoPlayer.TAG).commit();
+						t.add(R.id.parentpagermedia, mFrag, videoPlayer.TAG).commit();
 						
 //						 Bundle data = new Bundle();
 //					        data.putString("NewsId", (String) v.getTag());

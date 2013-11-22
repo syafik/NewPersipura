@@ -32,6 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
 import com.persipura.squad.DetailSquad;
@@ -62,8 +68,9 @@ public class Home extends SherlockFragment {
 	int failedRetrieveCount = 0;
 	String LinkId;
 	MainActivity attachingActivityLock;
+	TextView footerTitle;
 
-	public static Home newInstance() {
+	public static Home newInstance() {	
 		return new Home();
 	}
 
@@ -107,14 +114,11 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.bottom_control_bar);
 		adsLayout = (RelativeLayout) rootView.findViewById(R.id.eksklusive_ads);
 		newContainer = container;
-		
+	
 		squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
 		TextView squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
-		
-		TextView footerTitle = (TextView) rootView
+		footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
-				attachingActivityLock.getApplicationContext().getAssets());
 		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2",
 				attachingActivityLock.getApplicationContext().getAssets());
 		new fetchHomeLatestFromServer().execute("");
@@ -166,7 +170,7 @@ public class Home extends SherlockFragment {
 		protected String doInBackground(String... params) {
 
 			String result = WebHTTPMethodClass
-					.httpGetServiceWithoutparam("/restapi/get/home_squad");
+					.httpGetService("/restapi/get/home_squad", "");
 
 			return result;
 		}
@@ -251,7 +255,7 @@ public class Home extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.img_thumb_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(
 						attachingActivityLock.getApplicationContext());
@@ -364,8 +368,8 @@ public class Home extends SherlockFragment {
 				time.setText("");
 				league.setText("");
 
-				team1.setText(thisWeekBean.getTeam1());
-				team2.setText(thisWeekBean.getTeam2());
+				team2.setText(thisWeekBean.getTeam1());
+				team1.setText(thisWeekBean.getTeam2());
 				date.setText(thisWeekBean.getdate());
 				time.setText(thisWeekBean.gettime());
 				league.setText(thisWeekBean.getleague());
@@ -391,7 +395,7 @@ public class Home extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(
 						attachingActivityLock.getApplicationContext());
@@ -400,9 +404,9 @@ public class Home extends SherlockFragment {
 				ImageView imgNews2 = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView2);
 
-				imgLoader.DisplayImage(thisWeekBean.getTeam1Logo(), loader,
-						imgNews);
 				imgLoader.DisplayImage(thisWeekBean.getTeam2Logo(), loader,
+						imgNews);
+				imgLoader.DisplayImage(thisWeekBean.getTeam1Logo(), loader,
 						imgNews2);
 			}
 		}
@@ -489,7 +493,7 @@ public class Home extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(
 						attachingActivityLock.getApplicationContext());
@@ -540,7 +544,7 @@ public class Home extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -605,7 +609,7 @@ public class Home extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(
 						attachingActivityLock.getApplicationContext());
@@ -634,6 +638,10 @@ public class Home extends SherlockFragment {
 				}
 
 			}
+			
+			footerTitle.setText("Proudly Sponsored by");
+			AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+					attachingActivityLock.getApplicationContext().getAssets());
 		}
 
 	}
@@ -724,7 +732,7 @@ public class Home extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.ads2x;
 
 				ImageLoader imgLoader = new ImageLoader(
 						attachingActivityLock.getApplicationContext());

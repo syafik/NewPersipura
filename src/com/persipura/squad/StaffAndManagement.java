@@ -37,6 +37,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.HasilBean;
 import com.persipura.home.HomeSquad;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
@@ -140,6 +141,7 @@ public class StaffAndManagement extends SherlockFragment {
 							.getString("nama_lengkap"));
 					homeSquad.setposisi(resObject.getString("posisi"));
 					homeSquad.setage(resObject.getString("age"));
+					homeSquad.settanggal_lahir(resObject.getString("tanggal_lahir"));
 					homeSquad.setwarganegara(resObject
 							.getString("kewarganegaraan"));
 					homeSquad.setfoto(resObject.getString("foto"));
@@ -186,6 +188,7 @@ public class StaffAndManagement extends SherlockFragment {
 				no_punggung.setText("");
 
 				nama.setText(squad.getNamaLengkap());
+				
 				String posisiText = squad.getposisi() + "\n";
 				String ageText = squad.getage() + " tahun";
 				String warganegara = squad.getwarganegara();
@@ -196,6 +199,7 @@ public class StaffAndManagement extends SherlockFragment {
 					ageText = ageText + ", ";
 				}
 				String detailText = posisiText;
+//				String detailText = squad.gettanggal_lahir();
 				Log.d("squad.getage()", "squad.getage() : " + squad.getage());
 				if(squad != null && !squad.getage().equals("0")){
 					detailText = detailText + ageText;	
@@ -204,7 +208,12 @@ public class StaffAndManagement extends SherlockFragment {
 						
 				
 				detail.setText(detailText);
-				
+				AppConstants.fontrobotoTextViewBold(nama, 12, "ffffff",
+						getActivity().getApplicationContext()
+								.getAssets());
+				AppConstants.fontrobotoTextView(detail, 10, "cccccc",
+						getActivity().getApplicationContext()
+								.getAssets());
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -212,7 +221,7 @@ public class StaffAndManagement extends SherlockFragment {
 				staffId = squad.getId();
 
 				cellViewMainLayout.setTag(staffId);
-				int loader = R.drawable.image_thumb_4;
+				int loader = R.drawable.img_thumb_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());

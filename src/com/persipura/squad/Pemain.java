@@ -38,6 +38,7 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.HasilBean;
 import com.persipura.home.Home;
 import com.persipura.home.HomeSquad;
+import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
@@ -205,8 +206,14 @@ public class Pemain extends SherlockFragment {
 						
 				
 				detail.setText(detailText);
-				BitmapFactory.Options bmOptions;
+				AppConstants.fontrobotoTextViewBold(nama, 12, "ffffff",
+						getActivity().getApplicationContext()
+								.getAssets());
+				AppConstants.fontrobotoTextView(detail, 10, "cccccc",
+						getActivity().getApplicationContext()
+								.getAssets());
 				
+				BitmapFactory.Options bmOptions;
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
 				cellViewMainLayout.setTag(squad.getId());
@@ -215,7 +222,7 @@ public class Pemain extends SherlockFragment {
 				//
 				// imgNews.setImageBitmap(bm);
 				
-					int loader = R.drawable.image_thumb_4;
+					int loader = R.drawable.img_thumb_placeholder2x;
 
 					ImageLoader imgLoader = new ImageLoader(getActivity()
 							.getApplicationContext());

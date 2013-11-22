@@ -27,7 +27,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="15dp"
-                android:text="Proudly Sponsored by"
                 android:textSize="13dp" />
 
             <ImageView
@@ -36,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
-                android:src="@drawable/logo_ptfi_222" />
+                 />
 
         </LinearLayout>
     </FrameLayout>

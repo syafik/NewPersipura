@@ -27,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/findzoes_list_text_name"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/staff_placeholder2x" />
 
     <TextView
         android:id="@+id/findzoes_list_text_address"
@@ -59,7 +59,7 @@
         android:layout_height="50dp"
         android:layout_alignRight="@+id/TextView01"
         android:layout_below="@+id/findzoes_list_text_address"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/staff_placeholder2x" />
 
     <TextView
         android:id="@+id/TextView03"

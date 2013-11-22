@@ -1,5 +1,10 @@
 package com.persipura.match;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,20 +18,32 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.calenderBean;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +58,8 @@ public class CalendarView extends SherlockFragment {
 	String date;
 	LinearLayout lifePageCellContainerLayout;
 	List<calenderBean> listThisWeekBean;
+	ArrayList<String> stringArrayList = new ArrayList<String>();
+	GridView gridview;
 	public CalendarAdapter adapter;// adapter instance
 	public Handler handler;// for grabbing some event values for showing the dot
 							// marker.
@@ -71,9 +90,21 @@ public class CalendarView extends SherlockFragment {
 		items = new ArrayList<String>();
 		adapter = new CalendarAdapter(this, month);
 
-		GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
+		gridview = (GridView) rootView.findViewById(R.id.gridview);
 		gridview.setAdapter(adapter);
 
+		GridView gridviewtitle = (GridView) rootView.findViewById(R.id.gridviewTitle);
+		gridviewtitle.setAdapter(new TitleAdapter(getActivity()));
+
+		// add days
+		stringArrayList.add("S");
+		stringArrayList.add("S");
+		stringArrayList.add("R");
+		stringArrayList.add("K");
+		stringArrayList.add("J");
+		stringArrayList.add("S");
+		stringArrayList.add("M");
+		
 		handler = new Handler();
 		handler.post(calendarUpdater);
 
@@ -135,8 +166,55 @@ public class CalendarView extends SherlockFragment {
 
 			}
 		});
+	
 
 		return rootView;
+	}
+	
+
+	public class TitleAdapter extends BaseAdapter {
+	    private Context mContext;
+
+	    public TitleAdapter(Context c) {
+	        mContext = c;
+	    }
+
+	    public int getCount() {
+	        return 7;
+	    }
+
+	    public Object getItem(int position) {
+	        return null;
+	    }
+
+	    public long getItemId(int position) {
+	        return 0;
+	    }
+	    
+
+	    // create a new ImageView for each item referenced by the Adapter
+	    public View getView(int position, View convertView, ViewGroup parent) {
+	        TextView textView;
+	        if (convertView == null) {  // if it's not recycled, initialize some attributes
+	        	textView = new TextView(mContext);
+	        	String item = stringArrayList.get(position);
+	        	textView.setText(item);
+	        	textView.setGravity(Gravity.CENTER);
+	        	
+	        	
+	        	if(position == (stringArrayList.size() - 1)){
+	        	textView.setTextColor(Color.RED);	
+	        	}
+	           
+	        } else {
+	        	textView = (TextView) convertView;
+	        }
+
+			
+			
+	        return textView;
+	    }
+
 	}
 
 	// public void onCreate(Bundle savedInstanceState) {
@@ -285,6 +363,7 @@ public class CalendarView extends SherlockFragment {
 
 	private class fetchEventFromServer extends AsyncTask<String, Void, String> {
 
+		@SuppressLint("SimpleDateFormat")
 		@Override
 		protected void onPreExecute() {
 			Calendar rightNow = Calendar.getInstance();
@@ -293,14 +372,18 @@ public class CalendarView extends SherlockFragment {
 			String value2 = df1.format(rightNow.getTime());	
 			String str1 = Integer.toString(value1);
 			date = str1 + "-" + value2;
+			Log.d("dateTime", "dateTime : " + date);
 		}
 
 		@Override
 		protected String doInBackground(String... params) {
 
-			String result = WebHTTPMethodClass.httpGetServiceWithoutparam(
-//					"/restapi/get/match_event", "yearmonth=" + date);
-					"/restapi/get/match_event");
+//			String result = WebHTTPMethodClass.httpGetServiceWithoutparam(
+////					"/restapi/get/match_event", "yearmonth=" + date);
+//					"/restapi/get/match_event");
+			
+			String result = WebHTTPMethodClass.httpGetService(
+				"/restapi/get/match_event", "yearmonth[value][date]=" + date);
 			return result;
 		}
 
@@ -323,6 +406,11 @@ public class CalendarView extends SherlockFragment {
 					thisWeekBean.setTitle(resObject.getString("title"));
 					thisWeekBean.setType(resObject.getString("type"));
 					thisWeekBean.setDatetime(resObject.getString("datetime"));
+					thisWeekBean.setLeague(resObject.getString("league"));
+					thisWeekBean.setHTeam(resObject.getString("h_team"));
+					thisWeekBean.setHGoal(resObject.getString("h_goal"));
+					thisWeekBean.setATeam(resObject.getString("a_team"));
+					thisWeekBean.setAGoal(resObject.getString("a_goal"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -340,22 +428,27 @@ public class CalendarView extends SherlockFragment {
 		private void createSelectLocationListView(
 				List<calenderBean> listThisWeekBean) {
 			items.clear();
-
+			
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 			String itemvalue;
 
 			for (int i = 0; i < listThisWeekBean.size(); i++) {
 				calenderBean thisWeekBean = listThisWeekBean.get(i);
+				
 				itemvalue = df.format(itemmonth.getTime());
 				itemmonth.add(GregorianCalendar.DATE, 1);
 				
 				String x = thisWeekBean.getDatetime();
 				Log.d("------------------", x.substring(0,10));
 				items.add(x.substring(0,10));
+				Log.d("date", "date Event : " + x.substring(0,10));
+				
 			}
 
 			adapter.setItems(items);
+			adapter.setCollections(listThisWeekBean);
 			adapter.notifyDataSetChanged();
+			
 
 		}
 	}

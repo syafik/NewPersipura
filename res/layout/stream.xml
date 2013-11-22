@@ -22,7 +22,7 @@
                 android:id="@+id/btnCloseTweet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tweet"
+                android:text="Send Tweet"
                 android:textColor="#ccc"
                 android:background="@drawable/tweet_button_background"
                 />

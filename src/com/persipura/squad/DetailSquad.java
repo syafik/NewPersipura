@@ -56,7 +56,7 @@ public class DetailSquad extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	FrameLayout footerLayout;
 	String LinkId;
-
+	TextView footerTitle;
 	LinearLayout lifePageCellContainerLayout;
 	ViewGroup newContainer;
 	String nid;
@@ -65,7 +65,7 @@ public class DetailSquad extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		nid = getArguments().getString("squadId");
 
 		showProgressDialog();
@@ -80,27 +80,32 @@ public class DetailSquad extends SherlockFragment {
 		newContainer = container;
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.list_parent);
-		footerLayout = (FrameLayout) rootView.findViewById(R.id.bottom_control_bar);
-
-		TextView footerTitle = (TextView) rootView
+		footerLayout = (FrameLayout) rootView
+				.findViewById(R.id.bottom_control_bar);
+		footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff", getActivity()
-				.getApplicationContext().getAssets());
+		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+				getActivity().getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
-		try{
-			if(getActivity().getSupportFragmentManager().findFragmentByTag(Home.TAG) != null){
-				getActivity().getSupportFragmentManager().findFragmentByTag(Home.TAG).getView().setVisibility(View.GONE);	
+		try {
+			if (getActivity().getSupportFragmentManager().findFragmentByTag(
+					Home.TAG) != null) {
+				getActivity().getSupportFragmentManager()
+						.findFragmentByTag(Home.TAG).getView()
+						.setVisibility(View.GONE);
 			}
-			
-			if(getActivity().getSupportFragmentManager().findFragmentByTag(Squad.TAG) != null){
-				getActivity().getSupportFragmentManager().findFragmentByTag(Squad.TAG).getView().setVisibility(View.GONE);	
+
+			if (getActivity().getSupportFragmentManager().findFragmentByTag(
+					Squad.TAG) != null) {
+				getActivity().getSupportFragmentManager()
+						.findFragmentByTag(Squad.TAG).getView()
+						.setVisibility(View.GONE);
 			}
-				
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		
+
 		}
-		
 
 		return rootView;
 	}
@@ -231,21 +236,61 @@ public class DetailSquad extends SherlockFragment {
 				nama_lengkap.setText(thisWeekBean.getNamaLengkap());
 				tanggal_lahir.setText(thisWeekBean.gettanggal_lahir());
 				kewarganegaraan.setText(thisWeekBean.getwarganegara());
-				tinggi_badan.setText(thisWeekBean.gettinggi_badan() + " cm");
-				berat_badan.setText(thisWeekBean.getberat_badan() + " kg");
+				String tinggi = thisWeekBean.gettinggi_badan();
+				if(!tinggi.isEmpty()){
+					 tinggi = tinggi + " cm";
+				}else{
+					tinggi = "-";
+				}
+				
+				String berat = thisWeekBean.getberat_badan();
+				if(!berat.isEmpty()){
+					 berat = berat + " kg";
+				}else{
+					berat = "-";
+				}
+				
+				tinggi_badan.setText(tinggi);
+				berat_badan.setText(berat);
 				no_punggung.setText(thisWeekBean.getno_punggung());
 				nama.setText(thisWeekBean.getNama());
-				detailheader.setText(thisWeekBean.getposisi() + "\n"
-						+ thisWeekBean.getage() + ", "
-						+ thisWeekBean.getwarganegara());
+				
+				
+				String posisiText = thisWeekBean.getposisi() + "\n";
+				String ageText = thisWeekBean.getage() + " tahun";
+				String warganegara = thisWeekBean.getwarganegara();
+				
+				if(warganegara != null || warganegara != ""){
+					ageText = ageText + ", ";
+				}
+				String detailText = posisiText;
+				Log.d("squad.getage()", "squad.getage() : " + thisWeekBean.getage());
+				if(thisWeekBean != null && !thisWeekBean.getage().equals("0")){
+					detailText = detailText + ageText;	
+				}
+				detailText = detailText + warganegara; 
+						
+				
+				detailheader.setText(detailText);
+				
+//				detailheader.setText(thisWeekBean.getposisi() + "\n"
+//						+ thisWeekBean.getage() + ", "
+//						+ thisWeekBean.getwarganegara());
 
 				BitmapFactory.Options bmOptions;
 
-				bmOptions = new BitmapFactory.Options();
-				bmOptions.inSampleSize = 1;
-				Bitmap bm = loadBitmap(thisWeekBean.getfoto(), bmOptions);
+//				bmOptions = new BitmapFactory.Options();
+//				bmOptions.inSampleSize = 1;
+//				Bitmap bm = loadBitmap(thisWeekBean.getfoto(), bmOptions);
+//
+//				imgNews.setImageBitmap(bm);
+				
+				int loader = R.drawable.img_thumb_placeholder2x;
 
-				imgNews.setImageBitmap(bm);
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+
+				imgLoader.DisplayImage(thisWeekBean.getfoto(), loader, imgNews);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 
@@ -285,104 +330,106 @@ public class DetailSquad extends SherlockFragment {
 
 		}
 	}
-	
-	private class fetchFooterFromServer extends
-	AsyncTask<String, Void, String> {
 
-@Override
-protected void onPreExecute() {
+	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
 
-}
-
-@Override
-protected String doInBackground(String... params) {
-	String result = WebHTTPMethodClass.httpGetService(
-			"/restapi/get/footer", "id=68");
-
-	return result;
-}
-
-@Override
-protected void onProgressUpdate(Void... values) {
-
-}
-
-@Override
-protected void onPostExecute(String result) {
-	try {
-		JSONArray jsonArray = new JSONArray(result);
-		Log.d("test1", "test1 : " + jsonArray);
-		listFooterBean = new ArrayList<FooterBean>();
-		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObject resObject = jsonArray.getJSONObject(i);
-			FooterBean thisWeekBean = new FooterBean();
-			thisWeekBean.setclickable(resObject.getString("clickable"));
-			thisWeekBean.setfooter_logo(resObject.getString("footer_logo"));
-			thisWeekBean.setlink(resObject.getString("link"));
-//
-			listFooterBean.add(thisWeekBean);
+		@Override
+		protected void onPreExecute() {
 
 		}
-		if (listFooterBean != null && listFooterBean.size() > 0) {
-			createFooterView(listFooterBean);
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/footer", "");
+
+			return result;
 		}
 
-	} catch (Exception e) {
-		e.printStackTrace();
-		Toast.makeText(getActivity().getApplicationContext(),
-				"Failed to retrieve data from server",
-				Toast.LENGTH_LONG).show();
-	}
+		@Override
+		protected void onProgressUpdate(Void... values) {
 
-}
+		}
 
-private void createFooterView(List<FooterBean> listFooterBean)
-		throws IOException {
-	for (int i = 0; i < listFooterBean.size(); i++) {
-		FooterBean thisWeekBean = listFooterBean.get(i);
-		
-		
-		ImageView imgNews = (ImageView) footerLayout
-				.findViewById(R.id.footerImg);
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "test1 : " + jsonArray);
+				listFooterBean = new ArrayList<FooterBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					FooterBean thisWeekBean = new FooterBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setfooter_logo(resObject
+							.getString("footer_logo"));
+					thisWeekBean.setlink(resObject.getString("link"));
+					//
+					listFooterBean.add(thisWeekBean);
 
-		
-		
-		BitmapFactory.Options bmOptions;
+				}
+				if (listFooterBean != null && listFooterBean.size() > 0) {
+					createFooterView(listFooterBean);
+				}
 
-		bmOptions = new BitmapFactory.Options();
-		bmOptions.inSampleSize = 1;
-		int loader = R.drawable.loader;
-
-		ImageLoader imgLoader = new ImageLoader(getActivity()
-				.getApplicationContext());
-
-		if(!thisWeekBean.getfooter_logo().isEmpty()){
-			imgLoader.DisplayImage(thisWeekBean.getfooter_logo(), loader,
-					imgNews);
-
-			LinkId = null;
-			LinkId = thisWeekBean.getlink();
-			Log.d("clickable", "clickable : " + thisWeekBean.getclickable());
-			if(thisWeekBean.getclickable().equals("1")){
-				
-			 imgNews.setOnClickListener(new View.OnClickListener() {
-                 public void onClick(View v) {
-
-                	 Uri uri = Uri.parse(LinkId);
-                	 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                	 startActivity(intent);
-
-                 }
-             });
-	
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Failed to retrieve data from server",
+						Toast.LENGTH_LONG).show();
 			}
-	
+
 		}
-		
+
+		private void createFooterView(List<FooterBean> listFooterBean)
+				throws IOException {
+			for (int i = 0; i < listFooterBean.size(); i++) {
+				FooterBean thisWeekBean = listFooterBean.get(i);
+
+				ImageView imgNews = (ImageView) footerLayout
+						.findViewById(R.id.footerImg);
+
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.staff_placeholder2x;
+
+				ImageLoader imgLoader = new ImageLoader(getActivity()
+						.getApplicationContext());
+
+				if (!thisWeekBean.getfooter_logo().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
+							loader, imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					Log.d("clickable",
+							"clickable : " + thisWeekBean.getclickable());
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+
+			}
+			
+			footerTitle.setText("Proudly Sponsored by");
+			AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+					getActivity().getApplicationContext().getAssets());
+		}
 
 	}
-}
-
-}
 
 }

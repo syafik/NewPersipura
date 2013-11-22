@@ -171,7 +171,7 @@ public class Sejarah extends SherlockFragment {
 				 
 				 // new code here
 				 ImageView imageView1 = (ImageView) lifePageCellContainerLayout.findViewById(R.id.imageView1);
-				 	int loader = R.drawable.loader;
+				 	int loader = R.drawable.staff_placeholder2x;
 				 TextView nama = (TextView) lifePageCellContainerLayout.findViewById(R.id.nama);
 				 TextView berdiri = (TextView) lifePageCellContainerLayout.findViewById(R.id.berdiri);
 				 TextView alamat = (TextView) lifePageCellContainerLayout.findViewById(R.id.alamat);

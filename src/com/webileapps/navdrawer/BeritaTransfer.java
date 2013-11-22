@@ -250,7 +250,7 @@ public class BeritaTransfer extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
 
@@ -298,7 +298,7 @@ public class BeritaTransfer extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -348,7 +348,7 @@ public class BeritaTransfer extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.ads2x;
 
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
@@ -500,7 +500,7 @@ public class BeritaTransfer extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.ads2x;
 
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());

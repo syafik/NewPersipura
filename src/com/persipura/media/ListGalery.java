@@ -194,14 +194,14 @@ public class ListGalery extends SherlockFragment {
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						newContainer.setTag(nid);
-						GaleryView vp = new GaleryView();
+						GaleryView2 vp = new GaleryView2();
 
 						Bundle b = new Bundle();
 						b.putString("myString", (String) v.getTag());
 						vp.setArguments(b);
 						getActivity().getSupportFragmentManager()
 								.beginTransaction()
-								.add(R.id.parentpagermedia, vp, GaleryView.TAG)
+								.add(R.id.parentpagermedia, vp, GaleryView2.TAG)
 								.addToBackStack("").commit();
 						
 						

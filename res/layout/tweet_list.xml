@@ -54,7 +54,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/staff_placeholder2x" />
 
         <TextView
             android:id="@+id/tweetUsername"

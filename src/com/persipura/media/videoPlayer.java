@@ -31,12 +31,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -50,6 +52,11 @@ import android.widget.VideoView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.mediaBean;
 import com.persipura.socialize.TwitterSocial;
@@ -57,6 +64,7 @@ import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
+import android.webkit.WebSettings;
 
 public class videoPlayer extends SherlockFragment {
 
@@ -222,8 +230,8 @@ public class videoPlayer extends SherlockFragment {
 						R.id.textDesc);
 //				videoView = (VideoView) getView().findViewById(
 //						R.id.videoView1);
-				WebView mWebView = (WebView) getView().findViewById(
-						R.id.webView1);
+//				WebView mWebView = (WebView) getView().findViewById(
+//						R.id.webView1);
 				
 				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", attachingActivityLock.getApplicationContext().getAssets());
 				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", attachingActivityLock.getApplicationContext().getAssets());
@@ -238,65 +246,52 @@ public class videoPlayer extends SherlockFragment {
 				created.setText(thisWeekBean.getcreated());
 				description.setText(Html.fromHtml(thisWeekBean.getdescription()));
 				
-				String page;
-				String videoUrl = ""; 
-				try {
-					String videoID = thisWeekBean.getvideo_uri().split("v=")[1];
-					page = new Communicator().httpGetService("http://gdata.youtube.com/feeds/mobile/videos/"+videoID, "");
-					Document doc = Jsoup.parse(page);
-					Element ab = doc.getElementsByTag("media:content").get(1);
-					videoUrl = ab.attr("url");
-					
-					
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				final String videoURL = thisWeekBean.getvideo_uri();
+				final String videoID = videoURL.split("v=")[1];
+			
+//				YouTubePlayerSupportFragment youTubePlayerFragment = new YouTubePlayerSupportFragment();
+				
+//				YouTubePlayerSupportFragment youTubePlayerFragment =
+//				        (YouTubePlayerSupportFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
+//
+				FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+			    FragmentTransaction fragmentTransaction = fragmentManager
+			            .beginTransaction();
+
+			    YouTubePlayerSupportFragment fragment = new YouTubePlayerSupportFragment();
+			    fragmentTransaction.add(R.id.fragmentz, fragment);
+			    fragmentTransaction.commit();
+			    
+			    fragment.initialize("AIzaSyAy3NlAp9iAR4Sjk7xAWorplPivK6CdfaI",
+			            new OnInitializedListener() {
+							@Override
+							public void onInitializationFailure(Provider arg0,
+									YouTubeInitializationResult arg1) {
+								if(progressDialog != null){
+						        	progressDialog.dismiss();
+						        }
+							}
+
+							@Override
+							public void onInitializationSuccess(Provider arg0,
+									YouTubePlayer arg1, boolean arg2) {
+								if(progressDialog != null){
+						        	progressDialog.dismiss();
+						        }
+								if (!arg2) {
+									arg1.loadVideo(videoID);
+			                    }
+							}
+
+			            });
+			    
+
 				}
-				
-
-//				videoView
-//						.setMediaController(new MediaController(attachingActivityLock));
-//				Log.d("entry", "entry : " + videoUrl);
-//				Uri uri = Uri
-//						.parse(videoUrl);
-//				videoView.setVideoURI(uri);
-//				videoView.requestFocus();
-//				
-//				videoView.start();
-//				
-//				String videoSource = "http://173.193.24.66/~kanz/video/mp4/9.mp4";
-
-//				videoView.setMediaController(new MediaController(attachingActivityLock));
-//				videoView.setVideoPath(videoUrl);
-//				videoView.requestFocus();
-//				videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//				  public void onPrepared(MediaPlayer mp) {
-//					  videoView.start();
-//				  }
-//				});
-				
-				mWebView.getSettings().setJavaScriptEnabled(true);
-				mWebView.getSettings().setPluginState(PluginState.ON);
-				String videoID = thisWeekBean.getvideo_uri().split("v=")[1];
-				mWebView.setWebViewClient(new WebViewClient() {
-				    @Override  
-				    public void onPageFinished(WebView view, String url) {
-				        super.onPageFinished(view, url);
-				        if(progressDialog != null){
-				        	progressDialog.dismiss();
-				        }
-				    }  
-
-				    @Override
-				    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-				        Toast.makeText(attachingActivityLock, "Failed to load Video", Toast.LENGTH_LONG).show();
-				    }
-				});
-				mWebView.loadUrl("http://www.youtube.com/embed/" + videoID + "?autoplay=1&vq=small");
-			}
+			
 		}
 	}
 	
+
 	
 	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
 
@@ -308,7 +303,7 @@ public class videoPlayer extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "id=68");
+					"/restapi/get/footer", "");
 
 			return result;
 		}
@@ -360,7 +355,7 @@ public class videoPlayer extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());
@@ -387,7 +382,11 @@ public class videoPlayer extends SherlockFragment {
 						});
 
 					}
-
+					TextView footerTitle = (TextView) footerLayout
+							.findViewById(R.id.footerText);
+					footerTitle.setText("Proudly Sponsored by");
+					AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
+							getActivity().getApplicationContext().getAssets());
 				}
 
 			}

@@ -2,14 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background"
+    android:background="#2E2C2C"
     android:orientation="vertical" >
-
+ <View
+               android:layout_width="fill_parent"
+               android:layout_height="0.5dp"
+               android:layout_alignParentBottom="true"
+               android:layout_alignParentLeft="true"
+               android:background="#696666" />
+   
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/calendar_top" >
+        
+         >
 
         <RelativeLayout
             android:id="@+id/previous"
@@ -17,11 +24,18 @@
             android:layout_height="30dip"
             android:layout_alignParentLeft="true" >
 
-            <ImageView
+            <!-- <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/arrow_left" />
+                android:background="@drawable/arrow_left" /> -->
+                <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="prev"
+	                android:id="@+id/arrow_left" 
+	                android:layout_marginLeft="10dp"
+                    />
         </RelativeLayout>
 
         <TextView
@@ -30,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dip"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:textSize="18dip"
             android:textStyle="bold" />
 
@@ -40,19 +54,44 @@
             android:layout_height="30dip"
             android:layout_alignParentRight="true" >
 
-            <ImageView
+         <!--    <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/arrow_right" />
+                android:background="@drawable/arrow_right" /> -->
+                <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="next"
+	                android:id="@+id/arrow_right" 
+	                android:layout_marginRight="10dp"
+	                android:gravity="right"
+                    />
         </RelativeLayout>
+         
     </RelativeLayout>
-
+     <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="#696666" />
+    
+	<GridView
+        android:id="@+id/gridviewTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="7"
+        android:stretchMode="columnWidth" />
+        
     <GridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal"
         android:listSelector="@android:color/transparent"
         android:numColumns="7"

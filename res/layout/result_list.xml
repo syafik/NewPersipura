@@ -45,7 +45,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="14dp"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/staff_placeholder2x" />
 
         <TextView
             android:id="@+id/findzoes_list_text_name"
