@@ -25,6 +25,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -59,6 +60,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
@@ -186,10 +188,19 @@ public class MainActivity extends SherlockFragmentActivity {
 				R.layout.drawer_list_item, mPlanetTitles));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle(null);
-		getActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle(null);
 		// getActionBar().setDisplayHomeAsUpEnabled(true);
+		 
+		
+		View v = LayoutInflater.from(this).inflate(R.layout.actionbar_custom_view_home, null);
 
+		 ActionBar actionBar = getSupportActionBar();
+		 actionBar.setDisplayHomeAsUpEnabled(true);
+		 actionBar.setDisplayShowCustomEnabled(true);
+
+
+		 actionBar.setCustomView(v);
+			
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#B61718")));
 		_initMenu();

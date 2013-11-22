@@ -14,7 +14,11 @@ import com.webileapps.navdrawer.MainActivity;
 import com.webileapps.navdrawer.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +35,7 @@ android.view.View.OnClickListener{
 	public Activity c;
 	public Dialog d;
 	public Button btn_like_persipura, btn_like_freeport;
+	private boolean has_package;
 
 	public FacebookLikePage(Activity a) {
 		super(a);
@@ -116,14 +121,65 @@ android.view.View.OnClickListener{
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_like_persipura:
-			((MainActivity) this.c).likePersipuraPage();
+			has_package = false;
+			try{
+	        	ApplicationInfo info = this.c.getPackageManager().
+	                    getApplicationInfo("com.facebook.katana", 0 );
+	            Log.d("katana ", "katana info : " + info);
+	        	has_package = true;
+	        } catch( PackageManager.NameNotFoundException e ){
+	        	AlertDialog alertDialog1 = new AlertDialog.Builder(this.c).create();
+	            alertDialog1.setTitle("Info");
+	            alertDialog1.setCancelable(false);
+	            alertDialog1.setMessage("Please Install Facebook for Android to continue this action");
+	 
+	            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int which) {
+	                	dialog.dismiss();          
+	                }
+	            });
+	 
+	            alertDialog1.show();
+	            has_package = false;
+	        }
+			
+			if(has_package){
+				((MainActivity) this.c).likePersipuraPage();	
+			}
+			
 			break;
 		case R.id.btn_like_freeport:
-			((MainActivity) this.c).likeFreeportPage();
+			has_package = false;
+			try{
+	        	ApplicationInfo info = this.c.getPackageManager().
+	                    getApplicationInfo("com.facebook.katana", 0 );
+	            Log.d("katana ", "katana info : " + info);
+	        	has_package = true;
+	        } catch( PackageManager.NameNotFoundException e ){
+	        	AlertDialog alertDialog1 = new AlertDialog.Builder(this.c).create();
+	            alertDialog1.setTitle("Info");
+	            alertDialog1.setCancelable(false);
+	            alertDialog1.setMessage("Please Install Facebook for Android to continue this action");
+	 
+	            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int which) {
+	                	dialog.dismiss();          
+	                }
+	            });
+	 
+	            alertDialog1.show();
+	            has_package = false;
+	        }
+			
+			if(has_package){
+				((MainActivity) this.c).likeFreeportPage();	
+			}
+			
 			break;
 		default:
 			break;
