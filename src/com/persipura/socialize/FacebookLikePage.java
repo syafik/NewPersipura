@@ -16,6 +16,7 @@ import com.webileapps.navdrawer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -36,6 +37,7 @@ android.view.View.OnClickListener{
 	public Dialog d;
 	public Button btn_like_persipura, btn_like_freeport;
 	private boolean has_package;
+	public ProgressDialog progressDialog;
 
 	public FacebookLikePage(Activity a) {
 		super(a);
@@ -46,6 +48,11 @@ android.view.View.OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		progressDialog = new ProgressDialog(this.c);
+		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.facebook_like_page2);
 		LayoutParams params = getWindow().getAttributes();
@@ -114,6 +121,10 @@ android.view.View.OnClickListener{
 //							webview2.loadUrl("http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2F536852216398619&width=10&height=62&colorscheme=light&show_faces=false&header=false&stream=false&show_border=false&appId=171262573080320");
 						}
 						
+
+						if(progressDialog != null){
+							progressDialog.dismiss();
+						}
 					}
 				});
 		Request.executeBatchAsync(request2);
