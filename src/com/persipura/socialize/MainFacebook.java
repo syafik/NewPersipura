@@ -53,9 +53,8 @@ public class MainFacebook extends FragmentActivity {
         
         if(has_package){
         	setContentView(R.layout.login_fragment);
-        
-        	userSettingsFragment.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
             userSettingsFragment = (UserSettingsFragment) fragmentManager.findFragmentById(R.id.login_fragment);
+//            userSettingsFragment.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
             userSettingsFragment.setSessionStatusCallback(new Session.StatusCallback() {
                 @Override
                 public void call(Session session, SessionState state, Exception exception) {
