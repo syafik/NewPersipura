@@ -58,6 +58,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -112,6 +113,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private String[] mPlanetTitles;
 	private EditText search;
 	private Button scelta1;
+	public TextView titleTextView;
 	ProgressDialog progressDialog;
 	String squadId;
 	String titleNav = "Home";
@@ -201,6 +203,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 
 		 actionBar.setCustomView(v);
+		 titleTextView = (TextView) v.findViewById(R.id.title_bar_eaa);
 			
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#B61718")));
@@ -336,6 +339,23 @@ public class MainActivity extends SherlockFragmentActivity {
 				long id) {
 			Log.d("logging", "hit item menu : " + position);
 			selectItem(position);
+			if(position == 0)
+				titleTextView.setText("HOME");
+			else if(position == 1)
+				titleTextView.setText("NEWS");
+			else if(position == 2)
+				titleTextView.setText("MEDIA");
+			else if(position == 3)
+				titleTextView.setText("MATCH");
+			else if(position == 4)
+				titleTextView.setText("SQUAD");
+			else if(position == 6)
+				titleTextView.setText("FACEBOOK");
+			else if(position == 7)
+				titleTextView.setText("TWITTER");
+			else if(position == 8)
+				titleTextView.setText("STREAM");
+				
 		}
 	}
 

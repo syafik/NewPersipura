@@ -14,6 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;

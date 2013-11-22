@@ -32,9 +32,10 @@
                 <TextView
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:text="prev"
+	                android:text="Prev"
 	                android:id="@+id/arrow_left" 
 	                android:layout_marginLeft="10dp"
+	                android:textSize="14dp"
                     />
         </RelativeLayout>
 
@@ -66,6 +67,7 @@
 	                android:id="@+id/arrow_right" 
 	                android:layout_marginRight="10dp"
 	                android:gravity="right"
+                    android:textSize="14dp"
                     />
         </RelativeLayout>
          
@@ -96,5 +98,64 @@
         android:listSelector="@android:color/transparent"
         android:numColumns="7"
         android:stretchMode="columnWidth" />
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp">
+        <RelativeLayout
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:background="#AECF21">
+        </RelativeLayout>
+	    <TextView android:text="ISL"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="18dip"
+            android:textStyle="bold"
+            android:layout_marginLeft="25dp" />
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+            android:layout_marginLeft="25dp">
+        <RelativeLayout
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:background="#187E9F">
+        </RelativeLayout>
+	    <TextView android:text="AFC"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="18dip"
+            android:textStyle="bold"
+            android:layout_marginLeft="25dp"
+            />
+	</LinearLayout>
+	
+    	
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+	    android:layout_marginLeft="25dp">
+        <RelativeLayout
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:background="#D53643">
+        </RelativeLayout>
+	    <TextView android:text="Friendly Match"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="18dip"
+            android:textStyle="bold"
+            android:layout_marginLeft="25dp"/>
+	</LinearLayout>
 
 </LinearLayout>

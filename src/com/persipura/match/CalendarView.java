@@ -24,6 +24,7 @@ import com.persipura.utils.WebHTTPMethodClass;
 import com.webileapps.navdrawer.R;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -67,7 +68,7 @@ public class CalendarView extends SherlockFragment {
 									// needs showing the event marker
 
 	public static final String TAG = CalendarView.class.getSimpleName();
-
+    public ProgressDialog progressDialog;
 	public static CalendarView newInstance() {
 		return new CalendarView();
 	}
@@ -75,6 +76,9 @@ public class CalendarView extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Locale.setDefault(Locale.US);
+		month = (GregorianCalendar) GregorianCalendar.getInstance();
+		itemmonth = (GregorianCalendar) month.clone();
 		new fetchEventFromServer().execute("");
 //		showProgressDialog();
 		View rootView = inflater.inflate(R.layout.calendar, container, false);
@@ -83,9 +87,6 @@ public class CalendarView extends SherlockFragment {
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
 
-		Locale.setDefault(Locale.US);
-		month = (GregorianCalendar) GregorianCalendar.getInstance();
-		itemmonth = (GregorianCalendar) month.clone();
 
 		items = new ArrayList<String>();
 		adapter = new CalendarAdapter(this, month);
@@ -118,9 +119,10 @@ public class CalendarView extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
-				
+
+				showProgressDialog();
 				setPreviousMonth();
-				new fetchEventFromServer().execute("");
+//				new fetchEventFromServer().execute("");
 				refreshCalendar();
 				
 			}
@@ -131,9 +133,9 @@ public class CalendarView extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
-				
+				showProgressDialog();
 				setNextMonth();
-				new fetchEventFromServer().execute("");
+//				new fetchEventFromServer().execute("");
 				refreshCalendar();
 				
 			}
@@ -285,30 +287,38 @@ public class CalendarView extends SherlockFragment {
 	// });
 	// }
 
+	private void showProgressDialog() {
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("Loading...");
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+	}
+	
 	protected void setNextMonth() {
 		if (month.get(GregorianCalendar.MONTH) == month
-				.getActualMaximum(GregorianCalendar.MONTH)) {
-			month.set((month.get(GregorianCalendar.YEAR) + 1),
-					month.getActualMinimum(GregorianCalendar.MONTH), 1);
-			new fetchEventFromServer().execute("");
+				.getActualMinimum(GregorianCalendar.MONTH)) {
+//			month.set((month.get(GregorianCalendar.YEAR) + 1),
+//					month.getActualMaximum(GregorianCalendar.MONTH), 1);
+			month.set(GregorianCalendar.YEAR, month.get(GregorianCalendar.YEAR) + 1);
+			month.set(GregorianCalendar.MONTH, month.get(GregorianCalendar.MONTH) + 1);
+//			new fetchEventFromServer().execute("");
 		} else {
 			month.set(GregorianCalendar.MONTH,
 					month.get(GregorianCalendar.MONTH) + 1);
-			new fetchEventFromServer().execute("");
+//			new fetchEventFromServer().execute("");
 		}
-
 	}
 
 	protected void setPreviousMonth() {
 		if (month.get(GregorianCalendar.MONTH) == month
 				.getActualMinimum(GregorianCalendar.MONTH)) {
-			month.set((month.get(GregorianCalendar.YEAR) - 1),
-					month.getActualMaximum(GregorianCalendar.MONTH), 1);
-			new fetchEventFromServer().execute("");
+			month.set(GregorianCalendar.YEAR, month.get(GregorianCalendar.YEAR) - 1);
+			month.set(GregorianCalendar.MONTH, month.get(GregorianCalendar.MONTH) - 1);
+//			new fetchEventFromServer().execute("");
 		} else {
 			month.set(GregorianCalendar.MONTH,
 					month.get(GregorianCalendar.MONTH) - 1);
-			new fetchEventFromServer().execute("");
+//			new fetchEventFromServer().execute("");
 		}
 
 	}
@@ -366,12 +376,14 @@ public class CalendarView extends SherlockFragment {
 		@SuppressLint("SimpleDateFormat")
 		@Override
 		protected void onPreExecute() {
-			Calendar rightNow = Calendar.getInstance();
+			String value2;
+			String str1;
 			java.text.SimpleDateFormat df1 = new java.text.SimpleDateFormat("MM");
-			int value1 = rightNow.get(Calendar.YEAR);;
-			String value2 = df1.format(rightNow.getTime());	
-			String str1 = Integer.toString(value1);
+			int value1 = month.get(Calendar.YEAR);
+			value2 = df1.format(month.getTime());	
+			str1 = Integer.toString(value1);
 			date = str1 + "-" + value2;
+			
 			Log.d("dateTime", "dateTime : " + date);
 		}
 
@@ -413,9 +425,13 @@ public class CalendarView extends SherlockFragment {
 					thisWeekBean.setAGoal(resObject.getString("a_goal"));
 					listThisWeekBean.add(thisWeekBean);
 				}
-				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
-
-					createSelectLocationListView(listThisWeekBean);
+				
+				createSelectLocationListView(listThisWeekBean);
+					
+				
+				
+				if(progressDialog != null){
+					progressDialog.dismiss();
 				}
 
 			} catch (Exception e) {

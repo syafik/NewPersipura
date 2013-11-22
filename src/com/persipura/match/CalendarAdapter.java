@@ -140,7 +140,7 @@ public class CalendarAdapter extends BaseAdapter{
 		}
 
 		if (dayString.get(position).equals(curentDateString)) {
-			setSelected(v);
+			//setSelected(v);
 			previousView = v;
 		} else {
 //			v.setBackgroundResource(R.drawable.list_item_background);
@@ -170,14 +170,21 @@ public class CalendarAdapter extends BaseAdapter{
 						
 					} else {
 						Log.d("compare", "compare A : " + dayView.getText() + " compare B : " + date);
-						if(dayView.getText().toString().equals(date)){
+						int day_view_selected = Integer.parseInt(dayView.getText().toString());
+						int date_selected = Integer.parseInt(date);
+						if(day_view_selected == date_selected){
 							final String textClub1 = thisWeekBean.getHTeam();
 							final String textClub2 = thisWeekBean.getATeam();
 							final String textScore1 = thisWeekBean.getHGoal();
 							final String textScore2 = thisWeekBean.getAGoal();
 							
 							if(thisWeekBean.getLeague().toString().equals("ISL")){
-								v.setBackgroundResource(R.drawable.calender_gradient_box_yellow);	
+								v.setBackgroundResource(R.drawable.calender_gradient_box_yellow);
+							}else if(thisWeekBean.getLeague().toString().equals("AFC")){
+								v.setBackgroundResource(R.drawable.calender_gradient_box_blue);
+							}else if(thisWeekBean.getLeague().toString().equals("Friendly Match")){
+								v.setBackgroundResource(R.drawable.calender_gradient_box_red);
+							}
 								v.setOnClickListener(new OnClickListener() {
 									
 									@Override
@@ -209,11 +216,7 @@ public class CalendarAdapter extends BaseAdapter{
 										
 									}
 								});
-							}else if(thisWeekBean.getLeague().toString().equals("AFC")){
-								v.setBackgroundResource(R.drawable.calendar_cel_selectl);
-							}else{
-								
-							}
+							
 								
 						}
 						
