@@ -187,6 +187,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, mPlanetTitles));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setTitle(null);
 		// getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -195,7 +196,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		View v = LayoutInflater.from(this).inflate(R.layout.actionbar_custom_view_home, null);
 
 		 ActionBar actionBar = getSupportActionBar();
-		 actionBar.setDisplayHomeAsUpEnabled(true);
+//		 actionBar.setDisplayHomeAsUpEnabled(true);
 		 actionBar.setDisplayShowCustomEnabled(true);
 
 
