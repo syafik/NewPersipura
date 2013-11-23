@@ -87,6 +87,10 @@ public class DetailNews extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// nid = (String) container.getTag();
+		
+		TextView titleTextView = (TextView) attachingActivityLock.getSupportActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
+		titleTextView.setText("News");
+		
 		Bundle extras = getArguments();
 		nid = extras.getString("NewsId");
 		showProgressDialog();

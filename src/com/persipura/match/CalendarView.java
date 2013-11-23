@@ -145,7 +145,7 @@ public class CalendarView extends SherlockFragment {
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 
-				((CalendarAdapter) parent.getAdapter()).setSelected(v);
+//				((CalendarAdapter) parent.getAdapter()).setSelected(v);
 				String selectedGridDate = CalendarAdapter.dayString
 						.get(position);
 				String[] separatedTime = selectedGridDate.split("-");
@@ -162,9 +162,9 @@ public class CalendarView extends SherlockFragment {
 					new fetchEventFromServer().execute("");
 					refreshCalendar();
 				}
-				((CalendarAdapter) parent.getAdapter()).setSelected(v);
+//				((CalendarAdapter) parent.getAdapter()).setSelected(v);
 
-				showToast(selectedGridDate);
+//				showToast(selectedGridDate);
 
 			}
 		});

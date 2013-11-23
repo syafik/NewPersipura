@@ -142,6 +142,9 @@ public class CalendarAdapter extends BaseAdapter{
 		if (dayString.get(position).equals(curentDateString)) {
 			//setSelected(v);
 			previousView = v;
+			v.setPadding(10, 10, 10, 10);
+			dayView.setPadding(10, 10, 10, 10);
+			v.setBackgroundResource(R.drawable.calender_gradient_box);
 		} else {
 //			v.setBackgroundResource(R.drawable.list_item_background);
 

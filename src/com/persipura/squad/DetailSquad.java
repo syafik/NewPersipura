@@ -65,7 +65,9 @@ public class DetailSquad extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		TextView titleTextView = (TextView) getActivity().getActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
+		titleTextView.setText("Squad");
+		
 		nid = getArguments().getString("squadId");
 
 		showProgressDialog();

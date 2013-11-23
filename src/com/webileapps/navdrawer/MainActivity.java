@@ -53,6 +53,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -195,13 +196,17 @@ public class MainActivity extends SherlockFragmentActivity {
 		// getActionBar().setDisplayHomeAsUpEnabled(true);
 		 
 		
-		View v = LayoutInflater.from(this).inflate(R.layout.actionbar_custom_view_home, null);
+//		View v = LayoutInflater.from(this).inflate(R.layout.actionbar_custom_view_home, null);
 
 		 ActionBar actionBar = getSupportActionBar();
 //		 actionBar.setDisplayHomeAsUpEnabled(true);
 		 actionBar.setDisplayShowCustomEnabled(true);
 
-
+		 LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		    View v = inflater.inflate(R.layout.actionbar_custom_view_home, null);
+		    actionBar.setCustomView(v, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//		    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		    
 		 actionBar.setCustomView(v);
 		 titleTextView = (TextView) v.findViewById(R.id.title_bar_eaa);
 			
@@ -298,7 +303,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				public void onClick(View v) {
 					if (search.length() > 0) {
-						selectItem(11);
+						selectItem(9);
 					}
 
 				}
@@ -621,11 +626,11 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			}
 			break;
+//		case 6:
+//			break;
+//		case 7:
+//			break;
 		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
 			Session session = Session.getActiveSession();
 			if (session == null || session.getState().isClosed()) {
 				FacebookConnectDialog cdd = new FacebookConnectDialog(
@@ -640,7 +645,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			titleNav = "Facebook";
 			break;
-		case 9:
+		case 7:
 			HideOtherActivities();
 			if (twitterSession.isTwitterLoggedInAlready()) {
 				ProgressDialog pd = new ProgressDialog(mTabbars);
@@ -709,7 +714,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			titleNav = "Twitter";
 			break;
-		case 10:
+		case 8:
 			if (twitterSession.isTwitterLoggedInAlready()) {
 				ProgressDialog pd = new ProgressDialog(mTabbars);
 				pd.setMessage("Loading...");
@@ -773,7 +778,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 
 			break;
-		case 11:
+		case 9:
 
 			HideOtherActivities();
 

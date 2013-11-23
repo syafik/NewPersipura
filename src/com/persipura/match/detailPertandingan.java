@@ -47,6 +47,10 @@ public class detailPertandingan extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		TextView titleTextView = (TextView) getActivity().getActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
+		titleTextView.setText("Match");
+		
 		Bundle b = getArguments();
 		nid = b.getString("myString");
 		MainActivity.getInstance().HideOtherActivities();
