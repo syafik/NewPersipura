@@ -19,9 +19,9 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.persipura.bean.clasementBean;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.R.id;
-import com.webileapps.navdrawer.R.layout;
+import com.persipura.main.R;
+import com.persipura.main.R.id;
+import com.persipura.main.R.layout;
 
 public class Clasement extends SherlockFragment {
 
@@ -55,25 +55,25 @@ public class Clasement extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 		
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
 
 		progressDialog.show();
 	}
@@ -128,6 +128,10 @@ public class Clasement extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 
 		}

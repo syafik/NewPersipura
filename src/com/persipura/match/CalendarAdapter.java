@@ -1,5 +1,10 @@
 package com.persipura.match;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,13 +14,20 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +38,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.calenderBean;
 import com.persipura.match.*;
 public class CalendarAdapter extends BaseAdapter{
@@ -180,6 +193,9 @@ public class CalendarAdapter extends BaseAdapter{
 							final String textClub2 = thisWeekBean.getATeam();
 							final String textScore1 = thisWeekBean.getHGoal();
 							final String textScore2 = thisWeekBean.getAGoal();
+							final String dateDialog = thisWeekBean.getDatetime();
+							final String h_logo_src = thisWeekBean.geth_logo();
+							final String a_logo_src = thisWeekBean.geta_logo();
 							
 							if(thisWeekBean.getLeague().toString().equals("ISL")){
 								v.setBackgroundResource(R.drawable.calender_gradient_box_yellow);
@@ -187,7 +203,7 @@ public class CalendarAdapter extends BaseAdapter{
 								v.setBackgroundResource(R.drawable.calender_gradient_box_blue);
 							}else if(thisWeekBean.getLeague().toString().equals("Friendly Match")){
 								v.setBackgroundResource(R.drawable.calender_gradient_box_red);
-							}
+							}	
 								v.setOnClickListener(new OnClickListener() {
 									
 									@Override
@@ -200,10 +216,56 @@ public class CalendarAdapter extends BaseAdapter{
 				                		TextView club2 = (TextView) dialog.findViewById(R.id.club2);
 				                		TextView score1 = (TextView) dialog.findViewById(R.id.score1);
 				                		TextView score2 = (TextView) dialog.findViewById(R.id.score2);
+				                		TextView date = (TextView) dialog.findViewById(R.id.txt_dia);
+				                		ImageView h_logo = (ImageView) dialog.findViewById(R.id.h_logo);
+				                		ImageView a_logo = (ImageView) dialog.findViewById(R.id.a_logo);
+				                		
 				                		club1.setText(textClub1);
 				                		club2.setText(textClub2);
 				                		score1.setText(textScore1);
 				                		score2.setText(textScore2);
+				                		date.setText(dateDialog);
+				                		
+				                		final Bitmap bitmap = DownloadImage(h_logo_src);
+				                		final Bitmap bitmap2 = DownloadImage(a_logo_src);
+//										imgLoader.DisplayImage(v.getTag().toString(), loader,
+//												bigImg);
+										Display display = mContext.getActivity().getWindowManager().getDefaultDisplay();
+				                		Point size = new Point();
+				                		display.getSize(size);
+				                		int screenWidth = size.x;
+				                		int screenHeight = size.y;
+
+				                		// Get target image size
+//				                		Bitmap bitmap = BitmapFactory.decodeFile(drawable.presence_offline);
+				                		int bitmapHeight = bitmap.getHeight();
+				                		int bitmapWidth = bitmap.getWidth();
+				                		int bitmapHeight2 = bitmap2.getHeight();
+				                		int bitmapWidth2 = bitmap2.getWidth();
+				                		
+				                		if(bitmapHeight > screenHeight){
+				                			bitmapHeight = screenHeight - 30;
+				                		}
+				                		
+				                		if(bitmapWidth > screenWidth){
+				                			bitmapWidth = screenWidth;
+				                		}
+
+				                		if(bitmapHeight2 > screenHeight){
+				                			bitmapHeight2 = screenHeight - 30;
+				                		}
+				                		
+				                		if(bitmapWidth2 > screenWidth){
+				                			bitmapWidth2 = screenWidth;
+				                		}
+
+				                		// Create resized bitmap image
+				                		BitmapDrawable resizedBitmap = new BitmapDrawable(mContext.getActivity().getResources(), Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false));
+				                		BitmapDrawable resizedBitmap2 = new BitmapDrawable(mContext.getActivity().getResources(), Bitmap.createScaledBitmap(bitmap2, bitmapWidth, bitmapHeight, false));
+
+				                		// Create dialog
+										h_logo.setImageBitmap(resizedBitmap.getBitmap());
+										a_logo.setImageBitmap(resizedBitmap2.getBitmap());
 				                		
 				                		Button btnClose = (Button) dialog.findViewById(R.id.btnClose);
 				                		btnClose.setOnClickListener(new OnClickListener() {
@@ -252,6 +314,55 @@ public class CalendarAdapter extends BaseAdapter{
 		return v;
 	}
 
+	private Bitmap DownloadImage(String URL) {
+		String URL1 = URL;
+		Bitmap bitmap = null;
+
+		InputStream in = null;
+		Message msg = Message.obtain();
+		msg.what = 1;
+		try {
+			in = OpenHttpConnection(URL1);
+			bitmap = BitmapFactory.decodeStream(in);
+			Bundle b = new Bundle();
+			b.putParcelable("bitmap", bitmap);
+			msg.setData(b);
+			in.close();
+		} catch (IOException e1) {
+
+			e1.printStackTrace();
+		}
+
+		return bitmap;
+	}
+	
+	private InputStream OpenHttpConnection(String urlString)
+			throws IOException {
+
+		InputStream in = null;
+		int response = -1;
+		URL url = new URL(urlString);
+		URLConnection conn = url.openConnection();
+		if (!(conn instanceof HttpURLConnection))
+			throw new IOException("Not an HTTP connection");
+		try {
+
+			HttpURLConnection httpConn = (HttpURLConnection) conn;
+			httpConn.setAllowUserInteraction(false);
+			httpConn.setInstanceFollowRedirects(true);
+
+			httpConn.connect();
+			response = httpConn.getResponseCode();
+
+			if (response == HttpURLConnection.HTTP_OK) {
+
+				in = httpConn.getInputStream();
+			}
+		} catch (Exception ex) {
+			throw new IOException("Error connecting");
+		}
+		return in;
+	}
 	public View setSelected(View view) {
 		if (previousView != null) {
 			previousView.setBackgroundResource(R.drawable.list_item_background);

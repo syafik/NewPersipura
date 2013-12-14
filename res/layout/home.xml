@@ -4,13 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ScrollView
+    <!--
+         <ScrollView
         android:id="@+id/scrollBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:scrollbars="vertical" >
-	
+    -->
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scrollBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrMode="both" >
 
         <LinearLayout
             android:id="@+id/location_linear_parentview"
@@ -26,8 +36,6 @@
                 android:background="#2E2C2C"
                 android:orientation="vertical" >
             </LinearLayout>
-
-
 
             <LinearLayout
                 android:id="@+id/relativeLayout3"
@@ -266,13 +274,13 @@
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+        <!-- </ScrollView> -->
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
     <FrameLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        
         android:background="#000" >
 
         <LinearLayout
@@ -296,7 +304,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp" />
-
         </LinearLayout>
     </FrameLayout>
 

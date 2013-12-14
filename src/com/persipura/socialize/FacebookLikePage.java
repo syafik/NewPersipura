@@ -9,9 +9,9 @@ import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;

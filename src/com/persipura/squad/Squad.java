@@ -35,7 +35,7 @@ import com.persipura.bean.FooterBean;
 import com.persipura.match.HasilPertandingan;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class Squad extends SherlockFragment {
 	MyPagerAdapter mSectionsPagerAdapter;
@@ -98,6 +98,12 @@ public class Squad extends SherlockFragment {
 //		    float nbPages = 5; // You could display partial pages using a float value
 //		    return (1 / nbPages) + 1;
 //		}
+		
+		@Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+	        
+	    }
+		
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
@@ -249,7 +255,7 @@ public class Squad extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());

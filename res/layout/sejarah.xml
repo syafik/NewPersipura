@@ -18,16 +18,19 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginRight="10dp" >
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp" >
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="100dp"
-                android:layout_height="80dp"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/hello_world"
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
                 android:visibility="gone"
+                android:contentDescription="@string/hello_world"
                 />
         </LinearLayout>
 
@@ -37,15 +40,15 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="5dp"
-            android:layout_margin="10dip"
-            android:layout_below="@+id/logo"
+            android:layout_toRightOf="@+id/logo"
             android:orientation="vertical"
-            android:visibility="gone" >
+             >
 
             <TableLayout
                 android:id="@+id/tableLayout1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:visibility="gone"
                 >
 
                 <TableRow
@@ -87,7 +90,9 @@
 
                     <TextView
                         android:id="@+id/berdiri"
-                        android:tag="textView6" />
+                        android:tag="textView6"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"  />
                 </TableRow>
 
                 <TableRow
@@ -107,7 +112,10 @@
 
                     <TextView
                         android:id="@+id/alamat"
-                        android:tag="textView9" />
+                        android:tag="textView9"
+                        
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
@@ -127,7 +135,9 @@
 
                     <TextView
                         android:id="@+id/telepon"
-                        android:tag="textView12" />
+                        android:tag="textView12" 
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
@@ -147,7 +157,97 @@
 
                     <TextView
                         android:id="@+id/julukan"
-                        android:tag="textView15" />
+                        android:tag="textView15"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"  />
+                </TableRow>
+                
+                 <TableRow
+                    android:id="@+id/tableRow6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:tag="textView27"
+                        android:text="Ketua" />
+
+                    <TextView
+                        android:tag="textView16"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/ketua"
+                        android:tag="textView17" 
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
+                </TableRow>
+                
+                  <TableRow
+                    android:id="@+id/tableRow7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:tag="textView18"
+                        android:text="Manager" />
+
+                    <TextView
+                        android:tag="textView19"
+                        android:text=":" />
+
+                    
+                    <TextView
+                        android:id="@+id/manager"
+                        android:tag="textView20" 
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
+                </TableRow>
+                
+                 <TableRow
+                    android:id="@+id/tableRow8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:tag="textView21"
+                        android:text="Pelatih" />
+
+                    <TextView
+                        android:tag="textView22"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/pelatih"
+                        android:tag="textView23" 
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dip" >
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:tag="textView24"
+                        android:text="Stadion" />
+
+                    <TextView
+                        android:tag="textView25"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/stadion"
+                        android:tag="textView26" 
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
                 </TableRow>
             </TableLayout>
         </LinearLayout>
@@ -168,7 +268,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="21dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/hello_world"
                 android:textSize="12sp"
                 android:visibility="gone" />

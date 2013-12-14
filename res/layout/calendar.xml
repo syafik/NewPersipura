@@ -4,39 +4,58 @@
     android:layout_height="fill_parent"
     android:background="#2E2C2C"
     android:orientation="vertical" >
- <View
-               android:layout_width="fill_parent"
-               android:layout_height="0.5dp"
-               android:layout_alignParentBottom="true"
-               android:layout_alignParentLeft="true"
-               android:background="#696666" />
-   
+<ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:id="@+id/list_news"
+        
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:id="@+id/location_linear_parentview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical"
+            >
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#696666" />
+
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        
-         >
+        android:layout_height="wrap_content" >
 
         <RelativeLayout
             android:id="@+id/previous"
             android:layout_width="40dip"
             android:layout_height="30dip"
+            android:layout_marginTop="3dp"
             android:layout_alignParentLeft="true" >
 
-            <!-- <ImageView
+            <!--
+                 <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/arrow_left" /> -->
-                <TextView
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Prev"
-	                android:id="@+id/arrow_left" 
-	                android:layout_marginLeft="10dp"
-	                android:textSize="14dp"
-                    />
+                android:background="@drawable/arrow_left" />
+            -->
+
+            <TextView
+                android:id="@+id/arrow_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Prev"
+                android:textSize="14dp" 
+                android:textColor="#cdcdcd"/>
         </RelativeLayout>
 
         <TextView
@@ -44,119 +63,134 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dip"
             android:textColor="#ffffff"
-            android:textSize="18dip"
+            android:textSize="18sp"
+            
             android:textStyle="bold" />
 
         <RelativeLayout
             android:id="@+id/next"
+            android:layout_marginTop="3dp"
             android:layout_width="40dip"
             android:layout_height="30dip"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true" 
+            >
 
-         <!--    <ImageView
+            <!--
+                 <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/arrow_right" /> -->
+                android:background="@drawable/arrow_right" />
+            -->
 
-                <TextView
-                    android:id="@+id/arrow_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:gravity="right"
-                    android:text="Next"
-                    android:textSize="14dp" />
-
+            <TextView
+                android:id="@+id/arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:text="Next"
+                android:textSize="14dp" 
+                android:textColor="#cdcdcd"/>
         </RelativeLayout>
-         
     </RelativeLayout>
-     <View
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:background="#696666" />
-    
-	<GridView
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#696666" />
+
+    <GridView
         android:id="@+id/gridviewTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal"
+        
         android:listSelector="@android:color/transparent"
         android:numColumns="7"
         android:stretchMode="columnWidth" />
-        
-    <GridView
+
+    <com.persipura.match.ExpandableHeightGridView
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal"
         android:listSelector="@android:color/transparent"
         android:numColumns="7"
+         android:isScrollContainer="false"
         android:stretchMode="columnWidth" />
-    
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="25dp">
-        <RelativeLayout
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
-	        android:background="#AECF21">
-        </RelativeLayout>
-	    <TextView android:text="ISL"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="18dip"
-            android:textStyle="bold"
-            android:layout_marginLeft="25dp" />
-	</LinearLayout>
-	
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-            android:layout_marginLeft="25dp">
-        <RelativeLayout
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
-	        android:background="#187E9F">
-        </RelativeLayout>
-	    <TextView android:text="AFC"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="18dip"
-            android:textStyle="bold"
-            android:layout_marginLeft="25dp"
-            />
-	</LinearLayout>
-	
-    	
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-	    android:layout_marginLeft="25dp">
-        <RelativeLayout
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
-	        android:background="#D53643">
-        </RelativeLayout>
-	    <TextView android:text="Friendly Match"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="18dip"
-            android:textStyle="bold"
-            android:layout_marginLeft="25dp"/>
-	</LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        
+        android:layout_marginTop="10dp" >
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="#AECF21" >
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Indonesia Super League"
+            android:textColor="#ffffff"
+            android:textSize="12dip"
+            android:layout_marginTop="7dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        
+        android:layout_marginTop="5dp" >
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="#187E9F" >
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="AFC League"
+            android:textColor="#ffffff"
+            android:layout_marginTop="7dp"
+            android:textSize="12dip"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="5dp" >
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="#D53643" >
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Friendly Match"
+            android:textColor="#ffffff"
+            android:textSize="12dip"
+            android:layout_marginTop="7dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>
 </LinearLayout>

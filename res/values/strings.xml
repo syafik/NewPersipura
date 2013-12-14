@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Persipura</string>
+    <string name="app_name">Persipura Mobile Application</string>
     <string name="action_contact">Contact</string>
 
     <string-array name="planets_array">
@@ -20,16 +20,13 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
- <string name="action_save">Save</string>
+    <string name="action_save">Save</string>
     <string name="hello_world">Hello world!</string>
     <string name="drawer_text">Navigation Drawer example.</string>
-    
     <string name="ns_menu_main_header">Title</string>
     <string name="ns_menu_main_header2">Connect</string>
-    
     <string name="ns_menu_open">Navigation Drawer Open Menu</string>
     <string name="ns_menu_close">Navigation Drawer</string>
-    
     <string name="ns_menu_snippet1">Home</string>
     <string name="ns_menu_snippet2">News</string>
     <string name="ns_menu_snippet3">Media</string>
@@ -40,33 +37,25 @@
     <string name="ns_menu_items_connect1">Facebook</string>
     <string name="ns_menu_items_connect2">Twitter</string>
     <string name="ns_menu_items_connect3">Stream</string>
-    
-    
     <string name="section1">Jadwal Pertandingan</string>
-	<string name="section2">Hasil Pertandingan</string>
-	<string name="section3">Klasemen</string>
-	<string name="section4">Kalender</string>
-	
-	 <string name="media1">Media Terbaru</string>
-	 <string name="media2">Video Gallery</string>
-	 <string name="media3">Image Gallery</string>
-	 
-	<string name="nama_klub">Nama               :</string>
-	<string name="berdiri_klub">Berdiri               :</string>
-	<string name="alamat_klub">Alamat 		       :</string>
-	<string name="telepon_klub">Telepon 	       :</string>
-	<string name="julukan_klub">Julukan 	 	   :</string>
-	<string name="ketua_klub">Ketua 		       :</string>
-	<string name="manager_klub">Manager 		   :</string>
-	<string name="pelatih_klub">Pelatih 			   :</string>
-	<string name="stadion_klub">Stadion 		       :</string>
-	
-	<string name="staffandmanagement">staff and management</string>
-	<string name="pemain">pemain		</string>
-	<string name="formasi">formasi		</string>
-	<string name="sejarah">sejarah		</string>
-	
-	
-	
+    <string name="section2">Hasil Pertandingan</string>
+    <string name="section3">Klasemen</string>
+    <string name="section4">Kalender</string>
+    <string name="media1">Media Terbaru</string>
+    <string name="media2">Video Gallery</string>
+    <string name="media3">Image Gallery</string>
+    <string name="nama_klub">Nama               :</string>
+    <string name="berdiri_klub">Berdiri               :</string>
+    <string name="alamat_klub">Alamat 		       :</string>
+    <string name="telepon_klub">Telepon 	       :</string>
+    <string name="julukan_klub">Julukan 	 	   :</string>
+    <string name="ketua_klub">Ketua 		       :</string>
+    <string name="manager_klub">Manager 		   :</string>
+    <string name="pelatih_klub">Pelatih 			   :</string>
+    <string name="stadion_klub">Stadion 		       :</string>
+    <string name="staffandmanagement">staff and management</string>
+    <string name="pemain">pemain		</string>
+    <string name="formasi">formasi		</string>
+    <string name="sejarah">sejarah		</string>
 
 </resources>

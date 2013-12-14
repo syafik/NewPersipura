@@ -9,8 +9,8 @@ import twitter4j.conf.ConfigurationBuilder;
 import com.application.app.utility.Constants;
 import com.application.app.utility.TwitterSession;
 import com.facebook.android.Facebook;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.MainActivity;
+import com.persipura.main.R;
 
 import android.app.Activity;
 import android.app.Dialog;

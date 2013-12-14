@@ -42,7 +42,7 @@ import com.persipura.bean.SejarahBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class Sejarah extends SherlockFragment {
 
@@ -77,25 +77,25 @@ public class Sejarah extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 		
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
 
 		progressDialog.show();
 	}
@@ -113,7 +113,7 @@ public class Sejarah extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/page", "slug=sejarah");
+					"/restapi/get/sejarah", "");
 			
 			return result;
 		}
@@ -135,6 +135,16 @@ public class Sejarah extends SherlockFragment {
 					JSONObject resObject = jsonArray.getJSONObject(i);
 					SejarahBean thisWeekBean = new SejarahBean();
 					thisWeekBean.setdesc(resObject.getString("body"));
+					thisWeekBean.setlogo(resObject.getString("logo"));
+					thisWeekBean.setalamat(resObject.getString("alamat"));
+					thisWeekBean.setberdiri(resObject.getString("berdiri"));
+					thisWeekBean.setjulukan(resObject.getString("julukan"));
+					thisWeekBean.setketua(resObject.getString("ketua"));
+					thisWeekBean.setmanager(resObject.getString("manajer"));
+					thisWeekBean.setstadion(resObject.getString("stadion"));
+					thisWeekBean.settelepon(resObject.getString("telepon"));
+					thisWeekBean.setpelatih(resObject.getString("pelatih"));
+					thisWeekBean.setnama(resObject.getString("nama"));
 					// ProgressDialog pd = new ProgressDialog(getActivity());
 					// pd.dismiss();
 					listThisWeekBean.add(thisWeekBean);
@@ -147,7 +157,9 @@ public class Sejarah extends SherlockFragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 		}
 
 		@SuppressWarnings("deprecation")
@@ -177,6 +189,10 @@ public class Sejarah extends SherlockFragment {
 				 TextView alamat = (TextView) lifePageCellContainerLayout.findViewById(R.id.alamat);
 				 TextView telepon = (TextView) lifePageCellContainerLayout.findViewById(R.id.telepon);
 				 TextView julukan = (TextView) lifePageCellContainerLayout.findViewById(R.id.julukan);
+				 TextView ketua = (TextView) lifePageCellContainerLayout.findViewById(R.id.ketua);
+				 TextView manager = (TextView) lifePageCellContainerLayout.findViewById(R.id.manager);
+				 TextView pelatih = (TextView) lifePageCellContainerLayout.findViewById(R.id.pelatih);
+				 TextView stadion = (TextView) lifePageCellContainerLayout.findViewById(R.id.stadion);
 				 TextView detail = (TextView) lifePageCellContainerLayout.findViewById(R.id.textViewList2);
 				 LinearLayout detailLinear = (LinearLayout) lifePageCellContainerLayout.findViewById(R.id.detail);
 				 RelativeLayout relDetail = (RelativeLayout) lifePageCellContainerLayout.findViewById(R.id.relDetail);
@@ -189,6 +205,12 @@ public class Sejarah extends SherlockFragment {
 				 alamat.setVisibility(View.VISIBLE);
 				 telepon.setVisibility(View.VISIBLE);
 				 julukan.setVisibility(View.VISIBLE);
+				 ketua.setVisibility(View.VISIBLE);
+				 manager.setVisibility(View.VISIBLE);
+				 pelatih.setVisibility(View.VISIBLE);
+				 stadion.setVisibility(View.VISIBLE);
+				 
+				 
 				 detail.setVisibility(View.VISIBLE);
 				 detailLinear.setVisibility(View.VISIBLE);	
 				 relDetail.setVisibility(View.VISIBLE);
@@ -196,29 +218,32 @@ public class Sejarah extends SherlockFragment {
 				 
 				 
 				 // parsing html from string
-				 Document doc = Jsoup.parse(summary);
-				 Element logo = doc.select("img").first();
-				 Element p1 = doc.select("p").first();
-				 Element table_html = doc.select("table").first();
-				 
-				 
-				 // table element
-				 String nama_html = doc.select("td").get(2).text();
-				 String berdiri_html = doc.select("td").get(5).text();
-				 String alamat_html = doc.select("td").get(8).text();
-				 String telepon_html = doc.select("td").get(11).text();
-				 String julukan_html = doc.select("td").get(14).text();
-				 p1.remove();
-				 table_html.remove();
-				 
-				 nama.setText(nama_html);
-				 berdiri.setText(berdiri_html);
-				 alamat.setText(alamat_html);
-				 telepon.setText(telepon_html);
-				 julukan.setText(julukan_html);
+//				 Document doc = Jsoup.parse(summary);
+//				 Element logo = doc.select("img").first();
+//				 Element p1 = doc.select("p").first();
+//				 Element table_html = doc.select("table").first();
+//				 
+//				 
+//				 // table element
+//				 String nama_html = doc.select("td").get(2).text();
+//				 String berdiri_html = doc.select("td").get(5).text();
+//				 String alamat_html = doc.select("td").get(8).text();
+//				 String telepon_html = doc.select("td").get(11).text();
+//				 String julukan_html = doc.select("td").get(14).text();
+//				 p1.remove();
+//				 table_html.remove();
+//				 
+				 nama.setText(thisWeekBean.getnama());
+				 berdiri.setText(thisWeekBean.getberdiri());
+				 alamat.setText(thisWeekBean.getalamat());
+				 telepon.setText(thisWeekBean.gettelepon());
+				 julukan.setText(thisWeekBean.getjulukan());
+				 ketua.setText(thisWeekBean.getketua());
+				 manager.setText(thisWeekBean.getmanager());
+				 pelatih.setText(thisWeekBean.getpelatih());
+				 stadion.setText(thisWeekBean.getstadion());
 
-				 for(int a = 1; a <= 15; a++){ 
-					 Log.d("avalue", "A value : " + a);
+				 for(int a = 1; a <= 27; a++){ 
 				     TextView tv = (TextView) lifePageCellContainerLayout.findViewWithTag("textView" + a);
 				     AppConstants.fontrobotoTextViewBold((TextView) tv, 11, "ffffff",
 							getActivity().getApplicationContext().getAssets());
@@ -231,8 +256,8 @@ public class Sejarah extends SherlockFragment {
 				 
 				 
   				 ImageLoader imgLoader = new ImageLoader(getActivity().getApplicationContext());
-				 imgLoader.DisplayImage(logo.attr("src"), loader, imageView1);
-				 detail.setText(Html.fromHtml(doc.select("span").toString()));
+				 imgLoader.DisplayImage(thisWeekBean.getlogo(), loader, imageView1);
+				 detail.setText(Html.fromHtml(thisWeekBean.getdesc()));
 
 			}
 		}

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.webileapps.navdrawer"
+    package="com.persipura.main"
     android:versionCode="1"
-    android:versionName="1" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="13"
         android:targetSdkVersion="17" />
-
+<!-- <supports-screens
+ android:xlargeScreens="false"
+ />  -->
     <application
         android:allowBackup="true"
         android:configChanges="keyboardHidden|orientation|screenSize"
@@ -18,7 +20,7 @@
         
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <activity
-            android:name="com.webileapps.navdrawer.Splash"
+            android:name="com.persipura.main.Splash"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,11 +28,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.webileapps.navdrawer.MainActivity"
+        <!-- <activity
+            android:name="com.persipura.main.MainActivity"
              android:launchMode="singleInstance"
             
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" > -->
+            <activity
+            android:name="com.persipura.main.MainActivity"
+             android:launchMode="singleInstance"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -47,17 +53,17 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".News"
+            android:name="com.persipura.main.News"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
-            android:name=".DetailNews"
+            android:name="com.persipura.main.DetailNews"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
-            android:name=".Squad"
+            android:name="com.persipura.main.Squad"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" >
         </activity>
@@ -70,8 +76,16 @@
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    
+    <receiver android:name=".NetworkStateReceiver">
+	   <intent-filter>
+	       
+	      <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+	   </intent-filter>
+	</receiver>
+	
     </application>
-
+	    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -1,6 +1,6 @@
 package com.persipura.socialize;
  
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 import android.app.AlertDialog;
 import android.content.Context;

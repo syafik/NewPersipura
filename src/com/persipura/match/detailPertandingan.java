@@ -19,13 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.HasilBean;
 import com.persipura.bean.matchResult;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.AppConstants;
-import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class detailPertandingan extends SherlockFragment {
 
@@ -49,7 +49,7 @@ public class detailPertandingan extends SherlockFragment {
 			Bundle savedInstanceState) {
 		
 		TextView titleTextView = (TextView) getActivity().getActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
-		titleTextView.setText("Match");
+		titleTextView.setText("MATCH");
 		
 		Bundle b = getArguments();
 		nid = b.getString("myString");
@@ -74,26 +74,26 @@ public class detailPertandingan extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
+		progressDialog.setCancelable(false);
 		progressDialog.show();
 	}
 
@@ -144,6 +144,10 @@ public class detailPertandingan extends SherlockFragment {
 				Toast.makeText(getActivity(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 
 		}
@@ -376,15 +380,17 @@ public class detailPertandingan extends SherlockFragment {
 				percentageB.setText(thisWeekBean.getApercentage());
 
 				// Log.d("--------------------", thisWeekBean.getDate());
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
+				int loader = R.drawable.staff_placeholder2x;
+				ImageLoader imageLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
+				
 				imgTeamA.setTag(thisWeekBean.getHlogo());
 				imageLoader.DisplayImage(thisWeekBean.getHlogo(),
-						getActivity(), imgTeamA);
+						loader, imgTeamA);
 
 				imgTeamB.setTag(thisWeekBean.getAlogo());
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
-						getActivity(), imgTeamB);
+						loader, imgTeamB);
 				
 				
 				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff", getActivity().getApplicationContext().getAssets());

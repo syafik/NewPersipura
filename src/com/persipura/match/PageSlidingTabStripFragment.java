@@ -13,9 +13,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +33,7 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class PageSlidingTabStripFragment extends SherlockFragment {
 	MyPagerAdapter mSectionsPagerAdapter;
@@ -85,20 +87,30 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
-
+		Fragment fragment;
+		Bundle args;
+		
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
+		
+		@Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+	        
+	    }
+
 
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = null;
-			Bundle args = null;
+//			Fragment fragment = null;
+//			Bundle args = null;
+			
 			switch (position) {
 			case 0:
+
 				fragment = new JadwalPertandingan();
 //				fragment = new CalendarView();
 				args = new Bundle();

@@ -36,7 +36,7 @@ import com.persipura.bean.HasilBean;
 import com.persipura.bean.SejarahBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class FacebookSocial extends SherlockFragment {
 

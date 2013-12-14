@@ -3,7 +3,11 @@ package com.persipura.home;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,13 +17,16 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -38,15 +46,18 @@ import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
+import com.persipura.main.DetailNews;
+import com.persipura.main.MainActivity;
+import com.persipura.main.News;
 import com.persipura.squad.DetailSquad;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.DetailNews;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.News;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class Home extends SherlockFragment {
 	public static final String TAG = Home.class.getSimpleName();
@@ -69,8 +80,10 @@ public class Home extends SherlockFragment {
 	String LinkId;
 	MainActivity attachingActivityLock;
 	TextView footerTitle;
+	PullToRefreshScrollView mPullRefreshScrollView;
+	ScrollView mScrollView;
 
-	public static Home newInstance() {	
+	public static Home newInstance() {
 		return new Home();
 	}
 
@@ -114,13 +127,40 @@ public class Home extends SherlockFragment {
 				.findViewById(R.id.bottom_control_bar);
 		adsLayout = (RelativeLayout) rootView.findViewById(R.id.eksklusive_ads);
 		newContainer = container;
-	
+
 		squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
 		TextView squadTitle = (TextView) rootView.findViewById(R.id.squadTitle);
-		footerTitle = (TextView) rootView
-				.findViewById(R.id.footerText);
+		footerTitle = (TextView) rootView.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(squadTitle, 15, "A6A5A2",
 				attachingActivityLock.getApplicationContext().getAssets());
+
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
+				.findViewById(R.id.scrollBar);
+
+		mPullRefreshScrollView
+				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ScrollView> refreshView) {
+						if (refreshView.getheaderScroll() < 0) {
+							newsContainerLayout.removeAllViews();
+							squadContainerLayout.removeAllViews();
+							nextMatchContainerLayout.removeAllViews();
+
+							new fetchHomeLatestFromServer().execute("");
+							new fetchHomeNewsFromServer().execute("");
+							new fetchNextMatchFromServer().execute("");
+							new fetchAdsFromServer().execute("");
+						} else {
+							mPullRefreshScrollView.onRefreshComplete();
+						}
+
+					}
+				});
+
+		mScrollView = mPullRefreshScrollView.getRefreshableView();
+
 		new fetchHomeLatestFromServer().execute("");
 		new fetchHomeNewsFromServer().execute("");
 		new fetchNextMatchFromServer().execute("");
@@ -135,25 +175,25 @@ public class Home extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 
-//		final Handler h = new Handler();
-//		final Runnable r2 = new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				progressDialog.dismiss();
-//			}
-//		};
-//
-//		Runnable r1 = new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				progressDialog.show();
-//				h.postDelayed(r2, 10000);
-//			}
-//		};
-//
-//		h.postDelayed(r1, 1000);
+		// final Handler h = new Handler();
+		// final Runnable r2 = new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// progressDialog.dismiss();
+		// }
+		// };
+		//
+		// Runnable r1 = new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// progressDialog.show();
+		// h.postDelayed(r2, 10000);
+		// }
+		// };
+		//
+		// h.postDelayed(r1, 1000);
 
 		progressDialog.show();
 	}
@@ -169,8 +209,8 @@ public class Home extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 
-			String result = WebHTTPMethodClass
-					.httpGetService("/restapi/get/home_squad", "");
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/home_squad", "");
 
 			return result;
 		}
@@ -263,11 +303,16 @@ public class Home extends SherlockFragment {
 				imgLoader.DisplayImage(squad.getfoto(), loader, imgNews);
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 					public void onClick(View v) {
-
+						SharedPreferences mPrefs = PreferenceManager
+								.getDefaultSharedPreferences(attachingActivityLock);
+						Editor editor = mPrefs.edit();
+						editor.putString("currentFragment", Home.TAG);
+						editor.putString("prevFragment", Home.TAG);
+						editor.commit();
 						Bundle data = new Bundle();
 						data.putString("squadId", (String) squadId);
 						data.putString("FragmentTag", Home.TAG);
-						
+
 						FragmentTransaction t = attachingActivityLock
 								.getSupportFragmentManager().beginTransaction();
 						DetailSquad mFrag = new DetailSquad();
@@ -323,14 +368,24 @@ public class Home extends SherlockFragment {
 					thisWeekBean.setTeam2Logo(resObject.getString("h_logo"));
 					thisWeekBean.setdate(resObject.getString("date"));
 					thisWeekBean.setleague(resObject.getString("league"));
-					thisWeekBean.settime(resObject.getString("time") + " " + resObject.getString("timezone"));
-					
+					thisWeekBean.settime(resObject.getString("time") + " "
+							+ resObject.getString("timezone"));
 
 					listNextMatchBean.add(thisWeekBean);
 
 				}
 				if (listNextMatchBean != null && listNextMatchBean.size() > 0) {
 					createNextMatchView(listNextMatchBean);
+				} else {
+					View cellViewMainLayout = mInflater.inflate(
+							R.layout.no_next_match, null);
+
+					TextView noNextMatch = (TextView) cellViewMainLayout
+							.findViewById(R.id.noNextMatch);
+					AppConstants.fontrobotoTextView(noNextMatch, 14, "cdcdcd",
+							attachingActivityLock.getApplicationContext()
+									.getAssets());
+					nextMatchContainerLayout.addView(cellViewMainLayout);
 				}
 
 			} catch (Exception e) {
@@ -345,8 +400,7 @@ public class Home extends SherlockFragment {
 			nextMatchContainerLayout.removeAllViews();
 			for (int i = 0; i < listNextMatchBean.size(); i++) {
 				HomeNextMatch thisWeekBean = listNextMatchBean.get(i);
-				
-				
+
 				View cellViewMainLayout = mInflater.inflate(
 						R.layout.home_next_match, null);
 
@@ -354,7 +408,7 @@ public class Home extends SherlockFragment {
 						.findViewById(R.id.team1);
 				TextView team2 = (TextView) cellViewMainLayout
 						.findViewById(R.id.team2);
-				
+
 				TextView date = (TextView) cellViewMainLayout
 						.findViewById(R.id.dateMatch);
 				TextView time = (TextView) cellViewMainLayout
@@ -368,8 +422,8 @@ public class Home extends SherlockFragment {
 				time.setText("");
 				league.setText("");
 
-				team2.setText(thisWeekBean.getTeam1());
-				team1.setText(thisWeekBean.getTeam2());
+				team2.setText(thisWeekBean.getTeam1().replace(" ", "\n"));
+				team1.setText(thisWeekBean.getTeam2().replace(" ", "\n"));
 				date.setText(thisWeekBean.getdate());
 				time.setText(thisWeekBean.gettime());
 				league.setText(thisWeekBean.getleague());
@@ -488,7 +542,7 @@ public class Home extends SherlockFragment {
 				AppConstants.fontrobotoTextViewBold(titleNews, 11, "ffffff",
 						attachingActivityLock.getApplicationContext()
 								.getAssets());
-				
+
 				BitmapFactory.Options bmOptions;
 
 				bmOptions = new BitmapFactory.Options();
@@ -509,12 +563,13 @@ public class Home extends SherlockFragment {
 				View.OnClickListener myhandler1 = new View.OnClickListener() {
 
 					public void onClick(View v) {
-						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(attachingActivityLock);
+						SharedPreferences mPrefs = PreferenceManager
+								.getDefaultSharedPreferences(attachingActivityLock);
 						Editor editor = mPrefs.edit();
 						editor.putString("currentFragment", Home.TAG);
 						editor.putString("prevFragment", Home.TAG);
 						editor.commit();
-						
+
 						Bundle data = new Bundle();
 						data.putString("NewsId", (String) v.getTag());
 
@@ -638,7 +693,7 @@ public class Home extends SherlockFragment {
 				}
 
 			}
-			
+
 			footerTitle.setText("Proudly Sponsored by");
 			AppConstants.fontrobotoTextViewBold(footerTitle, 13, "ffffff",
 					attachingActivityLock.getApplicationContext().getAssets());
@@ -711,6 +766,8 @@ public class Home extends SherlockFragment {
 				}
 				if (listAdsBean != null && listAdsBean.size() > 0) {
 					createAdsView(listAdsBean);
+				} else {
+					mPullRefreshScrollView.onRefreshComplete();
 				}
 
 			} catch (Exception e) {
@@ -743,14 +800,28 @@ public class Home extends SherlockFragment {
 
 					LinkId = null;
 					LinkId = thisWeekBean.getlink();
-					Log.d("clickable",
-							"clickable : " + thisWeekBean.getclickable());
 					if (thisWeekBean.getclickable().equals("1")) {
 
 						imgNews.setOnClickListener(new View.OnClickListener() {
 							public void onClick(View v) {
-
-								Uri uri = Uri.parse(LinkId);
+//								showProgressDialog();
+								String reqToken = WebHTTPMethodClass
+									.httpGetServiceWithoutparam("/services/session/token");
+								 List<NameValuePair> nameparams = new ArrayList<NameValuePair>();
+								 nameparams.add(new BasicNameValuePair("X-CSRF-Token", reqToken));
+								 nameparams.add(new BasicNameValuePair("Content-type", "application/json"));
+								 nameparams.add(new BasicNameValuePair("username", "syafikli"));
+								 nameparams.add(new BasicNameValuePair("password", "syafiklisyafikli"));
+								 
+								String resultLogin = WebHTTPMethodClass.executeHttPost(AppConstants.BASE_URL + "/user/login.json", nameparams);
+							Log.d("resultToken", "resultToken : " + reqToken);
+							Log.d("resultToken", "resultToken : " + resultLogin);
+							
+								
+							
+							
+							// redirect to current link
+							Uri uri = Uri.parse(LinkId);
 								Intent intent = new Intent(Intent.ACTION_VIEW,
 										uri);
 								startActivity(intent);
@@ -763,9 +834,12 @@ public class Home extends SherlockFragment {
 				}
 
 			}
+
+			mPullRefreshScrollView.onRefreshComplete();
 		}
 
 	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -784,13 +858,4 @@ public class Home extends SherlockFragment {
 
 		}
 	}
-//	
-//	@Override
-//	public void onResume(){
-//		super.onResume();
-//		Log.d("onResume", "onResumeCalled");
-//		if(progressDialog !=null){
-//			progressDialog.dismiss();
-//		}
-//	}
 }

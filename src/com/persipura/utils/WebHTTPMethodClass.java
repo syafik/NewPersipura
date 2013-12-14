@@ -151,21 +151,21 @@ public class WebHTTPMethodClass {
 		String responseData = null;
 
 		HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-		HttpParams httpParameters = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParameters,
-				mTimeoutConnection);
+//		HttpParams httpParameters = new BasicHttpParams();
+//		HttpConnectionParams.setConnectionTimeout(httpParameters,
+//				mTimeoutConnection);
 
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
-
-		SchemeRegistry registry = new SchemeRegistry();
-		SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
-		socketFactory
-				.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
-		registry.register(new Scheme("https", socketFactory, 443));
-		SingleClientConnManager mgr = new SingleClientConnManager(
-				client.getParams(), registry);
-		DefaultHttpClient httpClient = new DefaultHttpClient(mgr,
-				client.getParams());
+//		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+//		SchemeRegistry registry = new SchemeRegistry();
+//		SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+//		socketFactory
+//				.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+//		registry.register(new Scheme("http", socketFactory, 443));
+//		SingleClientConnManager mgr = new SingleClientConnManager(
+//				client.getParams(), registry);
+//		DefaultHttpClient httpClient = new DefaultHttpClient(mgr,
+//				client.getParams());
 
 		// Set verifier
 		HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);

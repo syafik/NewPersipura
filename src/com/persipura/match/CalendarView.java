@@ -21,7 +21,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.calenderBean;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -60,7 +60,7 @@ public class CalendarView extends SherlockFragment {
 	LinearLayout lifePageCellContainerLayout;
 	List<calenderBean> listThisWeekBean;
 	ArrayList<String> stringArrayList = new ArrayList<String>();
-	GridView gridview;
+	ExpandableHeightGridView gridview;
 	public CalendarAdapter adapter;// adapter instance
 	public Handler handler;// for grabbing some event values for showing the dot
 							// marker.
@@ -91,7 +91,9 @@ public class CalendarView extends SherlockFragment {
 		items = new ArrayList<String>();
 		adapter = new CalendarAdapter(this, month);
 
-		gridview = (GridView) rootView.findViewById(R.id.gridview);
+		gridview = (ExpandableHeightGridView) rootView.findViewById(R.id.gridview);
+		gridview.setExpanded(true);
+
 		gridview.setAdapter(adapter);
 
 		GridView gridviewtitle = (GridView) rootView.findViewById(R.id.gridviewTitle);
@@ -423,6 +425,8 @@ public class CalendarView extends SherlockFragment {
 					thisWeekBean.setHGoal(resObject.getString("h_goal"));
 					thisWeekBean.setATeam(resObject.getString("a_team"));
 					thisWeekBean.setAGoal(resObject.getString("a_goal"));
+					thisWeekBean.seth_logo(resObject.getString("h_logo"));
+					thisWeekBean.seta_logo(resObject.getString("a_logo"));
 					listThisWeekBean.add(thisWeekBean);
 				}
 				

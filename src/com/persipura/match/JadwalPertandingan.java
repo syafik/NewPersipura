@@ -1,48 +1,33 @@
 package com.persipura.match;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.HasilBean;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.R.id;
-import com.webileapps.navdrawer.R.layout;
+import com.persipura.main.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -71,25 +56,28 @@ public class JadwalPertandingan extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		showProgressDialog();
-//		new fetchLocationFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.jadwal_pertandingan,
 				container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
-//		new fetchFooterFromServer().execute("");
-		
+
 		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
 		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-//				new GetDataTask().execute();
-			  
+				if(refreshView.getheaderScroll() < 0){
+					lifePageCellContainerLayout.removeAllViews();
+
+					Integer[] param = new Integer[] { hitung, 0 };
+					new fetchLocationFromServer().execute(param);
+				}else{
+
 					Integer[] param = new Integer[] { hitung, offset };
 					new fetchLocationFromServer().execute(param);
-				offset = offset + 10;
-				
+					offset = offset + 10;
+				}				
 			}
 		});
 
@@ -99,10 +87,6 @@ public class JadwalPertandingan extends SherlockFragment {
 //		
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-//		TextView footerTitle = (TextView) rootView
-//				.findViewById(R.id.footerText);
-//		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-//				getActivity().getApplicationContext().getAssets());
 		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
@@ -112,25 +96,25 @@ public class JadwalPertandingan extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 		
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 10000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 10000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
 
 		progressDialog.show();
 	}
@@ -176,14 +160,26 @@ public class JadwalPertandingan extends SherlockFragment {
 					thisWeekBean.setHteam(resObject.getString("h_team"));
 					thisWeekBean.setAteam(resObject.getString("a_team"));
 					thisWeekBean.setPlace(resObject.getString("place"));
-					// ProgressDialog pd = new ProgressDialog(getActivity());
-					// pd.dismiss();
+					thisWeekBean.setleague(resObject.getString("league"));
+					
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 
 					createSelectLocationListView(listThisWeekBean);
 				}else{
+					View cellViewMainLayout = mInflater.inflate(
+							R.layout.no_next_match, null);
+
+					TextView noNextMatch = (TextView) cellViewMainLayout
+							.findViewById(R.id.noNextMatch);
+					View liner = (View) cellViewMainLayout.findViewById(R.id.liner);
+					liner.setVisibility(View.GONE);
+					AppConstants.fontrobotoTextView(noNextMatch, 14, "cdcdcd",
+							getActivity().getApplicationContext()
+									.getAssets());
+					lifePageCellContainerLayout.addView(cellViewMainLayout);
+					
 					offset = offset - 10;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
@@ -193,6 +189,10 @@ public class JadwalPertandingan extends SherlockFragment {
 				Toast.makeText(getActivity(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 
 		}
@@ -221,6 +221,7 @@ public class JadwalPertandingan extends SherlockFragment {
 						.findViewById(R.id.imageView1);
 				ImageView imgTeamB = (ImageView) cellViewMainLayout
 						.findViewById(R.id.ImageTeam2);
+				TextView leagueName = (TextView) cellViewMainLayout.findViewById(R.id.TextView01);
 
 				AppConstants.fontrobotoTextViewBold(NameTeamA, 12, "ffffff",
 						getActivity().getApplicationContext().getAssets());
@@ -240,6 +241,7 @@ public class JadwalPertandingan extends SherlockFragment {
 				Place.setText("");
 				cellnumTextView.setText("");
 
+				leagueName.setText(thisWeekBean.getleague());
 				ListDate.setText(thisWeekBean.getDate());
 				ListTime.setText(thisWeekBean.getTime() + " WIT");
 				NameTeamA.setText(thisWeekBean.getHteam());
@@ -255,115 +257,20 @@ public class JadwalPertandingan extends SherlockFragment {
 				// Bitmap bm2 = loadBitmap(thisWeekBean.getAlogo(), bmOptions);
 				// imgTeamB.setImageBitmap(bm2);
 
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
+				int loader = R.drawable.staff_placeholder2x;
+				ImageLoader imageLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
+				
 				imgTeamA.setTag(thisWeekBean.getHlogo());
 				imageLoader.DisplayImage(thisWeekBean.getHlogo(),
-						getActivity(), imgTeamA);
+						loader, imgTeamA);
 
 				imgTeamB.setTag(thisWeekBean.getAlogo());
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
-						getActivity(), imgTeamB);
+						loader, imgTeamB);
 
 				lifePageCellContainerLayout.addView(cellViewMainLayout);
 				mPullRefreshScrollView.onRefreshComplete();
-			}
-		}
-
-	}
-	
-	private class fetchFooterFromServer extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			String result = WebHTTPMethodClass.httpGetService(
-					"/restapi/get/footer", "");
-
-			return result;
-		}
-
-		@Override
-		protected void onProgressUpdate(Void... values) {
-
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			try {
-				JSONArray jsonArray = new JSONArray(result);
-				Log.d("test1", "test1 : " + jsonArray);
-				listFooterBean = new ArrayList<FooterBean>();
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject resObject = jsonArray.getJSONObject(i);
-					FooterBean thisWeekBean = new FooterBean();
-					thisWeekBean.setclickable(resObject.getString("clickable"));
-					thisWeekBean.setfooter_logo(resObject
-							.getString("footer_logo"));
-					thisWeekBean.setlink(resObject.getString("link"));
-					//
-					listFooterBean.add(thisWeekBean);
-
-				}
-				if (listFooterBean != null && listFooterBean.size() > 0) {
-					createFooterView(listFooterBean);
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Failed to retrieve data from server",
-						Toast.LENGTH_LONG).show();
-			}
-
-		}
-
-		private void createFooterView(List<FooterBean> listFooterBean)
-				throws IOException {
-			for (int i = 0; i < listFooterBean.size(); i++) {
-				FooterBean thisWeekBean = listFooterBean.get(i);
-
-				ImageView imgNews = (ImageView) footerLayout
-						.findViewById(R.id.footerImg);
-
-				BitmapFactory.Options bmOptions;
-
-				bmOptions = new BitmapFactory.Options();
-				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.staff_placeholder2x;
-
-				ImageLoader imgLoader = new ImageLoader(getActivity()
-						.getApplicationContext());
-
-				if (!thisWeekBean.getfooter_logo().isEmpty()) {
-					imgLoader.DisplayImage(thisWeekBean.getfooter_logo(),
-							loader, imgNews);
-
-					LinkId = null;
-					LinkId = thisWeekBean.getlink();
-					Log.d("clickable",
-							"clickable : " + thisWeekBean.getclickable());
-					if (thisWeekBean.getclickable().equals("1")) {
-
-						imgNews.setOnClickListener(new View.OnClickListener() {
-							public void onClick(View v) {
-
-								Uri uri = Uri.parse(LinkId);
-								Intent intent = new Intent(Intent.ACTION_VIEW,
-										uri);
-								startActivity(intent);
-
-							}
-						});
-
-					}
-
-				}
-
 			}
 		}
 

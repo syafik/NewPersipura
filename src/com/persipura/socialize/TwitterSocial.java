@@ -34,9 +34,9 @@ import com.persipura.bean.AdsBean;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.home.Home;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.*;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -162,7 +162,7 @@ public class TwitterSocial extends SherlockFragment {
 
 			bmOptions = new BitmapFactory.Options();
 			bmOptions.inSampleSize = 1;
-			int loader = R.drawable.loader;
+			int loader = R.drawable.staff_placeholder2x;
 			ImageLoader imgLoader = new ImageLoader(getActivity()
 					.getApplicationContext());
 

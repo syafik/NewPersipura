@@ -48,6 +48,7 @@
                     android:layout_below="@+id/time"
                     android:ellipsize="end"
                     android:paddingBottom="6dp"
+                    android:layout_marginTop="15dp"
                     android:textSize="12dp" />
 
                 <TextView

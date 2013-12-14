@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,11 +35,11 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.home.Home;
+import com.persipura.main.MainActivity;
 import com.persipura.match.JadwalPertandingan;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class pageSliding extends SherlockFragment {
 	MyPagerAdapter mSectionsPagerAdapter;
@@ -84,6 +85,11 @@ public class pageSliding extends SherlockFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
 
 		mSectionsPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
@@ -106,6 +112,11 @@ public class pageSliding extends SherlockFragment {
 			super(fm);
 		}
 
+		@Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+	        
+	    }
+		
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment = null;
@@ -243,7 +254,7 @@ public class pageSliding extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(attachingActivityLock
 						.getApplicationContext());

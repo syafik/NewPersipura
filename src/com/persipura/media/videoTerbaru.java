@@ -1,14 +1,22 @@
 package com.persipura.media;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,17 +34,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.persipura.bean.AdsBean;
 import com.persipura.bean.mediaBean;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-//import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.R;
-
+//import com.persipura.main.R;
+import com.persipura.main.R;
 
 public class videoTerbaru extends SherlockFragment {
 
@@ -47,50 +56,77 @@ public class videoTerbaru extends SherlockFragment {
 	String nid;
 	PullToRefreshScrollView mPullRefreshScrollView;
 	ScrollView mScrollView;
-	int hitung = 10;
-	 int offset = 10;
+	List<AdsBean> listAdsBean;
+	MainActivity attachingActivityLock;
+	String LinkId;
+
+	int hitung = 15;
+	int offset = 15;
 
 	public static final String TAG = videoTerbaru.class.getSimpleName();
 
 	public static videoTerbaru newInstance() {
 		return new videoTerbaru();
 	}
-	
 
-	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		// setRetainInstance(true);
+	}
+
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		View rootView = inflater.inflate(R.layout.video, container, false);
 		newContainer = container;
 		mInflater = getLayoutInflater(savedInstanceState);
 
 		videoContainer = (LinearLayout) rootView
 				.findViewById(R.id.parent_video);
-		
+
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
-		
-		mPullRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pull_refresh_scrollview);
-		mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
 
-			@Override
-			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-//				new GetDataTask().execute();
-			  
-					Integer[] param = new Integer[] { hitung, offset };
-					new fetchLocationFromServer().execute(param);
-				offset = offset + 10;
-				
-			}
-		});
+		mPullRefreshScrollView = (PullToRefreshScrollView) rootView
+				.findViewById(R.id.pull_refresh_scrollview);
+		mPullRefreshScrollView
+				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ScrollView> refreshView) {
+						if (refreshView.getheaderScroll() < 0) {
+							videoContainer.removeAllViews();
+
+							Integer[] param = new Integer[] { hitung, 0 };
+							new fetchLocationFromServer().execute(param);
+							new fetchAdsFromServer().execute("");
+						} else {
+							Integer[] param = new Integer[] { hitung, offset };
+							new fetchLocationFromServer().execute(param);
+							offset = offset + 10;
+						}
+					}
+				});
 
 		mScrollView = mPullRefreshScrollView.getRefreshableView();
-		
-		
-		
+
 		rootView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
 			@Override
@@ -102,6 +138,7 @@ public class videoTerbaru extends SherlockFragment {
 
 		});
 		MainActivity.getInstance().HideOtherActivities();
+		new fetchAdsFromServer().execute("");
 		return rootView;
 	}
 
@@ -116,8 +153,9 @@ public class videoTerbaru extends SherlockFragment {
 		@Override
 		protected String doInBackground(Integer... param) {
 
-			String result = WebHTTPMethodClass
-					.httpGetService("/restapi/get/video", "limit=" + param[0] + "&offset=" + param[1]);
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/video", "limit=" + param[0] + "&offset="
+							+ param[1]);
 			return result;
 		}
 
@@ -146,7 +184,7 @@ public class videoTerbaru extends SherlockFragment {
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 
 					createSelectLocationListView(listThisWeekBean);
-				}else{
+				} else {
 					offset = offset - 10;
 					mPullRefreshScrollView.onRefreshComplete();
 				}
@@ -174,9 +212,11 @@ public class videoTerbaru extends SherlockFragment {
 						.findViewById(R.id.findzoes_list_text_address);
 				ImageView img = (ImageView) cellViewMainLayout
 						.findViewById(R.id.imageView1);
-				
-				AppConstants.fontrobotoTextView(created, 11, "A6A5A2", getActivity().getApplicationContext().getAssets());
-				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff", getActivity().getApplicationContext().getAssets());
+
+				AppConstants.fontrobotoTextView(created, 11, "A6A5A2",
+						getActivity().getApplicationContext().getAssets());
+				AppConstants.fontrobotoTextViewBold(title, 15, "ffffff",
+						getActivity().getApplicationContext().getAssets());
 
 				title.setText("");
 				created.setText("");
@@ -184,49 +224,54 @@ public class videoTerbaru extends SherlockFragment {
 				nid = thisWeekBean.getId();
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
-				Log.d("6666666666666666666", nid);
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
+				int loader = R.drawable.staff_placeholder2x;
+				ImageLoader imageLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
 				img.setTag(thisWeekBean.getvideo_image());
 				imageLoader.DisplayImage(thisWeekBean.getvideo_image(),
-						getActivity(), img);
+						loader, img);
 
 				videoContainer.addView(cellViewMainLayout);
 				cellViewMainLayout.setTag(nid);
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {					
-						
-//						videoPlayer vp = new videoPlayer();
-//						
-//						Bundle b = new Bundle();
-//					
-//						b.putString("myString",(String) v.getTag());
-//						vp.setArguments(b);	
-//						getActivity().getSupportFragmentManager().beginTransaction()
-//						.add(R.id.parentpager, vp,videoPlayer.TAG)
-//						.addToBackStack("")
-//						.commit();
-						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+					public void onClick(View v) {
+
+						// videoPlayer vp = new videoPlayer();
+						//
+						// Bundle b = new Bundle();
+						//
+						// b.putString("myString",(String) v.getTag());
+						// vp.setArguments(b);
+						// getActivity().getSupportFragmentManager().beginTransaction()
+						// .add(R.id.parentpager, vp,videoPlayer.TAG)
+						// .addToBackStack("")
+						// .commit();
+						SharedPreferences mPrefs = PreferenceManager
+								.getDefaultSharedPreferences(getActivity());
 						Editor editor = mPrefs.edit();
 						editor.putString("prevFragment", pageSliding.TAG);
 						editor.putString("currentFragment", videoPlayer.TAG);
-						editor.commit();
-						Bundle data = new Bundle();
-						data.putString("myString", (String) v.getTag());
-						FragmentTransaction t = getFragmentManager()
-								.beginTransaction();
-						videoPlayer mFrag = new videoPlayer();
-						mFrag.setArguments(data);
-						t.add(R.id.parentpagermedia, mFrag, videoPlayer.TAG).commit();
 						
-//						 Bundle data = new Bundle();
-//					        data.putString("NewsId", (String) v.getTag());
-//
-//					        FragmentTransaction t = getFragmentManager()
-//					                .beginTransaction();
-//					        DetailNews mFrag = new DetailNews();
-//					        mFrag.setArguments(data);
-//					        t.add(R.id.content, mFrag, DetailNews.TAG).commit();
+						videoPlayer vp = new videoPlayer();
+						Bundle b = new Bundle();
+						b.putString("myString",(String) v.getTag());
+						vp.setArguments(b);	
+						
+						editor.commit();
+						getActivity().getSupportFragmentManager()
+						.beginTransaction()
+//						.remove(vp)
+						.add(R.id.content, vp, videoPlayer.TAG)
+						.commit();
+
+						// Bundle data = new Bundle();
+						// data.putString("NewsId", (String) v.getTag());
+						//
+						// FragmentTransaction t = getFragmentManager()
+						// .beginTransaction();
+						// DetailNews mFrag = new DetailNews();
+						// mFrag.setArguments(data);
+						// t.add(R.id.content, mFrag, DetailNews.TAG).commit();
 					}
 				});
 				mPullRefreshScrollView.onRefreshComplete();
@@ -234,6 +279,164 @@ public class videoTerbaru extends SherlockFragment {
 			}
 		}
 
+	}
+
+	private class fetchAdsFromServer extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = WebHTTPMethodClass.httpGetService(
+					"/restapi/get/ads", "ad_location=berita_terbaru");
+
+			return result;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				JSONArray jsonArray = new JSONArray(result);
+				Log.d("test1", "result ads : " + jsonArray);
+				listAdsBean = new ArrayList<AdsBean>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject resObject = jsonArray.getJSONObject(i);
+					AdsBean thisWeekBean = new AdsBean();
+					thisWeekBean.setclickable(resObject.getString("clickable"));
+					thisWeekBean.setad_rank(resObject.getString("ad_rank"));
+					thisWeekBean.setlink(resObject.getString("ad_link"));
+
+					int screenSize = attachingActivityLock
+							.getApplicationContext().getResources()
+							.getConfiguration().screenLayout
+							& Configuration.SCREENLAYOUT_SIZE_MASK;
+
+					switch (screenSize) {
+					case Configuration.SCREENLAYOUT_SIZE_LARGE:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_ldpi"));
+						break;
+					case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_hdpi"));
+						break;
+					case Configuration.SCREENLAYOUT_SIZE_SMALL:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_mdpi"));
+						break;
+					default:
+						thisWeekBean.setimage(resObject
+								.getString("ad_image_xhdpi"));
+					}
+
+					thisWeekBean.setclickcounter(resObject
+							.getString("clickcounter"));
+
+					//
+					listAdsBean.add(thisWeekBean);
+
+				}
+				Collections.sort(listAdsBean, new Comparator<AdsBean>() {
+					@Override
+					public int compare(AdsBean o1, AdsBean o2) {
+						Log.d("o1", "o1 obj :" + o1);
+						Log.d("o2", "o2 obj :" + o2);
+						return o1.getad_rank().compareToIgnoreCase(
+								o2.getad_rank());
+					}
+				});
+
+				if (listAdsBean != null && listAdsBean.size() > 0) {
+					createAdsView(listAdsBean);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+
+		}
+
+		private void createAdsView(List<AdsBean> listAdsBean)
+				throws IOException {
+			int counter = 3; // will use API ads
+
+			int newCount;
+			Log.d("listAdsBean.size()",
+					"listAdsBean.size() : " + listAdsBean.size());
+
+			for (int i = 0; i < listAdsBean.size(); i++) {
+				AdsBean thisWeekBean = listAdsBean.get(i);
+
+				View cellViewMainLayout = mInflater.inflate(R.layout.ads_list,
+						null);
+
+				ImageView imgNews = (ImageView) cellViewMainLayout
+						.findViewById(R.id.ads_img);
+
+				imgNews.setVisibility(View.VISIBLE);
+				BitmapFactory.Options bmOptions;
+
+				bmOptions = new BitmapFactory.Options();
+				bmOptions.inSampleSize = 1;
+				int loader = R.drawable.ads2x;
+
+				ImageLoader imgLoader = new ImageLoader(
+						attachingActivityLock.getApplicationContext());
+
+				if (!thisWeekBean.getimage().isEmpty()) {
+					imgLoader.DisplayImage(thisWeekBean.getimage(), loader,
+							imgNews);
+
+					LinkId = null;
+					LinkId = thisWeekBean.getlink();
+					if (thisWeekBean.getclickable().equals("1")) {
+
+						imgNews.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+
+								Uri uri = Uri.parse(LinkId);
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										uri);
+								startActivity(intent);
+
+							}
+						});
+
+					}
+
+				}
+				newCount = counter * (i + 1) + i;
+				Log.d("lifePageCellContainerLayout.size()",
+						"lifePageCellContainerLayout.size() : "
+								+ videoContainer.getChildCount());
+				Log.d("lifePageCellContainerLayout.size()", "counter : "
+						+ newCount);
+
+				if (newCount >= videoContainer.getChildCount()) {
+					newCount = videoContainer.getChildCount();
+				}
+
+				videoContainer.addView(cellViewMainLayout, newCount);
+
+			}
+		}
+
+	}
+
+	public class CustomComparator implements Comparator<AdsBean> {
+		@Override
+		public int compare(AdsBean o1, AdsBean o2) {
+			return o2.getad_rank().compareTo(o1.getad_rank());
+		}
 	}
 
 }

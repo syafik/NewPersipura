@@ -30,7 +30,18 @@ public class HasilBean {
 	String a_goal_minute = "";
 	String a_player_got_red = "";
 	String a_min_got_red = "";
+	String league = "";
 
+	public String getleague() {
+		return league;
+	}
+
+	public void setleague(String league) {
+		if (league.equals("null")) {
+			league = "";
+		}
+		this.league = league;
+	}
 	public String getNid() {
 		return id;
 	}

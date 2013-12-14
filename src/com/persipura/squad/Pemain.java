@@ -38,12 +38,12 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.HasilBean;
 import com.persipura.home.Home;
 import com.persipura.home.HomeSquad;
+import com.persipura.main.MainActivity;
+import com.persipura.main.News;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.News;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class Pemain extends SherlockFragment {
 
@@ -79,25 +79,25 @@ public class Pemain extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 		
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
 
 		progressDialog.show();
 	}
@@ -156,6 +156,10 @@ public class Pemain extends SherlockFragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 
 		}
 
@@ -169,7 +173,7 @@ public class Pemain extends SherlockFragment {
 						R.layout.squad_list, null);
 				RelativeLayout wrapper = (RelativeLayout) cellViewMainLayout
 						.findViewById(R.id.wrapper);
-				wrapper.setBackground(getResources().getDrawable(
+				wrapper.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.gradient_box));
 				TextView nama = (TextView) cellViewMainLayout
 						.findViewById(R.id.textViewList2);

@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,8 +18,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -41,18 +37,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.persipura.bean.AdsBean;
 import com.persipura.bean.mediaBean;
-import com.persipura.home.Home;
-import com.persipura.match.detailPertandingan;
-import com.persipura.socialize.TwitterSocial;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.DetailNews;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.News;
-import com.webileapps.navdrawer.R;
-//import com.markupartist.android.widget.PullToRefreshListView;
-//import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+import com.persipura.main.R;
 
 
 public class mediaTerbaru extends SherlockFragment {
@@ -62,8 +51,8 @@ public class mediaTerbaru extends SherlockFragment {
 	LinearLayout lifePageCellContainerLayout;
 	PullToRefreshScrollView mPullRefreshScrollView;
 	ScrollView mScrollView;
-	int hitung = 10;
-	int offset = 10;
+	int hitung = 15;
+	int offset = 15;
 	ProgressDialog progressDialog;
 	String nid;
 	String type;
@@ -94,14 +83,13 @@ public class mediaTerbaru extends SherlockFragment {
 	  @Override
 	    public void onActivityCreated(Bundle savedInstanceState) {
 	        super.onActivityCreated(savedInstanceState);
-//	        setRetainInstance(true);
 	    }
 	  
 	  
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		setRetainInstance(true);
+		
 		Integer[] param = new Integer[] { hitung, 0 };
 		new fetchLocationFromServer().execute(param);
 		View rootView = inflater.inflate(R.layout.media_terbaru, container,
@@ -116,12 +104,18 @@ public class mediaTerbaru extends SherlockFragment {
 					@Override
 					public void onRefresh(
 							PullToRefreshBase<ScrollView> refreshView) {
-						// new GetDataTask().execute();
+						if(refreshView.getheaderScroll() < 0){
+							lifePageCellContainerLayout.removeAllViews();
 
-						Integer[] param = new Integer[] { hitung, offset };
-						new fetchLocationFromServer().execute(param);
-						offset = offset + 10;
+							Integer[] param = new Integer[] { hitung, 0 };
+							new fetchLocationFromServer().execute(param);
+							new fetchAdsFromServer().execute("");
+						}else{
 
+							Integer[] param = new Integer[] { hitung, offset };
+							new fetchLocationFromServer().execute(param);
+							offset = offset + 10;
+						}
 					}
 				});
 
@@ -138,25 +132,25 @@ public class mediaTerbaru extends SherlockFragment {
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
 
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
 
 		progressDialog.show();
 	}
@@ -220,6 +214,10 @@ public class mediaTerbaru extends SherlockFragment {
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
 			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 
 		}
 
@@ -252,11 +250,13 @@ public class mediaTerbaru extends SherlockFragment {
 				title.setText(thisWeekBean.gettitle());
 				created.setText(thisWeekBean.getcreated());
 
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
+				int loader = R.drawable.staff_placeholder2x;
+				ImageLoader imageLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
+				
 				img.setTag(thisWeekBean.getvideo_image());
 				imageLoader.DisplayImage(thisWeekBean.getvideo_image(),
-						getActivity(), img);
+						loader, img);
 
 				cellViewMainLayout.setTag(nid);
 				cellViewMainLayout.setTag(R.string.section1, type);
@@ -268,7 +268,7 @@ public class mediaTerbaru extends SherlockFragment {
 						editor.putString("prevFragment", pageSliding.TAG);
 						
 						String type = (String) v.getTag(R.string.section1);
-						Log.d("-------------", type);
+						
 						if (type.equals("picture")) {
 							editor.putString("currentFragment", GaleryView2.TAG);
 								
@@ -287,8 +287,11 @@ public class mediaTerbaru extends SherlockFragment {
 							Bundle b = new Bundle();
 							b.putString("myString",(String) v.getTag());
 							vp.setArguments(b);	
+							
+							
 							getActivity().getSupportFragmentManager()
 							.beginTransaction()
+//							.remove(vp)
 							.add(R.id.content, vp, videoPlayer.TAG)
 							.commit();
 						}

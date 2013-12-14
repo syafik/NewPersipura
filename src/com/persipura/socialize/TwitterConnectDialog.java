@@ -1,7 +1,7 @@
 package com.persipura.socialize;
 
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.MainActivity;
+import com.persipura.main.R;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -48,6 +48,7 @@ public class TwitterConnectDialog extends Dialog implements
 			break;
 		case R.id.btn_no:
 			dismiss();
+			((MainActivity) this.c).selectItem(0);
 			break;
 		default:
 			break;

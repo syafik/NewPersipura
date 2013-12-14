@@ -25,11 +25,11 @@ import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.bean.StoreBean;
 import com.persipura.home.Home;
+import com.persipura.main.MainActivity;
 import com.persipura.squad.DetailSquad;
 import com.persipura.squad.Squad;
 import com.persipura.utils.*;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

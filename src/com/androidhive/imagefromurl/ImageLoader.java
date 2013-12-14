@@ -14,7 +14,8 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
+
 
 import android.app.Activity;
 import android.content.Context;

@@ -39,10 +39,10 @@ import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.home.Home;
 import com.persipura.home.HomeSquad;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 public class DetailSquad extends SherlockFragment {
 	public static final String TAG = DetailSquad.class.getSimpleName();
@@ -66,7 +66,7 @@ public class DetailSquad extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		TextView titleTextView = (TextView) getActivity().getActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
-		titleTextView.setText("Squad");
+		titleTextView.setText("SQUAD");
 		
 		nid = getArguments().getString("squadId");
 
@@ -115,26 +115,26 @@ public class DetailSquad extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
-
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
+		progressDialog.setCancelable(false);
 		progressDialog.show();
 	}
 
@@ -198,6 +198,10 @@ public class DetailSquad extends SherlockFragment {
 				Toast.makeText(getActivity(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 		}
 

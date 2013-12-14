@@ -18,13 +18,14 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.NewsBean;
 import com.persipura.bean.SearchBean;
+import com.persipura.main.DetailNews;
+import com.persipura.main.MainActivity;
+import com.persipura.main.News;
 import com.persipura.media.videoPlayer;
 import com.persipura.utils.*;
-import com.webileapps.navdrawer.DetailNews;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.News;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
@@ -69,11 +70,31 @@ public class Search extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	FrameLayout footerLayout;
 	String LinkId;
+	MainActivity attachingActivityLock;
+
 	
 	public static final String TAG = Search.class.getSimpleName();
 
 	public static Search newInstance() {
 		return new Search();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -82,9 +103,11 @@ public class Search extends SherlockFragment {
 		showProgressDialog();
 		if (q == null) {
 			q = getArguments().getString("q");
-			Log.d("search ", "search is : " + q);
 
 		}
+		TextView titleTextView = (TextView) attachingActivityLock.getSupportActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
+		titleTextView.setText("SEARCH");
+		
 		new fetchLocationFromServer().execute("");
 		new fetchFooterFromServer().execute("");
 		View rootView = inflater.inflate(R.layout.result, container, false);
@@ -115,26 +138,26 @@ public class Search extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 10000);
-			}
-		};
-
-		h.postDelayed(r1, 1000);
-
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 10000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 1000);
+		progressDialog.setCancelable(false);
 		progressDialog.show();
 	}
 
@@ -197,6 +220,10 @@ public class Search extends SherlockFragment {
 
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
 					createSelectLocationListView(listThisWeekBean);
+				}else{
+					TextView resultlabel = (TextView) newContainer.findViewById(R.id.resultlabel);
+					resultlabel.setText(Html.fromHtml("No result found for " + "&quot;" + q
+				+ "&quot;"));	
 				}
 
 			} catch (Exception e) {
@@ -204,6 +231,10 @@ public class Search extends SherlockFragment {
 				Toast.makeText(getActivity(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 		}
 
@@ -248,7 +279,7 @@ public class Search extends SherlockFragment {
 				BitmapFactory.Options bmOptions;
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 				
 				try{
 					if(!thisWeekBean.getfoto().isEmpty()){
@@ -398,7 +429,7 @@ public class Search extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
@@ -409,8 +440,6 @@ public class Search extends SherlockFragment {
 
 					LinkId = null;
 					LinkId = thisWeekBean.getlink();
-					Log.d("clickable",
-							"clickable : " + thisWeekBean.getclickable());
 					if (thisWeekBean.getclickable().equals("1")) {
 
 						imgNews.setOnClickListener(new View.OnClickListener() {

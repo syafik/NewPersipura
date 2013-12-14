@@ -1,29 +1,19 @@
 package com.persipura.match;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Loader;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.sax.RootElement;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,24 +21,16 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockFragment;
+import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.HasilBean;
-
-import com.persipura.home.Home;
-import com.persipura.media.videoPlayer;
 import com.persipura.utils.AppConstants;
-import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.R.id;
-import com.webileapps.navdrawer.R.layout;
+import com.persipura.main.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -90,12 +72,17 @@ public class HasilPertandingan extends SherlockFragment {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-//				new GetDataTask().execute();
+				if(refreshView.getheaderScroll() < 0){
+					lifePageCellContainerLayout.removeAllViews();
+
+					Integer[] param = new Integer[] { hitung, 0 };
+					new fetchLocationFromServer().execute(param);
+				}else{
 			  
 					Integer[] param = new Integer[] { hitung, offset };
 					new fetchLocationFromServer().execute(param);
-				offset = offset + 10;
-				
+					offset = offset + 10;
+				}				
 			}
 		});
 
@@ -110,25 +97,25 @@ public class HasilPertandingan extends SherlockFragment {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
 		progressDialog.setCancelable(false);
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 10000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 10000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
 
 		progressDialog.show();
 	}
@@ -174,7 +161,8 @@ public class HasilPertandingan extends SherlockFragment {
 					thisWeekBean.setAteam(resObject.getString("a_team"));
 					thisWeekBean.setHgoal(resObject.getString("h_goal"));
 					thisWeekBean.setAgoal(resObject.getString("a_goal"));
-
+					thisWeekBean.setleague(resObject.getString("league"));
+					
 					listThisWeekBean.add(thisWeekBean);
 				}
 				if (listThisWeekBean != null && listThisWeekBean.size() > 0) {
@@ -190,6 +178,10 @@ public class HasilPertandingan extends SherlockFragment {
 				Toast.makeText(getActivity(),
 						"Failed to retrieve data from server",
 						Toast.LENGTH_LONG).show();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 
 		}
@@ -209,6 +201,8 @@ public class HasilPertandingan extends SherlockFragment {
 						.findViewById(R.id.list_time);
 				TextView cellnumTextView = (TextView) cellViewMainLayout
 						.findViewById(R.id.findzoes_list_text_cellnum);
+				TextView leagueName = (TextView) cellViewMainLayout.findViewById(R.id.leagueName);
+				
 				TextView NameTeamA = (TextView) cellViewMainLayout
 						.findViewById(R.id.name_team1);
 				TextView NameTeamB = (TextView) cellViewMainLayout
@@ -238,6 +232,7 @@ public class HasilPertandingan extends SherlockFragment {
 				NameTeamB.setText("");
 				ScoreTeamA.setText("");
 				ScoreTeamB.setText("");
+				leagueName.setText(thisWeekBean.getleague());
 				cellnumTextView.setText("");
 
 				ListDate.setText(thisWeekBean.getDate());
@@ -257,19 +252,27 @@ public class HasilPertandingan extends SherlockFragment {
 				}
 					
 
-				Imageloader imageLoader = new Imageloader(getSherlockActivity()
+				int loader = R.drawable.staff_placeholder2x;
+				ImageLoader imageLoader = new ImageLoader(getActivity()
 						.getApplicationContext());
+
 				imgTeamA.setTag(thisWeekBean.getHlogo());
 				imageLoader.DisplayImage(thisWeekBean.getHlogo(),
-						getActivity(), imgTeamA);
+						loader, imgTeamA);
 				String id = thisWeekBean.getNid();
 				imgTeamB.setTag(thisWeekBean.getAlogo());
 				imageLoader.DisplayImage(thisWeekBean.getAlogo(),
-						getActivity(), imgTeamB);
+						loader, imgTeamB);
 				
 				cellViewMainLayout.setTag(id);
 				cellViewMainLayout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {				
+						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+						Editor editor = mPrefs.edit();
+						
+						editor.putString("currentFragment", detailPertandingan.TAG);
+						editor.putString("prevFragment", PageSlidingTabStripFragment.TAG);
+						editor.commit();
 						
 						detailPertandingan vp = new detailPertandingan();
 						Bundle b = new Bundle();

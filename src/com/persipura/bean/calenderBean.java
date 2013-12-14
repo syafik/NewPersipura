@@ -10,6 +10,33 @@ public class calenderBean {
 	String ATeam = "";
 	String AGoal = "";
 	String HGoal = "";
+	String h_logo = "";
+	String a_logo = "";
+
+	
+	public String geth_logo() {
+		return h_logo;
+	}
+
+	public void seth_logo(String h_logo) {
+		if (h_logo.equals("null")) {
+			h_logo = "";
+		}
+		this.h_logo = h_logo;
+	}
+	
+	public String geta_logo() {
+		return a_logo;
+	}
+
+	public void seta_logo(String a_logo) {
+		if (a_logo.equals("null")) {
+			a_logo = "";
+		}
+		this.a_logo = a_logo;
+	}
+
+
 	
 	public String getAGoal() {
 		return AGoal;

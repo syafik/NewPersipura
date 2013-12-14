@@ -1,18 +1,15 @@
 package com.persipura.socialize;
 
 import com.facebook.android.Facebook;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.MainActivity;
+import com.persipura.main.R;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.service.textservice.SpellCheckerService.Session;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 public class ShareDialog extends Dialog implements

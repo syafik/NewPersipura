@@ -44,11 +44,11 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.bean.imageBean;
+import com.persipura.main.MainActivity;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
+import com.persipura.main.R;
 
 
 public class GaleryView extends SherlockFragment {
@@ -192,23 +192,6 @@ public class GaleryView extends SherlockFragment {
 			}
 			return in;
 		}
-
-//		@Override
-//		public View getView(int position, View cv, ViewGroup parent) {
-//			ImageView imageview = null;
-//
-//			Bitmap bitmap = DownloadImage(urls[position]);
-//
-//			if (cv == null) {
-//				imageview = new ImageView(context);
-//			} else {
-//				imageview = (ImageView) cv;
-//			}
-//
-//			imageview.setImageBitmap(bitmap);
-//			return imageview;
-//		}
-		
 		
 		@Override
 	    public View getView(int position, View cv, ViewGroup parent) {
@@ -220,16 +203,16 @@ public class GaleryView extends SherlockFragment {
 	        if(v == null) {
 	            v = mInflater.inflate(R.layout.gridcrop, parent, false);
 	            v.setTag(R.id.picture, v.findViewById(R.id.picture));
-//	            v.setTag(R.id.text, v.findViewById(R.id.text));
 	        }
 	        
 	        picture = (ImageView)v.getTag(R.id.picture);   
 	        
-	        Imageloader imageLoader = new Imageloader(getSherlockActivity()
+	        int loader = R.drawable.staff_placeholder2x;
+			ImageLoader imageLoader = new ImageLoader(getActivity()
 					.getApplicationContext());
 			picture.setTag(imagURls);
 			imageLoader.DisplayImage(imagURls,
-					getActivity(), picture);
+					loader, picture);
 	     
 //	        picture.setImageBitmap(bitmap);
 	        
@@ -293,25 +276,26 @@ public class GaleryView extends SherlockFragment {
 	private void showProgressDialog() {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("Loading...");
-		final Handler h = new Handler();
-		final Runnable r2 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.dismiss();
-			}
-		};
-
-		Runnable r1 = new Runnable() {
-
-			@Override
-			public void run() {
-				progressDialog.show();
-				h.postDelayed(r2, 5000);
-			}
-		};
-
-		h.postDelayed(r1, 500);
+//		final Handler h = new Handler();
+//		final Runnable r2 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.dismiss();
+//			}
+//		};
+//
+//		Runnable r1 = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				progressDialog.show();
+//				h.postDelayed(r2, 5000);
+//			}
+//		};
+//
+//		h.postDelayed(r1, 500);
+		progressDialog.setCancelable(false);
 
 		progressDialog.show();
 	}
@@ -358,6 +342,10 @@ public class GaleryView extends SherlockFragment {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
 		}
 
@@ -469,7 +457,7 @@ public class GaleryView extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.loader;
+				int loader = R.drawable.staff_placeholder2x;
 
 				ImageLoader imgLoader = new ImageLoader(getActivity()
 						.getApplicationContext());

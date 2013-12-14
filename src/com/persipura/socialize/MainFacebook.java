@@ -16,13 +16,13 @@ import com.facebook.Session;
 import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.widget.UserSettingsFragment;
+import com.persipura.main.MainActivity;
+import com.persipura.main.Splash;
 import com.sromku.simple.fb.Permissions;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebook.OnLoginListener;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
-import com.webileapps.navdrawer.MainActivity;
-import com.webileapps.navdrawer.R;
-import com.webileapps.navdrawer.Splash;
+import com.persipura.main.R;
 
 public class MainFacebook extends Activity {
     protected static final String TAG = null;
@@ -44,29 +44,29 @@ public class MainFacebook extends Activity {
 
         
 //        FragmentManager fragmentManager = getSupportFragmentManager();
-        try{
-        	ApplicationInfo info = getPackageManager().
-                    getApplicationInfo("com.facebook.katana", 0 );
-            Log.d("katana ", "katana info : " + info);
-        	has_package = true;
-        } catch( PackageManager.NameNotFoundException e ){
-        	AlertDialog alertDialog1 = new AlertDialog.Builder(MainFacebook.this).create();
-            alertDialog1.setTitle("Info");
-            alertDialog1.setCancelable(false);
-            alertDialog1.setMessage("Please Install Facebook for Android to continue this action");
- 
-            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                	finish();          
-                }
-            });
- 
-            alertDialog1.show();
-            has_package = false;
-        }
-        
-        
-        if(has_package){
+//        try{
+//        	ApplicationInfo info = getPackageManager().
+//                    getApplicationInfo("com.facebook.katana", 0 );
+//            Log.d("katana ", "katana info : " + info);
+//        	has_package = true;
+//        } catch( PackageManager.NameNotFoundException e ){
+//        	AlertDialog alertDialog1 = new AlertDialog.Builder(MainFacebook.this).create();
+//            alertDialog1.setTitle("Info");
+//            alertDialog1.setCancelable(false);
+//            alertDialog1.setMessage("Please Install Facebook for Android to continue this action");
+// 
+//            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int which) {
+//                	finish();          
+//                }
+//            });
+// 
+//            alertDialog1.show();
+//            has_package = false;
+//        }
+//        
+//        
+//        if(has_package){
 //        	setContentView(R.layout.login_fragment);
 //        
 //        	userSettingsFragment.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
@@ -131,11 +131,11 @@ public class MainFacebook extends Activity {
         	mSimpleFacebook.login(onLoginListener);
 
             
-        }else{
-        	   Intent intent = new Intent(MainFacebook.this, MainActivity.class);
-             intent.putExtra("callbackFacebook", false);
-             startActivity(intent);
-        }
+//        }else{
+//        	   Intent intent = new Intent(MainFacebook.this, MainActivity.class);
+//             intent.putExtra("callbackFacebook", false);
+//             startActivity(intent);
+//        }
         
         
     }
