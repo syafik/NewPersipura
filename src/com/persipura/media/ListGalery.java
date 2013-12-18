@@ -240,7 +240,7 @@ public class ListGalery extends SherlockFragment {
 						vp.setArguments(b);
 						getActivity().getSupportFragmentManager()
 								.beginTransaction()
-								.add(R.id.parentpagermedia, vp, GaleryView2.TAG)
+								.add(R.id.content, vp, GaleryView2.TAG)
 								.commit();
 						
 						

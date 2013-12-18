@@ -145,13 +145,14 @@ public class Stream extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
 		showProgressDialog();
 		new fetchFooterFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.stream, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		newContainer = container;
-
+		
 		Integer[] param = new Integer[] { hitung, 1 };
 		new fetchLocationFromServer().execute(param);
 

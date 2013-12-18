@@ -350,8 +350,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				titleTextView.setText("FACEBOOK");
 			else if (position == 7)
 				titleTextView.setText("TWITTER");
-			else if (position == 8)
-				titleTextView.setText("STREAM");
+			
 
 		}
 	}
@@ -417,6 +416,8 @@ public class MainActivity extends SherlockFragmentActivity {
 				.findFragmentByTag(Squad.TAG);
 		Store storeFragment = (Store) getSupportFragmentManager()
 				.findFragmentByTag(Store.TAG);
+		Stream streamFragment = (Stream) getSupportFragmentManager()
+				.findFragmentByTag(Stream.TAG);
 
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(mTabbars);
@@ -428,7 +429,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		switch (position) {
 		case 0:
 			editor.putString("currentFragment", Home.TAG);
-			editor.putString("prevFragment", prevFragment);
+			editor.putString("prevFragment", "");
 			editor.commit();
 			titleTextView.setText("HOME");
 			if (homeFragment != null) {
@@ -440,8 +441,6 @@ public class MainActivity extends SherlockFragmentActivity {
 						.add(R.id.content, Home.newInstance(), Home.TAG)
 						.commit();
 			}
-
-			titleNav = "Home";
 
 			break;
 		case 1:
@@ -459,7 +458,6 @@ public class MainActivity extends SherlockFragmentActivity {
 								PageSlidingNews.TAG).commit();
 			}
 
-			titleNav = "News";
 			break;
 		case 2:
 			editor.putString("currentFragment", pageSliding.TAG);
@@ -468,11 +466,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			if (pageSlidingFragment != null) {
 				HideOtherActivities();
 				pageSlidingFragment.getView().setVisibility(View.VISIBLE);
-				// if (mediaterbaruFragment != null) {
-				// HideOtherActivities();
-				// mediaterbaruFragment.getView().setVisibility(View.VISIBLE);
-				// }
-				// mediaterbaruFragment.getView().setVisibility(View.VISIBLE);
 			} else {
 				HideOtherActivities();
 				getSupportFragmentManager()
@@ -480,8 +473,6 @@ public class MainActivity extends SherlockFragmentActivity {
 						.add(R.id.content, pageSliding.newInstance(),
 								pageSliding.TAG).commit();
 			}
-
-			titleNav = "Media";
 			break;
 		case 3:
 			editor.putString("currentFragment", PageSlidingTabStripFragment.TAG);
@@ -499,7 +490,6 @@ public class MainActivity extends SherlockFragmentActivity {
 								PageSlidingTabStripFragment.newInstance(),
 								PageSlidingTabStripFragment.TAG).commit();
 			}
-			titleNav = "Match";
 			break;
 		case 4:
 			editor.putString("currentFragment", Squad.TAG);
@@ -515,8 +505,6 @@ public class MainActivity extends SherlockFragmentActivity {
 						.commit();
 
 			}
-
-			titleNav = "Squad";
 			break;
 
 		case 5:
@@ -551,7 +539,6 @@ public class MainActivity extends SherlockFragmentActivity {
 				cdd.show();
 
 			}
-			titleNav = "Facebook";
 			break;
 		case 7:
 			HideOtherActivities();
@@ -622,7 +609,6 @@ public class MainActivity extends SherlockFragmentActivity {
 				cdd.show();
 			}
 
-			titleNav = "Twitter";
 			break;
 		case 8:
 			if (twitterSession.isTwitterLoggedInAlready()) {
@@ -670,11 +656,21 @@ public class MainActivity extends SherlockFragmentActivity {
 
 				Log.d("follow", "followFreeport : " + followFreeport + " followPersipura : " + followPersipura);
 				if (followPersipura && followFreeport) {
+					editor.putString("currentFragment", Stream.TAG);
+					editor.putString("prevFragment", Home.TAG);
+					editor.commit();
+					titleTextView.setText("STREAM");
 					HideOtherActivities();
-					getSupportFragmentManager()
-							.beginTransaction()
-							.add(R.id.content, Stream.newInstance(), Stream.TAG)
-							.commit();
+					if (streamFragment != null) {
+						streamFragment.getView().setVisibility(View.VISIBLE);
+					} else {
+						getSupportFragmentManager()
+								.beginTransaction()
+								.add(R.id.content, Stream.newInstance(), Stream.TAG)
+								.commit();
+
+					}
+					
 
 				} else {
 					TwitterFollowPage tlp = new TwitterFollowPage(
@@ -701,7 +697,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			getSupportFragmentManager().beginTransaction()
 					.remove(searchFragment)
 					.add(R.id.content, searchFragment, Search.TAG).commit();
-			titleNav = "Search";
 			break;
 
 		default:
@@ -1054,41 +1049,51 @@ public class MainActivity extends SherlockFragmentActivity {
 			String[] str= {PageSlidingNews.TAG, PageSlidingTabStripFragment.TAG,
 					Squad.TAG, pageSliding.TAG};
 			
+			if(backstack.equals(PageSlidingNews.TAG)){
+				titleTextView.setText("NEWS");
+			}else if(backstack.equals(PageSlidingTabStripFragment.TAG)){
+				titleTextView.setText("MATCH");
+			}else if(backstack.equals(pageSliding.TAG)){
+				titleTextView.setText("MEDIA");
+			}else if(backstack.equals(Squad.TAG)){
+				titleTextView.setText("SQUAD");
+			}
 			
-//			if(Arrays.asList(str).contains(backstack)){
-//				Editor editor1 = mPrefs.edit();
-//				titleTextView.setText("HOME");
-//				editor1.putString("prevFragment", Home.TAG);
-//				editor1.commit();
-//			}else if(backstack.equals(Home.TAG)){
-//				Editor editor1 = mPrefs.edit();
-//				titleTextView.setText("HOME");
-//				editor1.putString("prevFragment", "");
-//				editor1.commit();
-//			}if(backstack.isEmpty()){
-//				String msg = "Are you sure exit Application?";
-//				AlertDialog.Builder builder = new AlertDialog.Builder(mTabbars);
-//			
-//		        builder.setTitle("Info");
-//			    builder.setMessage(msg);
-//			    builder.setPositiveButton("OK", 
-//			    		new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog,
-//							int which) {
-//						android.os.Process.killProcess(android.os.Process.myPid());
-//
-//					}
-//				});
-//	            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog,
-//							int which) {
-//						dialog.dismiss();
-//
-//					}
-//				});
-//			    builder.show();
-//			
-//			}
+			if(Arrays.asList(str).contains(backstack)){
+				Editor editor1 = mPrefs.edit();
+				
+				editor1.putString("prevFragment", Home.TAG);
+				editor1.commit();
+			}else if(backstack.equals(Home.TAG)){
+				Editor editor1 = mPrefs.edit();
+				titleTextView.setText("HOME");
+				editor1.putString("prevFragment", "");
+				editor1.putString("currentFragment", Home.TAG);
+				editor1.commit();
+			}if(backstack.isEmpty()){
+				String msg = "Are you sure exit Application?";
+				AlertDialog.Builder builder = new AlertDialog.Builder(mTabbars);
+			
+		        builder.setTitle("Info");
+			    builder.setMessage(msg);
+			    builder.setPositiveButton("OK", 
+			    		new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						android.os.Process.killProcess(android.os.Process.myPid());
+
+					}
+				});
+	            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						dialog.dismiss();
+
+					}
+				});
+			    builder.show();
+			
+			}
 
 			Log.d("backstackTag", "backstackTag : " + backstack);
 			

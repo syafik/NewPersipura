@@ -30,6 +30,7 @@ import com.persipura.bean.FooterBean;
 import com.persipura.bean.HasilBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.persipura.home.Home;
 import com.persipura.main.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -270,7 +271,7 @@ public class HasilPertandingan extends SherlockFragment {
 						SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 						Editor editor = mPrefs.edit();
 						
-						editor.putString("currentFragment", detailPertandingan.TAG);
+						editor.putString("currentFragment", Home.TAG);
 						editor.putString("prevFragment", PageSlidingTabStripFragment.TAG);
 						editor.commit();
 						
@@ -280,7 +281,7 @@ public class HasilPertandingan extends SherlockFragment {
 						vp.setArguments(b);	
 						getActivity().getSupportFragmentManager()
 						.beginTransaction()
-						.add(R.id.parentpager, vp, detailPertandingan.TAG)
+						.add(R.id.content, vp, detailPertandingan.TAG)
 						.commit();
 					}
 				});
