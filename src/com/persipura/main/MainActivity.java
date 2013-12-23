@@ -135,27 +135,29 @@ public class MainActivity extends SherlockFragmentActivity {
 	private AuthenticationTask mAuthTask;
 	private RetriveAcessTokenTask mAccessTokenTask;
 	private boolean has_package;
-
+	public boolean is_tablet; 
 	static MainActivity mTabbars;
 
 	public static MainActivity getInstance() {
 		return new MainActivity();
 	}
 
-	//
-	// @Override
-	// public void onResume()
-	// {
-	// super.onResume();
-	// mSimpleFacebook = SimpleFacebook.getInstance(this);
-	// }
-
+	public static boolean isTablet(Context context) {
+	    return (context.getResources().getConfiguration().screenLayout
+	            & Configuration.SCREENLAYOUT_SIZE_MASK)
+	            >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mTabbars = this;
-
-		setContentView(R.layout.activity_main);
+		is_tablet = isTablet(getApplicationContext());
+		if(is_tablet){
+			setContentView(R.layout.activity_main_tablet);
+		}else{
+			setContentView(R.layout.activity_main);	
+		}
+		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
@@ -170,45 +172,13 @@ public class MainActivity extends SherlockFragmentActivity {
 				.setPermissions(permissions).build();
 		SimpleFacebook.setConfiguration(configuration);
 		twitterSession = new TwitterSession(mTabbars);
-
-		getSupportActionBar().setIcon(R.drawable.logo_open);
-
-		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-		mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-		mDrawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mPlanetTitles));
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setTitle(null);
-		// getActionBar().setDisplayHomeAsUpEnabled(true);
-
-		// View v =
-		// LayoutInflater.from(this).inflate(R.layout.actionbar_custom_view_home,
-		// null);
-
-		ActionBar actionBar = getSupportActionBar();
-		// actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setDisplayShowCustomEnabled(true);
-
-		LayoutInflater inflater = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflater.inflate(R.layout.actionbar_custom_view_home, null);
-		actionBar.setCustomView(v, new ActionBar.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
-		// actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-		actionBar.setCustomView(v);
-		titleTextView = (TextView) v.findViewById(R.id.title_bar_eaa);
-
-		getSupportActionBar().setBackgroundDrawable(
-				new ColorDrawable(Color.parseColor("#B61718")));
+		setupActionBar();
 		_initMenu();
-		mDrawerToggle = new CustomActionBarDrawerToggle(this, mDrawer);
-		mDrawer.setDrawerListener(mDrawerToggle);
+		if(!is_tablet){
+			mDrawerToggle = new CustomActionBarDrawerToggle(this, mDrawer);
+			mDrawer.setDrawerListener(mDrawerToggle);	
+		}
+		
 
 		if (savedInstanceState == null) {
 			selectItem(0);
@@ -217,7 +187,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		Session session = Session.getActiveSession();
 		if (session != null && (session.isOpened() || session.isClosed())) {
 			onSessionStateChange(session, session.getState(), null);
-			Log.d("wewe", "wewgombel");
 		}
 
 		// Check if twitter keys are set
@@ -227,6 +196,41 @@ public class MainActivity extends SherlockFragmentActivity {
 			return;
 		}
 
+	}
+
+	private void setupActionBar() {
+		getSupportActionBar().setIcon(R.drawable.logo_open);
+		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+		if(!is_tablet){
+			mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+			
+			mDrawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);	
+		}
+		
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_list_item, mPlanetTitles));
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle(null);
+		
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowCustomEnabled(true);
+
+		LayoutInflater inflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.actionbar_custom_view_home, null);
+		actionBar.setCustomView(v, new ActionBar.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.MATCH_PARENT));
+		
+		actionBar.setCustomView(v);
+		titleTextView = (TextView) v.findViewById(R.id.title_bar_eaa);
+
+		getSupportActionBar().setBackgroundDrawable(
+				new ColorDrawable(Color.parseColor("#B61718")));
+		
 	}
 
 	private void onSessionStateChange(Session session, SessionState state,
@@ -307,23 +311,25 @@ public class MainActivity extends SherlockFragmentActivity {
 			break;
 		}
 		
-		
-		switch (item.getItemId()) {
-		case android.R.id.home: {
-			if (mDrawer.isDrawerOpen(mDrawerList)) {
-				getSupportActionBar().setIcon(R.drawable.logo_open);
-				mDrawer.closeDrawer(mDrawerList);
-			} else {
-				getSupportActionBar().setIcon(R.drawable.logo_close);
-				mDrawer.openDrawer(mDrawerList);
+		if(!is_tablet){
+			switch (item.getItemId()) {
+			case android.R.id.home: {
+				if (mDrawer.isDrawerOpen(mDrawerList)) {
+					getSupportActionBar().setIcon(R.drawable.logo_open);
+					mDrawer.closeDrawer(mDrawerList);
+				} else {
+					getSupportActionBar().setIcon(R.drawable.logo_close);
+					mDrawer.openDrawer(mDrawerList);
+
+				}
+				break;
+			}
+
+			case R.id.action_contact:
 
 			}
-			break;
 		}
-
-		case R.id.action_contact:
-
-		}
+		
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -359,22 +365,24 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
+		if(!is_tablet)
+			mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggles
-		mDrawerToggle.onConfigurationChanged(newConfig);
-		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-			Log.d("On Config Change", "LANDSCAPE");
-			return;
-		} else {
-
-			Log.d("On Config Change", "PORTRAIT");
-		}
+		if(!is_tablet)
+			mDrawerToggle.onConfigurationChanged(newConfig);
+			if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+	
+				Log.d("On Config Change", "LANDSCAPE");
+				return;
+			} else {
+	
+				Log.d("On Config Change", "PORTRAIT");
+			}
 
 	}
 
@@ -703,8 +711,11 @@ public class MainActivity extends SherlockFragmentActivity {
 			Log.d("default123", "goto default");
 
 		}
-
-		mDrawer.closeDrawer(mDrawerList);
+		
+		if(!is_tablet){
+			mDrawer.closeDrawer(mDrawerList);	
+		}
+		
 	}
 
 	public void logoutTwitter() {

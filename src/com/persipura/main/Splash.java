@@ -9,8 +9,10 @@ import com.persipura.main.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -27,12 +29,18 @@ public class Splash extends Activity {
 		setContentView(R.layout.splash);
 	
 		boolean isNetworkAvailable = Utility.isNetworkAvailable(Splash.this);
-
+		Log.d("isTablet?", "isTablet? " + isTablet(getApplicationContext()));
 		if (isNetworkAvailable) {
 			my_timer = new Timer();
 			my_timer.schedule(new TimerTask() {
 				public void run() {
-					Intent i = new Intent(Splash.this, MainActivity.class);
+					Intent i;
+					if(isTablet(getApplicationContext())){
+						i = new Intent(Splash.this, MainActivity.class);	
+					}else{
+						i = new Intent(Splash.this, MainActivity.class);
+					}
+					
 					startActivity(i);
 					finish();
 				}
@@ -61,6 +69,12 @@ public class Splash extends Activity {
 				Log.d("ConnectionProblem", "Show Dialog: " + e.getMessage());
 			}
 		}
+	}
+
+	public static boolean isTablet(Context context) {
+	    return (context.getResources().getConfiguration().screenLayout
+	            & Configuration.SCREENLAYOUT_SIZE_MASK)
+	            >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
 
 	@Override

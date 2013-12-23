@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.persipura.main"
-    android:versionCode="1"
+    android:versionCode="2"
     android:versionName="1.1" >
 
     <uses-sdk
@@ -9,7 +9,7 @@
         android:targetSdkVersion="17" />
 <supports-screens
  android:xlargeScreens="false"
- />
+ /> 
     <application
         android:allowBackup="true"
         android:configChanges="keyboardHidden|orientation|screenSize"
@@ -32,7 +32,7 @@
             android:name="com.persipura.main.MainActivity"
              android:launchMode="singleInstance"
             
-            android:screenOrientation="portrait" > 
+            android:screenOrientation="portrait" >  
             <!-- <activity
             android:name="com.persipura.main.MainActivity"
              android:launchMode="singleInstance"
@@ -48,6 +48,8 @@
                     android:scheme="persipura-scheme" />
             </intent-filter>
         </activity>
+        
+        
         <activity
             android:name="com.persipura.socialize.MainFacebook"
             android:theme="@android:style/Theme.NoTitleBar"
