@@ -38,11 +38,13 @@ android.view.View.OnClickListener{
 	public Button btn_like_persipura, btn_like_freeport;
 	private boolean has_package;
 	public ProgressDialog progressDialog;
-
-	public FacebookLikePage(Activity a) {
+	public boolean is_tablet;
+	
+	public FacebookLikePage(Activity a, boolean is_tablet) {
 		super(a);
 		// TODO Auto-generated constructor stub
 		this.c = a;
+		this.is_tablet = is_tablet;
 	}
 
 	@Override
@@ -56,7 +58,11 @@ android.view.View.OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.facebook_like_page2);
 		LayoutParams params = getWindow().getAttributes();
-		params.width = LayoutParams.FILL_PARENT;
+		if(this.is_tablet){
+			params.width = 400;
+		}else{
+			params.width = LayoutParams.FILL_PARENT;
+		}
 
 		
 		getWindow().setAttributes(

@@ -28,15 +28,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+        <!-- <activity
             android:name="com.persipura.main.MainActivity"
              android:launchMode="singleInstance"
             
-            android:screenOrientation="portrait" >  
-            <!-- <activity
+            android:screenOrientation="portrait" > -->  
+            <activity
             android:name="com.persipura.main.MainActivity"
              android:launchMode="singleInstance"
-            > -->
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -24,12 +24,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.view.View.OnLayoutChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -165,7 +167,16 @@ public class Home extends SherlockFragment {
 		new fetchHomeNewsFromServer().execute("");
 		new fetchNextMatchFromServer().execute("");
 		new fetchAdsFromServer().execute("");
-		new fetchFooterFromServer().execute("");
+		if(!attachingActivityLock.is_tablet){
+			new fetchFooterFromServer().execute("");	
+		}else{
+			((ViewManager) rootView).removeView(footerLayout);
+
+			if(progressDialog != null){
+				progressDialog.dismiss();
+				}
+			}
+		
 
 		return rootView;
 	}
@@ -537,7 +548,7 @@ public class Home extends SherlockFragment {
 				titleNews.setText("");
 				timeNews.setText("");
 
-				titleNews.setText(thisWeekBean.gettitle());
+				titleNews.setText(Html.fromHtml(thisWeekBean.gettitle()));
 				timeNews.setText(thisWeekBean.getcreated());
 				AppConstants.fontrobotoTextViewBold(titleNews, 11, "ffffff",
 						attachingActivityLock.getApplicationContext()
@@ -664,7 +675,7 @@ public class Home extends SherlockFragment {
 
 				bmOptions = new BitmapFactory.Options();
 				bmOptions.inSampleSize = 1;
-				int loader = R.drawable.staff_placeholder2x;
+				int loader = R.drawable.footer_placeholder;
 
 				ImageLoader imgLoader = new ImageLoader(
 						attachingActivityLock.getApplicationContext());

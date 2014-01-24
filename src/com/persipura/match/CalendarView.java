@@ -301,7 +301,7 @@ public class CalendarView extends SherlockFragment {
 				.getActualMinimum(GregorianCalendar.MONTH)) {
 //			month.set((month.get(GregorianCalendar.YEAR) + 1),
 //					month.getActualMaximum(GregorianCalendar.MONTH), 1);
-			month.set(GregorianCalendar.YEAR, month.get(GregorianCalendar.YEAR) + 1);
+//			month.set(GregorianCalendar.YEAR, month.get(GregorianCalendar.YEAR) + 1);
 			month.set(GregorianCalendar.MONTH, month.get(GregorianCalendar.MONTH) + 1);
 //			new fetchEventFromServer().execute("");
 		} else {
@@ -314,7 +314,7 @@ public class CalendarView extends SherlockFragment {
 	protected void setPreviousMonth() {
 		if (month.get(GregorianCalendar.MONTH) == month
 				.getActualMinimum(GregorianCalendar.MONTH)) {
-			month.set(GregorianCalendar.YEAR, month.get(GregorianCalendar.YEAR) - 1);
+//			month.set(GregorianCalendar.YEAR, month.get(GregorianCalendar.YEAR) - 1);
 			month.set(GregorianCalendar.MONTH, month.get(GregorianCalendar.MONTH) - 1);
 //			new fetchEventFromServer().execute("");
 		} else {

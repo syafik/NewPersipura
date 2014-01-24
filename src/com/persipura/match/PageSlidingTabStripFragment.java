@@ -8,8 +8,10 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +36,7 @@ import com.androidhive.imagefromurl.ImageLoader;
 import com.persipura.bean.FooterBean;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.persipura.main.MainActivity;
 import com.persipura.main.R;
 
 public class PageSlidingTabStripFragment extends SherlockFragment {
@@ -41,7 +45,20 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	LinearLayout footerLayout;
 	String LinkId;
+	MainActivity attachingActivityLock;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
 
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+	
 	public static final String TAG = PageSlidingTabStripFragment.class
 			.getSimpleName();
 
@@ -78,7 +95,12 @@ public class PageSlidingTabStripFragment extends SherlockFragment {
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		footerLayout = (LinearLayout) view.findViewById(R.id.outer);
-		new fetchFooterFromServer().execute("");
+		if(attachingActivityLock.is_tablet){
+			FrameLayout bottom_control_bar = (FrameLayout) footerLayout.findViewById(R.id.bottom_control_bar);
+			bottom_control_bar.setBackgroundColor(Color.parseColor("#2E2C2C"));
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
 
 		TextView footerTitle = (TextView) footerLayout
 				.findViewById(R.id.footerText);

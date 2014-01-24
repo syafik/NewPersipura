@@ -11,10 +11,12 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,19 +63,36 @@ public class DetailSquad extends SherlockFragment {
 	ViewGroup newContainer;
 	String nid;
 	private ProgressDialog progressDialog;
+	MainActivity attachingActivityLock;
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		TextView titleTextView = (TextView) getActivity().getActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
-		titleTextView.setText("SQUAD");
+		
+		if(!attachingActivityLock.is_tablet){
+			titleTextView.setText("SQUAD");	
+		}
+		
 		
 		nid = getArguments().getString("squadId");
 
 		showProgressDialog();
 
 		new fetchLocationFromServer().execute("");
-		new fetchFooterFromServer().execute("");
+//		new fetchFooterFromServer().execute("");
 
 		View rootView = inflater.inflate(R.layout.squad_profile, container,
 				false);
@@ -84,6 +103,11 @@ public class DetailSquad extends SherlockFragment {
 				.findViewById(R.id.list_parent);
 		footerLayout = (FrameLayout) rootView
 				.findViewById(R.id.bottom_control_bar);
+		if(attachingActivityLock.is_tablet){
+			footerLayout.setBackgroundColor(Color.parseColor("#2E2C2C"));
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
 		footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);
 		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",

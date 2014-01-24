@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -67,6 +69,20 @@ public class DetailGaleryView extends SherlockFragment {
 	TextView galleryDesc;
 	private TextView title;
 	private TextView created;
+	MainActivity attachingActivityLock;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
 
 
 	public static final String TAG = DetailGaleryView.class.getSimpleName();
@@ -139,12 +155,17 @@ public class DetailGaleryView extends SherlockFragment {
 		String imgTitle = b.getString("titleImg");
 		String createdImg = b.getString("createdImg");
 		
-		new fetchFooterFromServer().execute("");
+		
 		showProgressDialog();
 		View rootView = inflater.inflate(R.layout.detail_gridview, container,
 				false);
 		footerLayout = (FrameLayout) rootView
 				.findViewById(R.id.bottom_control_bar);
+		if(attachingActivityLock.is_tablet){
+			footerLayout.setBackgroundColor(Color.parseColor("#2E2C2C"));
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
 		bigImg = (ImageView) rootView.findViewById(R.id.detailGaleryImg);
 		TextView footerTitle = (TextView) rootView
 				.findViewById(R.id.footerText);

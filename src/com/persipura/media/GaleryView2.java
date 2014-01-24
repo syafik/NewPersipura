@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -44,6 +46,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +85,20 @@ public class GaleryView2 extends SherlockFragment {
 	TextView galleryDesc;
 	private TextView title;
 	private TextView created;
+	MainActivity attachingActivityLock;
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
 
 	public static final String TAG = GaleryView2.class.getSimpleName();
 
@@ -98,7 +114,7 @@ public class GaleryView2 extends SherlockFragment {
 		Bundle b = getArguments();
 		nid = b.getString("myString");
 		new fetchImage().execute("");
-		new fetchFooterFromServer().execute("");
+//		new fetchFooterFromServer().execute("");
 		showProgressDialog();
 		View rootView = inflater.inflate(R.layout.gridview, container,
 				false);
@@ -114,8 +130,17 @@ public class GaleryView2 extends SherlockFragment {
 				.findViewById(R.id.title_text);
 		created = (TextView) rootView
 				.findViewById(R.id.date_text);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				getActivity().getApplicationContext().getAssets());
+//		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+//				getActivity().getApplicationContext().getAssets());
+//		
+		if(attachingActivityLock.is_tablet){
+			footerLayout.setBackgroundColor(Color.parseColor("#2E2C2C"));
+		}else{
+			new fetchFooterFromServer().execute("");
+			AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+					attachingActivityLock.getApplicationContext().getAssets());
+		}
+		
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		Editor editor = mPrefs.edit();
 		editor.putBoolean("isMediaImage", false);

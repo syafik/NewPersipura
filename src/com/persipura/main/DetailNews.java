@@ -92,14 +92,15 @@ public class DetailNews extends SherlockFragment {
 		// nid = (String) container.getTag();
 		
 		TextView titleTextView = (TextView) attachingActivityLock.getSupportActionBar().getCustomView().findViewById(R.id.title_bar_eaa);
-		titleTextView.setText("NEWS");
+		if(!attachingActivityLock.is_tablet)
+			titleTextView.setText("NEWS");
 		
 		Bundle extras = getArguments();
 		nid = extras.getString("NewsId");
 		showProgressDialog();
 
 		new fetchLocationFromServer().execute("");
-		new fetchFooterFromServer().execute("");
+		
 
 		View rootView = inflater.inflate(R.layout.detail_news2, container,
 				false);
@@ -117,6 +118,11 @@ public class DetailNews extends SherlockFragment {
 		MainActivity.getInstance().HideOtherActivities();
 		MainActivity.getInstance().changeItemSearchToShare(true);
 		
+		if(attachingActivityLock.is_tablet){
+			lifePageCellContainerLayout.removeView(footerLayout);
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
 		return rootView;
 	}
 

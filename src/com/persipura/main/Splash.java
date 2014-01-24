@@ -12,9 +12,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,20 +29,22 @@ public class Splash extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-	
+
 		boolean isNetworkAvailable = Utility.isNetworkAvailable(Splash.this);
 		Log.d("isTablet?", "isTablet? " + isTablet(getApplicationContext()));
+
+		if (isTablet(getApplicationContext())) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+
 		if (isNetworkAvailable) {
 			my_timer = new Timer();
 			my_timer.schedule(new TimerTask() {
 				public void run() {
-					Intent i;
-					if(isTablet(getApplicationContext())){
-						i = new Intent(Splash.this, MainActivity.class);	
-					}else{
-						i = new Intent(Splash.this, MainActivity.class);
-					}
-					
+					Intent i = new Intent(Splash.this, MainActivity.class);
+
 					startActivity(i);
 					finish();
 				}
@@ -72,9 +76,38 @@ public class Splash extends Activity {
 	}
 
 	public static boolean isTablet(Context context) {
-	    return (context.getResources().getConfiguration().screenLayout
-	            & Configuration.SCREENLAYOUT_SIZE_MASK)
-	            >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+		// return (context.getResources().getConfiguration().screenLayout
+		// & Configuration.SCREENLAYOUT_SIZE_MASK)
+		// >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+//		try {
+//
+//			// Compute screen size
+//
+//			DisplayMetrics dm = context.getResources().getDisplayMetrics();
+//
+//			float screenWidth = dm.widthPixels / dm.xdpi;
+//
+//			float screenHeight = dm.heightPixels / dm.ydpi;
+//
+//			double size = Math.sqrt(Math.pow(screenWidth, 2) +
+//
+//			Math.pow(screenHeight, 2));
+//
+//			// Tablet devices should have a screen size greater than 6 inches
+//
+//			return size >= 6;
+//
+//		} catch (Throwable t) {
+//
+//			Log.d("Error", "Failed to compute screen size", t);
+//
+//			return false;
+//
+//		}
+		boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
+
 	}
 
 	@Override

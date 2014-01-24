@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -95,7 +97,12 @@ public class pageSliding extends SherlockFragment {
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		footerLayout = (LinearLayout) view.findViewById(R.id.outer);
-		new fetchFooterFromServer().execute("");
+		if(attachingActivityLock.is_tablet){
+			FrameLayout bottom_control_bar = (FrameLayout) footerLayout.findViewById(R.id.bottom_control_bar);
+			bottom_control_bar.setBackgroundColor(Color.parseColor("#2E2C2C"));
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
 
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());

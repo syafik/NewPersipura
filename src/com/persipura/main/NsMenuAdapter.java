@@ -19,6 +19,10 @@ import com.persipura.utils.AppConstants;
 import com.persipura.main.R;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +82,41 @@ public class NsMenuAdapter extends ArrayAdapter<NsMenuItemModel> {
 			this.textCounterHolder = textcounter1;
 		}
 	}
-
+	
+	 public static boolean isTablet(Context context) {
+//         return (context.getResources().getConfiguration().screenLayout
+//                 & Configuration.SCREENLAYOUT_SIZE_MASK)
+//                 >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+//		 try {
+//
+// 			// Compute screen size
+//
+// 			DisplayMetrics dm = context.getResources().getDisplayMetrics();
+//
+// 			float screenWidth = dm.widthPixels / dm.xdpi;
+//
+// 			float screenHeight = dm.heightPixels / dm.ydpi;
+//
+// 			double size = Math.sqrt(Math.pow(screenWidth, 2) +
+//
+// 			Math.pow(screenHeight, 2));
+//
+// 			// Tablet devices should have a screen size greater than 6 inches
+//
+// 			return size >= 6;
+//
+// 		} catch (Throwable t) {
+//
+// 			Log.d("Error", "Failed to compute screen size", t);
+//
+// 			return false;
+//
+// 		}
+		 boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+         boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+         return (xlarge || large);
+     }
+	 
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		NsMenuItemModel item = getItem(position);
@@ -91,14 +129,23 @@ public class NsMenuAdapter extends ArrayAdapter<NsMenuItemModel> {
 				layout = R.layout.ns_menu_row_header;
 
 			view = LayoutInflater.from(getContext()).inflate(layout, null);
-
 			TextView text1 = (TextView) view.findViewById(R.id.menurow_title);
 			ImageView image1 = (ImageView) view.findViewById(R.id.menurow_icon);
 			TextView textcounter1 = (TextView) view
 					.findViewById(R.id.menurow_counter);
 			view.setTag(new ViewHolder(text1, image1, textcounter1));
-		}
+			view.setId(position);	
+            boolean is_tablet = isTablet(getContext());
 
+			if(is_tablet){
+				if(position == 0){
+					view.findViewById(R.id.con1).setBackgroundColor(Color.parseColor("#46434A"));
+				}	
+			}
+
+		}
+		
+//		.setBackgroundColor(Color.parseColor("#46434A")
 		if (holder == null && view != null) {
 			Object tag = view.getTag();
 			if (tag instanceof ViewHolder) {

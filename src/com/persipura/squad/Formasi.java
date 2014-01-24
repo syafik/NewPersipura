@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,6 +35,7 @@ import com.persipura.bean.HasilBean;
 import com.persipura.bean.SejarahBean;
 import com.persipura.utils.Imageloader;
 import com.persipura.utils.WebHTTPMethodClass;
+import com.persipura.main.MainActivity;
 import com.persipura.main.R;
 
 public class Formasi extends SherlockFragment {
@@ -42,12 +44,26 @@ public class Formasi extends SherlockFragment {
 	List<SejarahBean> listThisWeekBean;
 	RelativeLayout lifePageCellContainerLayout;
 	private ProgressDialog progressDialog;
-
+	MainActivity attachingActivityLock;
 	public static final String TAG = Formasi.class.getSimpleName();
 
 	public static Formasi newInstance() {
 		return new Formasi();
 	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		attachingActivityLock = null;
+	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -159,8 +175,14 @@ public class Formasi extends SherlockFragment {
 
 				 // OR, you can also load from an HTML string:
 				 String summary = thisWeekBean.getdesc();
-//				 summary += "<style>body {background: #2E2C2C !important;}</style>";
-				 String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" + summary;
+				 summary += "<style>body {background: #2E2C2C !important;}</style>";
+				 String htmlData;
+				 if(attachingActivityLock.is_tablet){
+					 htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"style_tablet.css\" />" + summary;
+				 }else{
+					 htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" + summary;	 
+				 }
+				 
 				 webview.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null);
 
 //				 webview.loadData(Html.fromHtml(summary).toString(), "text/html", null);

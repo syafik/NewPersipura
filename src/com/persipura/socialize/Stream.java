@@ -147,7 +147,7 @@ public class Stream extends SherlockFragment {
 			Bundle savedInstanceState) {
 		
 		showProgressDialog();
-		new fetchFooterFromServer().execute("");
+		
 
 		View rootView = inflater.inflate(R.layout.stream, container, false);
 		mInflater = getLayoutInflater(savedInstanceState);
@@ -160,6 +160,12 @@ public class Stream extends SherlockFragment {
 				.findViewById(R.id.location_linear_parentview);
 		footerLayout = (FrameLayout) rootView
 				.findViewById(R.id.bottom_control_bar);
+		if(attachingActivityLock.is_tablet){
+			footerLayout.setBackgroundColor(Color.parseColor("#2E2C2C"));
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
+//		new fetchFooterFromServer().execute("");
 		Button send = (Button) rootView.findViewById(R.id.sendTweet);
 		Button cancel = (Button) rootView.findViewById(R.id.cancelTweet);
 		tweetText = (EditText) rootView.findViewById(R.id.tweetText);
@@ -212,8 +218,9 @@ public class Stream extends SherlockFragment {
 				InputFilter[] FilterArray = new InputFilter[1];
 				int limit = 140 - keywords.toString().length()
 						- tweetText.getText().length() - 1;
-				FilterArray[0] = new InputFilter.LengthFilter(limit);
-				tweetText.setFilters(FilterArray);
+				Log.d("limitText", "limitText : " + limit);
+//				FilterArray[0] = new InputFilter.LengthFilter(limit);
+//				tweetText.setFilters(FilterArray);
 				labelLimit.setText(Integer.toString(limit));
 			}
 

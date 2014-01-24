@@ -17,11 +17,13 @@ public class TwitterConnectDialog extends Dialog implements
 	public Activity c;
 	public Dialog d;
 	public Button yes, no;
+	public boolean is_tablet;
 
-	public TwitterConnectDialog(Activity a) {
+	public TwitterConnectDialog(Activity a, boolean is_tablet) {
 		super(a);
 		// TODO Auto-generated constructor stub
 		this.c = a;
+		this.is_tablet = is_tablet;
 	}
 
 	@Override
@@ -30,7 +32,11 @@ public class TwitterConnectDialog extends Dialog implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.twitter_connect_dialog);
 		LayoutParams params = getWindow().getAttributes();
-        params.width = LayoutParams.FILL_PARENT;
+		if(this.is_tablet){
+			params.width = 400;
+		}else{
+			params.width = LayoutParams.FILL_PARENT;
+		}
         getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         
 		yes = (Button) findViewById(R.id.btn_yes);

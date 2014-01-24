@@ -64,6 +64,7 @@ import com.persipura.socialize.TwitterSocial;
 import com.persipura.utils.AppConstants;
 import com.persipura.utils.WebHTTPMethodClass;
 import com.persipura.main.R;
+
 import android.webkit.WebSettings;
 
 public class videoPlayer extends SherlockFragment {
@@ -136,20 +137,27 @@ public class videoPlayer extends SherlockFragment {
 		Log.d("tagID +++++++++++++++++++++++++++++++", "tagID : " + nid);
 
 		new fetchLocationFromServer().execute("");
-		new fetchFooterFromServer().execute("");
+	
 		
 		View rootView = inflater.inflate(R.layout.video_detail, container,
 				false);
 		mInflater = getLayoutInflater(savedInstanceState);
 		footerLayout = (FrameLayout) rootView
 				.findViewById(R.id.bottom_control_bar);
-		
 		lifePageCellContainerLayout = (LinearLayout) rootView
 				.findViewById(R.id.location_linear_parentview);
-		TextView footerTitle = (TextView) rootView
-				.findViewById(R.id.footerText);
-		AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
-				attachingActivityLock.getApplicationContext().getAssets());
+		
+		if(attachingActivityLock.is_tablet){
+			LinearLayout parentVideo = (LinearLayout) rootView.findViewById(R.id.parentVideo);
+			parentVideo.removeView(footerLayout);
+		}else{
+			new fetchFooterFromServer().execute("");
+			TextView footerTitle = (TextView) rootView
+					.findViewById(R.id.footerText);
+			AppConstants.fontrobotoTextView(footerTitle, 16, "ffffff",
+					attachingActivityLock.getApplicationContext().getAssets());
+		}
+		
 //		MainActivity.getInstance().HideOtherActivities();
 		return rootView;
 	}
@@ -279,11 +287,11 @@ public class videoPlayer extends SherlockFragment {
 						        	progressDialog.dismiss();
 						        }
 								
-//								if (!arg2) {
+								if (!arg2) {
 									arg1.loadVideo(videoID);
 									arg1.setShowFullscreenButton(false);
 									
-//			                    }
+			                    }
 							}
 
 			            });

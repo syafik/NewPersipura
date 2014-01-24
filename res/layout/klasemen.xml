@@ -13,7 +13,8 @@
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical" >
 
-        <TableRow>
+        <TableRow     android:layout_height="fill_parent" android:gravity="center">
+            
 
             <TextView
                 android:id="@+id/pos"

@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -24,6 +25,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,7 +45,15 @@ public class PageSlidingNews extends SherlockFragment {
 	List<FooterBean> listFooterBean;
 	LinearLayout footerLayout;
 	String LinkId;
+	MainActivity attachingActivityLock;
 
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		attachingActivityLock = (MainActivity) activity;
+
+	}
 	public static final String TAG = PageSlidingNews.class
 			.getSimpleName();
 
@@ -77,10 +88,15 @@ public class PageSlidingNews extends SherlockFragment {
 
 		mSectionsPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
+		
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		footerLayout = (LinearLayout) view.findViewById(R.id.outer);
-		new fetchFooterFromServer().execute("");
-
+		
+		if(attachingActivityLock.is_tablet){
+			((ViewGroup) mViewPager.getParent().getParent()).removeViewAt(1);
+		}else{
+			new fetchFooterFromServer().execute("");
+		}
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
